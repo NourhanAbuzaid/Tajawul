@@ -1,25 +1,69 @@
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap");
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  /* Color styles */
+  --Grey: rgba(124, 124, 124, 1);
+
+  --Beige-Dark: rgba(203, 177, 136, 1);
+  --Beige-Perfect: rgba(243, 221, 187, 1);
+  --Beige-Hover: rgba(246, 230, 205, 1);
+  --Beige-Very-Bright: rgba(251, 243, 230, 1);
+
+  --Green-Dark: rgba(37, 63, 59, 1);
+  --Green-Perfect: rgba(59, 101, 95, 1);
+  --Green-Hover: rgba(92, 156, 146, 1);
+  --Green-Very-Bright: rgba(200, 223, 219, 1);
+
+  --Burgundy-Dark: rgba(52, 2, 0, 1);
+  --Burgundy-Perfect: rgba(90, 32, 30, 1);
+  --Burgundy-Hover: rgba(136, 87, 85, 1);
+
+  --Neutrals-Black-Text: rgba(34, 26, 20, 1);
+  --Neutrals-Dark-Outline: rgba(45, 45, 45, 1);
+  --Neutrals-Medium-Outline: rgba(131, 116, 104, 1);
+  --Neutrals-Light-Outline: rgba(213, 195, 181, 1);
+  --Neutrals-Background: rgba(255, 251, 244, 1);
+
+  --Blue-Dark: rgba(12, 55, 61, 1);
+  --Blue-Perfect: rgba(27, 129, 143, 1);
+  --Blue-Hover: rgba(106, 173, 181, 1);
+  --Blue-Very-Bright: rgba(205, 233, 234, 1);
+
+  --Brown-Dark: rgba(68, 40, 25, 1);
+  --Brown-Perfect: rgba(123, 77, 53, 1);
+  --Brown-Hover: rgba(162, 128, 111, 1);
+  --Brown-Very-Bright: rgba(193, 167, 153, 1);
+
+  --Yellow-Dark: rgba(121, 84, 10, 1);
+  --Yellow-Perfect: rgba(238, 170, 35, 1);
+  --Yellow-Hover: rgba(255, 222, 156, 1);
+  --Yellow-Very-Bright: rgba(255, 237, 201, 1);
+
+  --Sienna-Dark: rgba(60, 18, 0, 1);
+  --Sienna-Perfect: rgba(133, 53, 18, 1);
+  --Sienna-Hover: rgba(178, 108, 77, 1);
+  --Sienna-Very-Bright: rgba(255, 211, 193, 1);
+
+  --Gradient-Default: linear-gradient(268deg, #253f3b 23.52%, #5c9c92 136.03%);
 }
 
 html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
+  height: 100vh;
+  display: flex;
+  flex-direction: column; /* Stack navbar at the top */
+  align-items: center;
+  justify-content: flex-start; /* Ensures content starts below navbar */
+  text-align: center;
+  padding-top: 40px; /* Pushes content below navbar */
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--Neutrals-Black-Text);
+  background: var(--Neutrals-Background);
+  font-family: "DM Sans", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -35,8 +79,44 @@ a {
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Merriweather", serif;
+  padding: 8px;
+}
+
+/* Navbar */
+.nav-bar {
+  position: fixed; /* Keeps navbar above content */
+  top: 0;
+  left: 0; /* Ensures it starts from the left edge */
+  width: 100vw; /* Makes it take the full width */
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 99px;
+  flex-shrink: 0;
+  border: 1.5px solid var(--Neutrals-Light-Outline, #d5c3b5);
+  background: var(--Beige-Perfect, #f3ddbb);
+  box-shadow: 0px 1px 8px 0px rgba(38, 29, 28, 0.15);
+  z-index: 1000; /* Ensures navbar stays on top */
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  color: var(--Neutrals-Black-Text, #221a14);
+  font-family: Merriweather;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 120%; /* 19.2px */
 }
