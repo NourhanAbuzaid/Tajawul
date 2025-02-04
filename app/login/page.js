@@ -21,13 +21,7 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const response = await axios.post(
-        "http://tajawul.runasp.net/api/Auth/signin",
-        {
-          email,
-          password,
-        }
-      );
+      const response = await axios.post("/api/proxy", { email, password });
 
       console.log("Login successful:", response.data);
     } catch (err) {
