@@ -226,7 +226,15 @@
 }
 
 .errorMessage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
-  color: #b00020;
-  font-weight: 800;
+  height: 38px;
+  color: #a6001e;
+  font-weight: 600;
+  text-transform: capitalize;
+  background-color: #ffb5c3;
+  border-radius: 12px;
+  font-size: 14px;
 }

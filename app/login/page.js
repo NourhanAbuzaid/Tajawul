@@ -4,6 +4,7 @@ import styles from "../login.module.css";
 import GoogleIcon from "@mui/icons-material/Google";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import axios from "axios";
 import Link from "next/link";
 import Image from "next/image";
@@ -92,7 +93,18 @@ export default function LoginPage() {
               </label>
 
               {/* Error message display */}
-              {error && <p className={styles.errorMessage}>{error}</p>}
+              {error && (
+                <div className={styles.errorMessage}>
+                  <ErrorOutlineIcon
+                    style={{
+                      color: "#a6001e",
+                      fontSize: "20px",
+                      marginRight: "8px",
+                    }}
+                  />
+                  {error}
+                </div>
+              )}
 
               <Link href="../forgot-password" className={styles.Link}>
                 <p>Forgot Password?</p>

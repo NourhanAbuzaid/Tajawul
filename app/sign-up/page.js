@@ -1,9 +1,9 @@
 "use client";
 
 import styles from "../login.module.css";
-import GoogleIcon from "@mui/icons-material/Google";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import axios from "axios";
 import Link from "next/link";
 import Image from "next/image";
@@ -110,7 +110,6 @@ export default function SignUpPage() {
                   placeholder="Email Address"
                 />
               </label>
-
               <label className={styles.passwordLabel}>
                 Password
                 <div className={styles.passwordContainer}>
@@ -130,7 +129,6 @@ export default function SignUpPage() {
                   </button>
                 </div>
               </label>
-
               {/* Confirm Password */}
               <label className={styles.passwordLabel}>
                 Confirm Password
@@ -144,9 +142,19 @@ export default function SignUpPage() {
                   />
                 </div>
               </label>
-
               {/* Error message display */}
-              {error && <p className={styles.errorMessage}>{error}</p>}
+              {error && (
+                <div className={styles.errorMessage}>
+                  <ErrorOutlineIcon
+                    style={{
+                      color: "#a6001e",
+                      fontSize: "20px",
+                      marginRight: "8px",
+                    }}
+                  />
+                  {error}
+                </div>
+              )}
 
               <button type="submit" className={styles.submitButton}>
                 Register Now
