@@ -1,4 +1,4 @@
-"use client";
+"use client"; // ✅ Ensures this page runs in the client
 
 import styles from "../login.module.css";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
@@ -6,21 +6,43 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import axios from "axios";
-import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, Suspense } from "react";
+import SearchParamsWrapper from "@/components/SearchParamsWrapper";
 
 export default function NewPassPage() {
+  const [params, setParams] = useState({ email: "", token: "" });
+  const { email, token } = params; // ✅ Destructure extracted params
+
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState(""); // ✅ New state for success message
+  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setSuccess(""); // ✅ Clear previous messages
+    setSuccess("");
+
+    if (!newPassword || !confirmPassword) {
+      setError("Both password fields are required.");
+      return;
+    }
+
+    if (newPassword.length < 8) {
+      setError("Password must be at least 8 characters long.");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    setLoading(true);
 
     try {
       const response = await axios.post("/api/proxy/newPass", {
@@ -30,15 +52,21 @@ export default function NewPassPage() {
         token,
       });
 
-      setSuccess(response.data.message || "Password Changed Successfully"); // ✅ Store success message
+      setSuccess(response.data.message || "Password changed successfully!");
     } catch (err) {
-      setError(err.response?.data?.message || "Failed");
+      setError(err.response?.data?.message || "Failed to reset password.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className={styles.container}>
-      {/* Header: Logo */}
+      <Suspense fallback={<p>Loading...</p>}>
+        <SearchParamsWrapper setParams={setParams} />{" "}
+        {/* ✅ Wrapped in Suspense */}
+      </Suspense>
+
       <div className={styles.frameBackground}>
         <div className={styles.formFrame}>
           <Image
@@ -47,28 +75,24 @@ export default function NewPassPage() {
             width={120}
             height={100}
           />
-          {/* Form Container */}
           <div className={styles.formContainer}>
-            <div>
-              <p className={styles.title}>Change Password</p>
-              <p className={styles.subtitle}>
-                Your password must be{" "}
-                <span className={styles.importantText}>
-                  {" "}
-                  at least 8 characters long,{" "}
-                </span>{" "}
-                contain at least one uppercase letter, one lowercase letter, one
-                number, and one special character.
-              </p>
-            </div>
+            <p className={styles.title}>Change Password</p>
+            <p className={styles.subtitle}>
+              Your password must be{" "}
+              <span className={styles.importantText}>
+                at least 8 characters long
+              </span>
+              , contain at least one uppercase letter, one lowercase letter, one
+              number, and one special character.
+            </p>
 
-            {/* Start Form Items */}
             <form onSubmit={handleSubmit} className={styles.formWidth}>
+              {/* New Password Field */}
               <label className={styles.passwordLabel}>
                 New Password
                 <div className={styles.passwordContainer}>
                   <input
-                    type={showPassword ? "text" : "password"}
+                    type={showNewPassword ? "text" : "password"}
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     required
@@ -77,23 +101,31 @@ export default function NewPassPage() {
                   <button
                     type="button"
                     className={styles.togglePassword}
-                    onClick={() => setShowPassword(!showPassword)}
+                    onClick={() => setShowNewPassword(!showNewPassword)}
                   >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                    {showNewPassword ? <VisibilityOff /> : <Visibility />}
                   </button>
                 </div>
               </label>
-              {/* Confirm Password */}
+
+              {/* Confirm Password Field */}
               <label className={styles.passwordLabel}>
                 Confirm Password
                 <div className={styles.passwordContainer}>
                   <input
-                    type={showPassword ? "text" : "password"}
+                    type={showConfirmPassword ? "text" : "password"}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
                     placeholder="Confirm Password"
                   />
+                  <button
+                    type="button"
+                    className={styles.togglePassword}
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  >
+                    {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                  </button>
                 </div>
               </label>
 
@@ -111,7 +143,7 @@ export default function NewPassPage() {
                 </div>
               )}
 
-              {/* Error message display */}
+              {/* ❌ Error message display */}
               {error && (
                 <div className={styles.errorMessage}>
                   <ErrorOutlineIcon
@@ -124,8 +156,13 @@ export default function NewPassPage() {
                   {error}
                 </div>
               )}
-              <button type="submit" className={styles.submitButton}>
-                Change Password
+
+              <button
+                type="submit"
+                className={styles.submitButton}
+                disabled={loading}
+              >
+                {loading ? "Processing..." : "Change Password"}
               </button>
             </form>
           </div>
