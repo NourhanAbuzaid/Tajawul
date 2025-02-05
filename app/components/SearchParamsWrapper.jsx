@@ -5,7 +5,7 @@ import { useEffect } from "react";
 
 export default function SearchParamsWrapper({ setParams }) {
   const searchParams = useSearchParams();
-  const email = searchParams.get("personEmail"); // ✅ Keep the correct query param name
+  const email = searchParams.get("email"); // ✅ Keep the correct query param name
   const token = searchParams.get("token");
 
   useEffect(() => {
