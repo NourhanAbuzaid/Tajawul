@@ -22,6 +22,7 @@ export default function ForgotPassPage() {
     try {
       const response = await axios.post("/api/proxy/forgotPass", {
         email,
+        clientURI: "https://tajawul.vercel.app/new-password", // ✅ Add client URI
       });
 
       setSuccess(response.data.message || "Reset link sent successfully!"); // ✅ Store success message
