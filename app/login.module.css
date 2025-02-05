@@ -25,11 +25,13 @@
 .leftContent {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* Aligns everything to the left */
-  justify-content: center; /* Ensures content starts at the top */
-  padding: 0 16%;
-  gap: 4%; /* Adjust spacing for better layout */
-  width: 100%; /* Ensures it takes full width */
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  max-width: 520px; /* Adjust based on your design */
+  min-width: 160px; /* Ensures it doesn't shrink too much */
+  margin: 0 auto; /* Centers content horizontally */
+  padding: 0 48px;
 }
 
 .formContainer {
@@ -47,7 +49,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 16px;
+  gap: 12px;
   align-self: stretch;
 }
 
@@ -237,4 +239,20 @@
   background-color: #ffb5c3;
   border-radius: 12px;
   font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .right {
+    display: none; /* Hide right section on mobile */
+  }
+
+  .left {
+    width: 100%; /* Take full width */
+    align-items: center; /* Center horizontally */
+    justify-content: center; /* Center vertically */
+  }
+
+  .formWidth {
+    gap: 8px;
+  }
 }
