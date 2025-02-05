@@ -54,7 +54,7 @@ export default function LoginPage() {
             </button>
 
             <div className={styles.divider}>
-              <span>Or Using Email</span>
+              <span>Or</span>
             </div>
 
             {/* Start Form Items */}

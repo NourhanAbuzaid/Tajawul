@@ -79,6 +79,11 @@
   margin-top: 8px;
 }
 
+.importantText {
+  color: var(--Sienna-Perfect);
+  font-weight: 600;
+}
+
 .nameContainer {
   display: flex;
   gap: 8px;
@@ -269,6 +274,7 @@
 
 .forgot {
   height: 28px;
+  width: fit-content;
   display: flex;
   align-items: flex-end;
 }
@@ -293,6 +299,32 @@
   font-size: 16px;
   font-weight: 400;
   z-index: 2;
+}
+
+.frameBackground {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  flex-shrink: 0;
+  background-color: var(--very-bright-beige, #f9f4e8);
+}
+
+.formFrame {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  max-width: 520px; /* Adjust based on your design */
+  min-width: 160px; /* Ensures it doesn't shrink too much */
+  margin: 0 auto; /* Centers content horizontally */
+  padding: 48px;
+  border-radius: 24px;
+  border: 1.5px solid var(--Neutrals-Light-Outline, #d5c3b5);
+  background: var(--Neutrals-Background);
+  box-shadow: 0px 4px 10px 0px rgba(34, 26, 20, 0.15);
 }
 
 @media (max-width: 768px) {
