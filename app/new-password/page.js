@@ -1,4 +1,4 @@
-"use client";
+"use client"; // ✅ Fix: Ensures this is a Client Component
 
 import styles from "../login.module.css";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
@@ -8,20 +8,20 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import axios from "axios";
 import Image from "next/image";
 import { useState } from "react";
-import { useSearchParams } from "next/navigation"; // ✅ Extract query parameters
+import { useSearchParams } from "next/navigation";
 
 export default function NewPassPage() {
+  const searchParams = useSearchParams(); // ✅ Now works properly
+  const email = searchParams.get("personEmail");
+  const token = searchParams.get("token");
+
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [loading, setLoading] = useState(false); // ✅ Add loading state
-
-  const searchParams = useSearchParams();
-  const email = searchParams.get("personEmail"); // ✅ Get email from URL
-  const token = searchParams.get("token"); // ✅ Get token from URL
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -43,7 +43,7 @@ export default function NewPassPage() {
       return;
     }
 
-    setLoading(true); // ✅ Show loading state while waiting for API response
+    setLoading(true);
 
     try {
       const response = await axios.post("/api/proxy/newPass", {
@@ -57,7 +57,7 @@ export default function NewPassPage() {
     } catch (err) {
       setError(err.response?.data?.message || "Failed to reset password.");
     } finally {
-      setLoading(false); // ✅ Hide loading state after request
+      setLoading(false);
     }
   };
 
@@ -72,17 +72,15 @@ export default function NewPassPage() {
             height={100}
           />
           <div className={styles.formContainer}>
-            <div>
-              <p className={styles.title}>Change Password</p>
-              <p className={styles.subtitle}>
-                Your password must be{" "}
-                <span className={styles.importantText}>
-                  at least 8 characters long
-                </span>
-                , contain at least one uppercase letter, one lowercase letter,
-                one number, and one special character.
-              </p>
-            </div>
+            <p className={styles.title}>Change Password</p>
+            <p className={styles.subtitle}>
+              Your password must be{" "}
+              <span className={styles.importantText}>
+                at least 8 characters long
+              </span>
+              , contain at least one uppercase letter, one lowercase letter, one
+              number, and one special character.
+            </p>
 
             <form onSubmit={handleSubmit} className={styles.formWidth}>
               {/* New Password Field */}
