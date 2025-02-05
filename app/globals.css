@@ -45,6 +45,14 @@
   --Sienna-Very-Bright: rgba(255, 211, 193, 1);
 
   --Gradient-Default: linear-gradient(268deg, #253f3b 23.52%, #5c9c92 136.03%);
+  --Gradient-Hover: linear-gradient(270deg, #253f3b -25.25%, #5c9c92 99.99%);
+
+  /*Semantic Colors*/
+  --Error-Text: #a6001e;
+  --Error-Background: #ffb5c3;
+
+  --Success-Text: #0d5f07;
+  --Success-Background: #d2fbd0;
 }
 
 html,

@@ -10,6 +10,7 @@ export async function POST(req) {
     const allowedRoutes = {
       signin: "http://tajawul.runasp.net/api/Auth/signin",
       signup: "http://tajawul.runasp.net/api/Auth/signup",
+      forgotPass: "http://tajawul.runasp.net/api/Auth/sendResetPasswordEmail",
     };
 
     // Validate the requested route

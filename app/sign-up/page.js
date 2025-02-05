@@ -4,6 +4,7 @@ import styles from "../login.module.css";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import PlaceIcon from "@mui/icons-material/Place";
 import axios from "axios";
 import Link from "next/link";
 import Image from "next/image";
@@ -46,11 +47,19 @@ export default function SignUpPage() {
   return (
     <div className={styles.container}>
       <div className={styles.right}>
+        <div className={styles.locationTag}>
+          <PlaceIcon
+            style={{
+              fontSize: "20px",
+            }}
+          />
+          <p>United Arab Emirates</p>
+        </div>
         <Image
           src="/GRAND_MOSQUE.jpg"
           alt="The Grand Mosque in United Arab Emirates"
-          layout="fill"
-          objectFit="cover"
+          fill
+          style={{ objectFit: "cover" }}
           priority
         />
       </div>
@@ -60,8 +69,8 @@ export default function SignUpPage() {
           <Image
             src="/tajawul-logo-text-only.svg"
             alt="Tajawul Logo"
-            width={100}
-            height={80}
+            width={120}
+            height={100}
           />
           {/* Form Container */}
           <div className={styles.formContainer}>

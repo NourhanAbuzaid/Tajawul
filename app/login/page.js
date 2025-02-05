@@ -5,6 +5,7 @@ import GoogleIcon from "@mui/icons-material/Google";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import PlaceIcon from "@mui/icons-material/Place";
 import axios from "axios";
 import Link from "next/link";
 import Image from "next/image";
@@ -41,7 +42,7 @@ export default function LoginPage() {
             src="/tajawul-logo-text-only.svg"
             alt="Tajawul Logo"
             width={120}
-            height={120}
+            height={100}
           />
           {/* Form Container */}
           <div className={styles.formContainer}>
@@ -104,7 +105,7 @@ export default function LoginPage() {
               )}
 
               <Link href="../forgot-password" className={styles.Link}>
-                <p>Forgot Password?</p>
+                <div className={styles.forgot}>Forgot Password?</div>
               </Link>
               <button type="submit" className={styles.submitButton}>
                 Log In
@@ -125,11 +126,19 @@ export default function LoginPage() {
       </div>
 
       <div className={styles.right}>
+        <div className={styles.locationTag}>
+          <PlaceIcon
+            style={{
+              fontSize: "20px",
+            }}
+          />{" "}
+          <p>United Arab Emirates</p>
+        </div>
         <Image
           src="/GRAND_MOSQUE.jpg"
           alt="The Grand Mosque in United Arab Emirates"
-          layout="fill"
-          objectFit="cover"
+          fill
+          style={{ objectFit: "cover" }}
           priority
         />
       </div>

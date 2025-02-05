@@ -1,4 +1,5 @@
 import "./globals.css";
+import { AnimatePresence } from "framer-motion";
 
 export const metadata = {
   title: "Tajawul",
@@ -8,7 +9,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <AnimatePresence mode="wait">{children}</AnimatePresence>
+      </body>
     </html>
   );
 }
