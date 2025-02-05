@@ -29,16 +29,13 @@ export default function SignUpPage() {
     }
 
     try {
-      const response = await axios.post(
-        "http://tajawul.runasp.net/api/Auth/signup",
-        {
-          firstName,
-          lastName,
-          email,
-          password,
-          confirmPassword,
-        }
-      );
+      const response = await axios.post("/api/proxy/signup", {
+        firstName,
+        lastName,
+        email,
+        password,
+        confirmPassword,
+      });
 
       console.log("Signup successful:", response.data);
     } catch (err) {

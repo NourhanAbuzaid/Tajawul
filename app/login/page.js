@@ -21,11 +21,14 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const response = await axios.post("/api/proxy", { email, password });
+      const response = await axios.post("/api/proxy/signin", {
+        email,
+        password,
+      });
 
-      console.log("Login successful:", response.data);
+      console.log("Login Successful:", response.data);
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
+      setError(err.response?.data?.message || "Login Failed");
     }
   };
 
