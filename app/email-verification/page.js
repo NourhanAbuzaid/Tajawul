@@ -51,10 +51,12 @@ export default function EmailVerifyPage() {
 
   return (
     <div className={styles.container}>
-      <SearchParamsWrapper
-        setParams={setParams}
-        paramKeys={["personId", "token"]}
-      />
+      <Suspense fallback={<p className={styles.subtitle}>Loading...</p>}>
+        <SearchParamsWrapper
+          setParams={setParams}
+          paramKeys={["personId", "token"]}
+        />
+      </Suspense>
 
       <div className={styles.frameBackground}>
         <motion.div
