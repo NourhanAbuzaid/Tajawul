@@ -4,6 +4,7 @@ import styles from "../login.module.css";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
 import PlaceIcon from "@mui/icons-material/Place";
 import axios from "axios";
 import Link from "next/link";
@@ -18,10 +19,12 @@ export default function SignUpPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setSuccess("");
 
     // Check if passwords match
     if (password !== confirmPassword) {
@@ -39,7 +42,9 @@ export default function SignUpPage() {
         clientURI: "https://tajawul.vercel.app/email-verification",
       });
 
-      console.log("Signup successful:", response.data);
+      setSuccess(
+        "Signup successful! Please check your email for verification."
+      );
     } catch (err) {
       setError(err.response?.data?.message || "Signup failed");
     }
@@ -149,6 +154,19 @@ export default function SignUpPage() {
                   />
                 </div>
               </label>
+              {/* Success message display */}
+              {success && (
+                <div className={styles.successMessage}>
+                  <MarkEmailReadIcon
+                    style={{
+                      color: "#0d5f07",
+                      fontSize: "20px",
+                      marginRight: "8px",
+                    }}
+                  />
+                  {success}
+                </div>
+              )}
               {/* Error message display */}
               {error && (
                 <div className={styles.errorMessage}>
