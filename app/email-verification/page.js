@@ -44,12 +44,13 @@ export default function EmailVerifyPage() {
   }, [personId, token]);
 
   useEffect(() => {
+    console.log("Success state:", success); // Debugging
     if (success) {
       const timer = setTimeout(() => {
         router.push("../login");
       }, 5000);
 
-      return () => clearTimeout(timer); // Cleanup function to prevent memory leaks
+      return () => clearTimeout(timer);
     }
   }, [success, router]);
 
@@ -121,6 +122,7 @@ export default function EmailVerifyPage() {
               </div>
             )}
           </div>
+          <button onClick={() => router.push("../login")}>Test Redirect</button>
         </motion.div>
       </div>
     </div>
