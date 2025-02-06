@@ -21,11 +21,13 @@ export default function EmailVerifyPage() {
   const router = useRouter();
 
   useEffect(() => {
-    if (!personId || !token) {
-      setError("Invalid verification link.");
-      setLoading(false);
-      return;
-    }
+    // Only proceed if personId and token are available
+    if (!personId || !token) return;
+
+    setLoading(true);
+    setError(""); // Reset error to avoid flashing incorrect messages
+    setSuccess("");
+
     axios
       .post("/api/proxy/confirmEmail", { personId, token })
       .then((response) => {
@@ -91,13 +93,13 @@ export default function EmailVerifyPage() {
                   }}
                 />
                 {success}
-                <p className={styles.registerText}>
+                <div className={styles.registerText}>
                   Redirecting to{" "}
                   <Link href="../login" className={styles.Link}>
                     Login
                   </Link>{" "}
                   page...
-                </p>
+                </div>
               </div>
             )}
 
