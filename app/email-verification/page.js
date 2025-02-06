@@ -47,7 +47,7 @@ export default function EmailVerifyPage() {
     console.log("Success state:", success); // Debugging
     if (success) {
       const timer = setTimeout(() => {
-        router.push("../login");
+        router.push("https://tajawul.vercel.app/login");
       }, 5000);
 
       return () => clearTimeout(timer);
@@ -101,7 +101,10 @@ export default function EmailVerifyPage() {
             {success && (
               <div className={styles.registerText}>
                 Redirecting to{" "}
-                <Link href="../login" className={styles.Link}>
+                <Link
+                  href="https://tajawul.vercel.app/login"
+                  className={styles.Link}
+                >
                   Login
                 </Link>{" "}
                 page...
@@ -122,7 +125,11 @@ export default function EmailVerifyPage() {
               </div>
             )}
           </div>
-          <button onClick={() => router.push("../login")}>Test Redirect</button>
+          <button
+            onClick={() => router.push("https://tajawul.vercel.app/login")}
+          >
+            Test Redirect
+          </button>
         </motion.div>
       </div>
     </div>
