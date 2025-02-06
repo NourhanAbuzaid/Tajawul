@@ -27,7 +27,7 @@ export default function EmailVerifyPage() {
       return;
     }
     axios
-      .post("/api/proxy/emailConfirm", { personId, token })
+      .post("/api/proxy/confirmEmail", { personId, token })
       .then((response) => {
         setSuccess(
           response.data.message || "Your Email Has Been Confirmed Successfully"
