@@ -7,13 +7,14 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import axios from "axios";
 import Image from "next/image";
-import { useState, Suspense } from "react";
+import Link from "next/link";
+import { useState, useEffect, Suspense } from "react";
+import { useRouter } from "next/navigation";
 import SearchParamsWrapper from "@/components/SearchParamsWrapper";
 
 export default function NewPassPage() {
   const [params, setParams] = useState({ email: "", token: "" });
   const { email, token } = params; // ✅ Destructure extracted params
-
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -21,6 +22,18 @@ export default function NewPassPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => {
+        router.push("../login"); // Redirect to login after 5 seconds
+      }, 5000);
+
+      return () => clearTimeout(timer); // Cleanup on unmount
+    }
+  }, [success]); // Runs when success state changes
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -54,7 +67,7 @@ export default function NewPassPage() {
 
       setSuccess(response.data.message || "Password changed successfully!");
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to reset password.");
+      setError(err.response?.data?.message || "Failed to reset password");
     } finally {
       setLoading(false);
     }
@@ -76,16 +89,17 @@ export default function NewPassPage() {
             height={100}
           />
           <div className={styles.formContainer}>
-            <p className={styles.title}>Change Password</p>
-            <p className={styles.subtitle}>
-              Your password must be{" "}
-              <span className={styles.importantText}>
-                at least 8 characters long
-              </span>
-              , contain at least one uppercase letter, one lowercase letter, one
-              number, and one special character.
-            </p>
-
+            <div>
+              <p className={styles.title}>Change Password</p>
+              <p className={styles.subtitle}>
+                Your password must be{" "}
+                <span className={styles.importantText}>
+                  at least 8 characters long
+                </span>
+                , contain at least one uppercase letter, one lowercase letter,
+                one number, and one special character.
+              </p>
+            </div>
             <form onSubmit={handleSubmit} className={styles.formWidth}>
               {/* New Password Field */}
               <label className={styles.passwordLabel}>
@@ -140,6 +154,13 @@ export default function NewPassPage() {
                     }}
                   />
                   {success}
+                  <p className={styles.registerText}>
+                    Redirecting to{" "}
+                    <Link href="../login" className={styles.Link}>
+                      Login
+                    </Link>{" "}
+                    page...
+                  </p>
                 </div>
               )}
 

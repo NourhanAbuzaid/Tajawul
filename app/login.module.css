@@ -32,7 +32,7 @@
   justify-content: center;
   width: 100%;
   max-width: 520px; /* Adjust based on your design */
-  min-width: 160px; /* Ensures it doesn't shrink too much */
+  min-width: 380px; /* Ensures it doesn't shrink too much */
   margin: 0 auto; /* Centers content horizontally */
   padding: 0 48px;
 }
@@ -199,7 +199,6 @@
   width: 100%;
   text-align: left;
 }
-
 .submitButton {
   display: flex;
   height: 46px;
@@ -209,10 +208,7 @@
   gap: 10px;
   align-self: stretch;
   border-radius: 12px;
-  background: var(
-    --Gradient-Default,
-    linear-gradient(268deg, #253f3b 23.52%, #5c9c92 136.03%)
-  );
+  background: linear-gradient(268deg, #253f3b 23.52%, #5c9c92 136.03%);
   color: var(--Neutrals-Background, #fffbf4);
   font-family: Merriweather;
   font-size: 16px;
@@ -223,6 +219,24 @@
   width: 100%;
   border: none;
   margin-top: 12px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.submitButton::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(270deg, #253f3b -25.25%, #5c9c92 99.99%);
+  opacity: 0;
+  transition: opacity 0.4s ease-in-out;
+  z-index: -1;
+}
+
+.submitButton:hover::before {
+  opacity: 1;
 }
 
 .registerText {
@@ -318,7 +332,7 @@
   justify-content: center;
   width: 100%;
   max-width: 520px; /* Adjust based on your design */
-  min-width: 160px; /* Ensures it doesn't shrink too much */
+  min-width: 380px; /* Ensures it doesn't shrink too much */
   margin: 0 auto; /* Centers content horizontally */
   padding: 48px;
   border-radius: 24px;
