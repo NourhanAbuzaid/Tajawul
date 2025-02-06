@@ -21,25 +21,24 @@ export default function EmailVerifyPage() {
   const router = useRouter();
 
   useEffect(() => {
-    if (personId && token) {
-      axios
-        .post("/api/proxy/emailConfirm", {
-          personId,
-          token,
-        })
-        .then((response) => {
-          setSuccess(
-            response.data.message ||
-              "Your Email Has Been Confirmed Successfully"
-          );
-        })
-        .catch((err) => {
-          setError(err.response?.data?.message || "Email Confirmation Failed");
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+    if (!personId || !token) {
+      setError("Invalid verification link.");
+      setLoading(false);
+      return;
     }
+    axios
+      .post("/api/proxy/emailConfirm", { personId, token })
+      .then((response) => {
+        setSuccess(
+          response.data.message || "Your Email Has Been Confirmed Successfully"
+        );
+      })
+      .catch((err) => {
+        setError(err.response?.data?.message || "Email Confirmation Failed");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [personId, token]);
 
   useEffect(() => {
@@ -52,9 +51,10 @@ export default function EmailVerifyPage() {
 
   return (
     <div className={styles.container}>
-      <Suspense fallback={<p className={styles.subtitle}>Loading...</p>}>
-        <SearchParamsWrapper setParams={setParams} />
-      </Suspense>
+      <SearchParamsWrapper
+        setParams={setParams}
+        paramKeys={["personId", "token"]}
+      />
 
       <div className={styles.frameBackground}>
         <motion.div

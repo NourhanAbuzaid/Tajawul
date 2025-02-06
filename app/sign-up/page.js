@@ -42,9 +42,7 @@ export default function SignUpPage() {
         clientURI: "https://tajawul.vercel.app/email-verification",
       });
 
-      setSuccess(
-        "Signup successful! Please check your email for verification."
-      );
+      setSuccess("Please check your email for verification!");
     } catch (err) {
       setError(err.response?.data?.message || "Signup failed");
     }

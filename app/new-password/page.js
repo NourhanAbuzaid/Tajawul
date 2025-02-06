@@ -75,9 +75,11 @@ export default function NewPassPage() {
 
   return (
     <div className={styles.container}>
-      <Suspense fallback={<p>Loading...</p>}>
-        <SearchParamsWrapper setParams={setParams} />{" "}
-        {/* ✅ Wrapped in Suspense */}
+      <Suspense fallback={<p className={styles.subtitle}>Loading...</p>}>
+        <SearchParamsWrapper
+          setParams={setParams}
+          paramKeys={["email", "token"]}
+        />
       </Suspense>
 
       <div className={styles.frameBackground}>

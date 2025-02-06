@@ -1,16 +1,21 @@
-"use client"; // ✅ Ensures it runs only on the client
+"use client";
 
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
-export default function SearchParamsWrapper({ setParams }) {
+export default function SearchParamsWrapper({ setParams, paramKeys }) {
   const searchParams = useSearchParams();
-  const email = searchParams.get("email"); // ✅ Keep the correct query param name
-  const token = searchParams.get("token");
 
   useEffect(() => {
-    setParams({ email, token });
-  }, [email, token, setParams]); // ✅ Updates state when values change
+    const extractedParams = {};
+    paramKeys.forEach((key) => {
+      extractedParams[key] = searchParams.get(key);
+    });
 
-  return null; // ✅ Doesn't render anything, just updates parent state
+    if (Object.values(extractedParams).every((val) => val !== null)) {
+      setParams(extractedParams);
+    }
+  }, [searchParams, paramKeys, setParams]);
+
+  return null; // ✅ No UI elements needed, only updates state
 }
