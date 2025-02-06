@@ -93,13 +93,15 @@ export default function EmailVerifyPage() {
                   }}
                 />
                 {success}
-                <div className={styles.registerText}>
-                  Redirecting to{" "}
-                  <Link href="../login" className={styles.Link}>
-                    Login
-                  </Link>{" "}
-                  page...
-                </div>
+              </div>
+            )}
+            {success && (
+              <div className={styles.registerText}>
+                Redirecting to{" "}
+                <Link href="../login" className={styles.Link}>
+                  Login
+                </Link>{" "}
+                page...
               </div>
             )}
 
