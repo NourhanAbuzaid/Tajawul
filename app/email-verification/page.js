@@ -21,12 +21,11 @@ export default function EmailVerifyPage() {
   const router = useRouter();
 
   useEffect(() => {
-    if (personId && token && clientURI) {
+    if (personId && token) {
       axios
         .post("/api/proxy/emailConfirm", {
           personId,
           token,
-          clientURI: "https://tajawul.vercel.app/email-verification",
         })
         .then((response) => {
           setSuccess(

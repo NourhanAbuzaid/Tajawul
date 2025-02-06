@@ -36,6 +36,7 @@ export default function SignUpPage() {
         email,
         password,
         confirmPassword,
+        clientURI: "https://tajawul.vercel.app/email-verification",
       });
 
       console.log("Signup successful:", response.data);
