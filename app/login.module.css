@@ -47,6 +47,16 @@
   padding-bottom: 16px;
 }
 
+.formContainerCenter {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  align-self: stretch;
+  padding-bottom: 16px;
+}
+
 .formWidth {
   width: 100%;
   display: flex;
@@ -231,7 +241,7 @@
   inset: 0;
   background: linear-gradient(270deg, #253f3b -25.25%, #5c9c92 99.99%);
   opacity: 0;
-  transition: opacity 0.4s ease-in-out;
+  transition: opacity 0.2s ease-in-out;
   z-index: -1;
 }
 
@@ -280,6 +290,20 @@
   height: 38px;
   color: var(--success-text, #0d5f07);
   background-color: var(--success-background, #d2fbd0);
+  font-weight: 600;
+  text-transform: capitalize;
+  border-radius: 12px;
+  font-size: 14px;
+}
+
+.message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 38px;
+  color: var(--Yellow-Dark);
+  background-color: var(--Yellow-Very-Bright);
   font-weight: 600;
   text-transform: capitalize;
   border-radius: 12px;
