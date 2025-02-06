@@ -9,7 +9,6 @@ import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, Suspense } from "react";
-import { useRouter } from "next/navigation";
 import SearchParamsWrapper from "@/components/SearchParamsWrapper";
 
 export default function NewPassPage() {
@@ -23,12 +22,10 @@ export default function NewPassPage() {
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const router = useRouter();
-
   useEffect(() => {
     if (success) {
       const timer = setTimeout(() => {
-        router.push("../login"); // Redirect to login after 5 seconds
+        window.location.href = "/login";
       }, 5000);
 
       return () => clearTimeout(timer); // Cleanup on unmount

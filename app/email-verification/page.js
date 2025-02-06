@@ -7,7 +7,6 @@ import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, Suspense } from "react";
-import { useRouter } from "next/navigation";
 import SearchParamsWrapper from "@/components/SearchParamsWrapper";
 import { motion } from "framer-motion";
 
@@ -17,8 +16,6 @@ export default function EmailVerifyPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(true);
-
-  const router = useRouter();
 
   useEffect(() => {
     // Only proceed if personId and token are available
@@ -125,11 +122,6 @@ export default function EmailVerifyPage() {
               </div>
             )}
           </div>
-          <button
-            onClick={() => router.push("https://tajawul.vercel.app/login")}
-          >
-            Test Redirect
-          </button>
         </motion.div>
       </div>
     </div>
