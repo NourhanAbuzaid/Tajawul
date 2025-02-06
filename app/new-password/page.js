@@ -26,7 +26,7 @@ export default function NewPassPage() {
     if (success) {
       const timer = setTimeout(() => {
         window.location.href = "/login";
-      }, 5000);
+      }, 3000);
 
       return () => clearTimeout(timer); // Cleanup on unmount
     }
@@ -153,13 +153,15 @@ export default function NewPassPage() {
                     }}
                   />
                   {success}
-                  <p className={styles.registerText}>
-                    Redirecting to{" "}
-                    <Link href="../login" className={styles.Link}>
-                      Login
-                    </Link>{" "}
-                    page...
-                  </p>
+                </div>
+              )}
+              {success && (
+                <div className={styles.registerText}>
+                  Redirecting to{" "}
+                  <Link href="../login" className={styles.Link}>
+                    Login
+                  </Link>{" "}
+                  page...
                 </div>
               )}
 

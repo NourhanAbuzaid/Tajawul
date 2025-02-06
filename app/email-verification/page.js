@@ -45,7 +45,7 @@ export default function EmailVerifyPage() {
     if (success) {
       const timer = setTimeout(() => {
         window.location.href = "/login";
-      }, 5000);
+      }, 3000);
 
       return () => clearTimeout(timer);
     }
@@ -98,10 +98,7 @@ export default function EmailVerifyPage() {
             {success && (
               <div className={styles.registerText}>
                 Redirecting to{" "}
-                <Link
-                  href="https://tajawul.vercel.app/login"
-                  className={styles.Link}
-                >
+                <Link href="../login" className={styles.Link}>
                   Login
                 </Link>{" "}
                 page...
