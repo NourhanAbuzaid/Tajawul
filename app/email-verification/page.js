@@ -45,11 +45,13 @@ export default function EmailVerifyPage() {
 
   useEffect(() => {
     if (success) {
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         router.push("../login");
       }, 5000);
+
+      return () => clearTimeout(timer); // Cleanup function to prevent memory leaks
     }
-  }, [success]);
+  }, [success, router]);
 
   return (
     <div className={styles.container}>
