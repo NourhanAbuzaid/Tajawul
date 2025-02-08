@@ -13,6 +13,7 @@ export async function POST(req) {
       forgotPass: "http://tajawul.runasp.net/api/Auth/sendResetPasswordEmail",
       newPass: "http://tajawul.runasp.net/api/Auth/resetPassword",
       confirmEmail: "http://tajawul.runasp.net/api/Auth/confirmEmail",
+      resendEmail: "http://tajawul.runasp.net/api/Auth/sendEmailVerification",
     };
 
     // Validate the requested route

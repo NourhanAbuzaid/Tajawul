@@ -20,25 +20,26 @@ export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (loading) return;
 
     setError("");
-    setSuccess("");
     setLoading(true);
 
     if (!firstName.trim() || !lastName.trim()) {
       setError("First name and last name are required.");
+      setLoading(false);
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       setError("Invalid email format.");
+      setLoading(false);
       return;
     }
 
@@ -50,34 +51,76 @@ export default function SignUpPage() {
       setError(
         "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character."
       );
+      setLoading(false);
       return;
     }
 
     if (password.length < 8) {
       setError("Password must be at least 8 characters long.");
+      setLoading(false);
       return;
     }
 
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
+      setLoading(false);
       return;
     }
 
     try {
-      const response = await axios.post("/api/proxy/signup", {
-        firstName: firstName.trim(),
-        lastName: lastName.trim(),
-        email: email.trim(),
+      await axios.post("/api/proxy/signup", {
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
         password,
         confirmPassword,
         clientURI: "https://tajawul.vercel.app/email-verification",
       });
 
-      setSuccess("Please check your email for verification!");
+      setShowPopup(true);
     } catch (err) {
       setError(err.response?.data?.message || "Signup failed");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleResendEmail = async () => {
+    if (!email) {
+      alert("Email is missing. Please try again.");
+      return;
+    }
+
+    console.log("Resending email to:", email); // Debugging
+
+    try {
+      const response = await axios.post("/api/proxy/resendEmail", {
+        email, // Ensure this matches the API's expected request body
+        clientURI: "https://tajawul.vercel.app/email-verification",
+      });
+
+      console.log("Success:", response.data);
+      alert("A new confirmation email has been sent! 📩");
+    } catch (error) {
+      console.error(
+        "Error resending email:",
+        error.response?.data || error.message
+      );
+
+      if (error.response) {
+        // API returned an error response
+        alert(
+          `Failed to resend email: ${
+            error.response.data.message || "Unknown error"
+          }`
+        );
+      } else if (error.request) {
+        // Request was made but no response
+        alert("No response from server. Check your network.");
+      } else {
+        // Something else went wrong
+        alert("An error occurred. Please try again.");
+      }
     }
   };
 
@@ -193,19 +236,6 @@ export default function SignUpPage() {
                 </div>
               </label>
 
-              {/* Success message display */}
-              {success && (
-                <div className={styles.successMessage}>
-                  <MarkEmailReadIcon
-                    style={{
-                      color: "#0d5f07",
-                      fontSize: "20px",
-                      marginRight: "8px",
-                    }}
-                  />
-                  {success}
-                </div>
-              )}
               {/* Error message display */}
               {error && (
                 <div className={styles.errorMessage}>
@@ -237,6 +267,43 @@ export default function SignUpPage() {
           </div>
         </div>
       </div>
+
+      {showPopup && (
+        <div className={styles.popupOverlay}>
+          <div className={styles.popupContent}>
+            <Image
+              src="/email-sent.svg"
+              alt="An email notification illustration"
+              width={100}
+              height={120}
+              priority
+            />
+            <button
+              className={styles.closeButton}
+              onClick={() => setShowPopup(false)}
+            >
+              ✕
+            </button>
+
+            <h2>Email Confirmation</h2>
+            <p>
+              We have sent an email to <strong>{email}</strong> to confirm the
+              validity of your email address. After receiving the email, follow
+              the link provided to complete your registration.
+            </p>
+            <div className={styles.divider}>Or</div>
+            <p>
+              If you did not receive any mail,{" "}
+              <button
+                className={styles.resendButton}
+                onClick={handleResendEmail}
+              >
+                Resend confirmation mail
+              </button>
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
