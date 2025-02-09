@@ -259,7 +259,7 @@ export default function SignUpPage() {
               <span>Already a member?</span>
             </div>
             <p className={styles.registerText}>
-              <Link href="../login" className={styles.Link}>
+              <Link href="../login" className={styles.link}>
                 Log In
               </Link>
               &nbsp;using your Tajawul account
