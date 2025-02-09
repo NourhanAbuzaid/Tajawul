@@ -1,5 +1,6 @@
 "use client";
 
+import { login } from "@/utils/auth"; // ✅ Import login function
 import styles from "../login.module.css";
 import GoogleIcon from "@mui/icons-material/Google";
 import Visibility from "@mui/icons-material/Visibility";
@@ -21,15 +22,14 @@ export default function LoginPage() {
     e.preventDefault();
     setError("");
 
-    try {
-      const response = await axios.post("/api/proxy/signin", {
-        email,
-        password,
-      });
+    const success = await login(email, password); // ✅ Call login function
 
-      console.log("Login Successful:", response.data);
-    } catch (err) {
-      setError(err.response?.data?.message || "Login Failed");
+    if (success) {
+      console.log("Login Successful");
+      // Redirect to home page after login
+      window.location.href = "/"; // Change this route if needed
+    } else {
+      setError("Invalid email or password. Please try again.");
     }
   };
 
@@ -104,7 +104,7 @@ export default function LoginPage() {
                 </div>
               )}
 
-              <Link href="../forgot-password" className={styles.Link}>
+              <Link href="../forgot-password" className={styles.link}>
                 <div className={styles.forgot}>Forgot Password?</div>
               </Link>
               <button type="submit" className={styles.submitButton}>
@@ -116,7 +116,7 @@ export default function LoginPage() {
               <span>Not a Member?</span>
             </div>
             <p className={styles.registerText}>
-              <Link href="../sign-up" className={styles.Link}>
+              <Link href="../sign-up" className={styles.link}>
                 Register
               </Link>
               &nbsp;to unlock the best of Tajawul
