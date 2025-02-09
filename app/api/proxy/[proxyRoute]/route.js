@@ -14,6 +14,7 @@ export async function POST(req) {
       newPass: "http://tajawul.runasp.net/api/Auth/resetPassword",
       confirmEmail: "http://tajawul.runasp.net/api/Auth/confirmEmail",
       resendEmail: "http://tajawul.runasp.net/api/Auth/sendEmailVerification",
+      refreshToken: "http://tajawul.runasp.net/api/Auth/refreshToken",
     };
 
     // Validate the requested route
