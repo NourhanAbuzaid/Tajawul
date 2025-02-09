@@ -61,6 +61,11 @@ export default function EmailVerifyPage() {
       </Suspense>
 
       <div className={styles.frameBackground}>
+        <img
+          src="/arabic-typo-pattern.svg"
+          alt="Arabic Typography Pattern"
+          className={styles.svgPatternDark}
+        />
         <motion.div
           className={styles.formFrame}
           initial={{ opacity: 0, y: 10 }}
@@ -98,7 +103,7 @@ export default function EmailVerifyPage() {
             {success && (
               <div className={styles.registerText}>
                 Redirecting to{" "}
-                <Link href="../login" className={styles.Link}>
+                <Link href="../login" className={styles.link}>
                   Login
                 </Link>{" "}
                 page...

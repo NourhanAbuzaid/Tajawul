@@ -99,7 +99,7 @@ export default function ForgotPassPage() {
 
             <p className={styles.registerText}>
               Return to the&nbsp;
-              <Link href="../login" className={styles.Link}>
+              <Link href="../login" className={styles.link}>
                 Login Page
               </Link>
             </p>

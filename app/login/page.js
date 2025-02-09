@@ -7,7 +7,6 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import PlaceIcon from "@mui/icons-material/Place";
-import axios from "axios";
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";

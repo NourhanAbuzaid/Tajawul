@@ -17,6 +17,7 @@
 
 /* Styling for the left column */
 .left {
+  position: relative;
   display: flex;
   width: 100%;
   flex-direction: column;
@@ -355,6 +356,7 @@
   align-items: flex-start;
   flex-shrink: 0;
   background-color: var(--very-bright-beige, #f9f4e8);
+  z-index: -2;
 }
 
 .formFrame {
@@ -452,6 +454,16 @@
 
 .closeButton:hover {
   color: var(--Neutrals-Medium-Text); /* Black "X" */
+}
+
+.svgPatternDark {
+  position: absolute; /* Positions it relative to the parent */
+  max-width: 550px;
+  bottom: 0;
+  right: 0;
+  z-index: -1; /* Keeps it behind all content */
+  pointer-events: none; /* Avoids interference with clicks */
+  opacity: 0.6;
 }
 
 @media (max-width: 768px) {

@@ -10,6 +10,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, Suspense } from "react";
 import SearchParamsWrapper from "@/components/SearchParamsWrapper";
+import { motion } from "framer-motion"; // ✅ Import motion
 
 export default function NewPassPage() {
   const [params, setParams] = useState({ email: "", token: "" });
@@ -91,7 +92,19 @@ export default function NewPassPage() {
       </Suspense>
 
       <div className={styles.frameBackground}>
-        <div className={styles.formFrame}>
+        <img
+          src="/arabic-typo-pattern.svg"
+          alt="Arabic Typography Pattern"
+          className={styles.svgPatternDark}
+        />
+
+        {/* ✅ Wrapped in motion.div for animation */}
+        <motion.div
+          className={styles.formFrame}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
           <Image
             src="/tajawul-logo-text-only.svg"
             alt="Tajawul Logo"
@@ -169,7 +182,7 @@ export default function NewPassPage() {
               {success && (
                 <div className={styles.registerText}>
                   Redirecting to{" "}
-                  <Link href="../login" className={styles.Link}>
+                  <Link href="../login" className={styles.link}>
                     Login
                   </Link>{" "}
                   page...
@@ -199,7 +212,7 @@ export default function NewPassPage() {
               </button>
             </form>
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
