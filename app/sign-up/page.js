@@ -4,8 +4,8 @@ import styles from "../login.module.css";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
-import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
 import PlaceIcon from "@mui/icons-material/Place";
+import Loading from "@/components/ui/Loading"; // Adjust the path if needed
 import axios from "axios";
 import Link from "next/link";
 import Image from "next/image";
@@ -22,6 +22,7 @@ export default function SignUpPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
+  const [resendLoading, setResendLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -86,41 +87,27 @@ export default function SignUpPage() {
   };
 
   const handleResendEmail = async () => {
+    if (resendLoading) return; // Prevent multiple clicks
     if (!email) {
       alert("Email is missing. Please try again.");
       return;
     }
 
-    console.log("Resending email to:", email); // Debugging
-
+    setResendLoading(true);
     try {
       const response = await axios.post("/api/proxy/resendEmail", {
-        email, // Ensure this matches the API's expected request body
+        email,
         clientURI: "https://tajawul.vercel.app/email-verification",
       });
-
-      console.log("Success:", response.data);
       alert("A new confirmation email has been sent! 📩");
     } catch (error) {
-      console.error(
-        "Error resending email:",
-        error.response?.data || error.message
+      alert(
+        `Failed to resend email: ${
+          error.response?.data?.message || "Unknown error"
+        }`
       );
-
-      if (error.response) {
-        // API returned an error response
-        alert(
-          `Failed to resend email: ${
-            error.response.data.message || "Unknown error"
-          }`
-        );
-      } else if (error.request) {
-        // Request was made but no response
-        alert("No response from server. Check your network.");
-      } else {
-        // Something else went wrong
-        alert("An error occurred. Please try again.");
-      }
+    } finally {
+      setResendLoading(false);
     }
   };
 
@@ -267,7 +254,7 @@ export default function SignUpPage() {
           </div>
         </div>
       </div>
-
+      {loading && <Loading />}
       {showPopup && (
         <div className={styles.popupOverlay}>
           <div className={styles.popupContent}>
@@ -297,6 +284,7 @@ export default function SignUpPage() {
               <button
                 className={styles.resendButton}
                 onClick={handleResendEmail}
+                disabled={resendLoading}
               >
                 Resend confirmation mail
               </button>
