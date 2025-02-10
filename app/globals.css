@@ -158,3 +158,40 @@ h6 {
     transform: rotate(360deg);
   }
 }
+
+/* Resizable Buttons (Translation Shortcut) */
+.resizable-btn-frame {
+  display: flex;
+  justify-content: center;
+}
+
+.resizable-btn {
+  width: 48px;
+  height: 32px;
+  color: var(--Beige-Perfect);
+  font-family: Merriweather, serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 120%; /* 16.8px */
+  border: none;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: width 400ms cubic-bezier(0.36, 0, 0.66, -0.56),
+    background 400ms ease-in-out;
+  display: flex;
+  padding: 8px 12px;
+  flex-direction: row; /* Ensure icon and text align properly */
+  align-items: center;
+  gap: 12px; /* Reduced gap slightly for better spacing */
+  border-radius: 38px;
+  background: var(--Neutrals-Black-Text, #221a14);
+  cursor: pointer;
+}
+
+.resizable-btn:hover {
+  background: var(--Green-Hover, #5c9c92);
+  color: var(--Neutrals-Background, #fffbf4);
+  width: 129px;
+  transition: width 400ms cubic-bezier(0.68, -0.55, 0.27, 1.55),
+    background 400ms ease-in-out;
+}
