@@ -4,6 +4,7 @@
   width: 100vw;
   align-items: stretch; /* Ensures both columns stay equal */
   flex-wrap: wrap;
+  z-index: 0;
 }
 
 /* Two equal-sized columns */
@@ -356,7 +357,7 @@
   align-items: flex-start;
   flex-shrink: 0;
   background-color: var(--very-bright-beige, #f9f4e8);
-  z-index: -2;
+  z-index: 1;
 }
 
 .formFrame {
@@ -373,6 +374,7 @@
   border: 1.5px solid var(--Neutrals-Light-Outline, #d5c3b5);
   background: var(--Neutrals-Background);
   box-shadow: 0px 4px 10px 0px rgba(34, 26, 20, 0.15);
+  z-index: 2;
 }
 
 .popupOverlay {
