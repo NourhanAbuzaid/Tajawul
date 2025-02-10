@@ -1,5 +1,4 @@
 "use client";
-import { motion } from "framer-motion";
 import TranslateIcon from "@mui/icons-material/Translate";
 
 export default function TranslationShortcut() {

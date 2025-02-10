@@ -1,0 +1,46 @@
+.navBar {
+  position: fixed; /* Keeps navbar above content */
+  top: 0;
+  left: 0; /* Ensures it starts from the left edge */
+  width: 100vw; /* Makes it take the full width */
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5%;
+  flex-shrink: 0;
+  border: 1.5px solid var(--Neutrals-Light-Outline, #d5c3b5);
+  background: var(--Beige-Perfect, #f3ddbb);
+  box-shadow: 0px 1px 8px 0px rgba(38, 29, 28, 0.15);
+  z-index: 1000; /* Ensures navbar stays on top */
+  justify-content: space-evenly;
+}
+
+.navItem {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  color: var(--Neutrals-Black-Text, #221a14);
+  font-family: Merriweather;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 120%; /* 19.2px */
+}
+
+.loginFrame {
+  display: flex;
+  padding: 14px 17px;
+  align-items: center;
+  gap: 12px;
+}
+
+.logoTransFrame {
+  display: flex;
+  padding: 14px 0px;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
