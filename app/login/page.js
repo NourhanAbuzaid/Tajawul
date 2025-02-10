@@ -1,6 +1,7 @@
 "use client";
 
 import { login } from "@/utils/auth"; // ✅ Import login function
+import Logo from "@/components/ui/Logo";
 import styles from "../login.module.css";
 import GoogleIcon from "@mui/icons-material/Google";
 import Visibility from "@mui/icons-material/Visibility";
@@ -37,12 +38,7 @@ export default function LoginPage() {
       {/* Header: Logo */}
       <div className={styles.left}>
         <div className={styles.leftContent}>
-          <Image
-            src="/tajawul-logo-text-only.svg"
-            alt="Tajawul Logo"
-            width={120}
-            height={100}
-          />
+          <Logo width={120} height={100} />
           {/* Form Container */}
           <div className={styles.formContainer}>
             <p className={styles.title}>Welcome Back</p>
@@ -115,7 +111,7 @@ export default function LoginPage() {
               <span>Not a Member?</span>
             </div>
             <p className={styles.registerText}>
-              <Link href="../sign-up" className={styles.link}>
+              <Link href="../signup" className={styles.link}>
                 Register
               </Link>
               &nbsp;to unlock the best of Tajawul

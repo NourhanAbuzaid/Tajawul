@@ -1,6 +1,7 @@
 "use client";
 
 import styles from "../login.module.css";
+import Logo from "@/components/ui/Logo";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
@@ -133,12 +134,7 @@ export default function SignUpPage() {
       {/* Header: Logo */}
       <div className={styles.left}>
         <div className={styles.leftContent}>
-          <Image
-            src="/tajawul-logo-text-only.svg"
-            alt="Tajawul Logo"
-            width={120}
-            height={100}
-          />
+          <Logo width={120} height={100} />
           {/* Form Container */}
           <div className={styles.formContainer}>
             <div>

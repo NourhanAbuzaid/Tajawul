@@ -1,6 +1,7 @@
 "use client";
 
 import styles from "../login.module.css";
+import Logo from "@/components/ui/Logo";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
 import PlaceIcon from "@mui/icons-material/Place";
@@ -36,12 +37,7 @@ export default function ForgotPassPage() {
       {/* Header: Logo */}
       <div className={styles.left}>
         <div className={styles.leftContent}>
-          <Image
-            src="/tajawul-logo-text-only.svg"
-            alt="Tajawul Logo"
-            width={120}
-            height={100}
-          />
+          <Logo width={120} height={100} />
           {/* Form Container */}
           <div className={styles.formContainer}>
             <div>

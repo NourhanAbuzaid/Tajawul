@@ -1,6 +1,7 @@
 "use client"; // ✅ Ensures this page runs in the client
 
 import styles from "../login.module.css";
+import Logo from "@/components/ui/Logo";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import axios from "axios";
@@ -72,12 +73,7 @@ export default function EmailVerifyPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <Image
-            src="/tajawul-logo-text-only.svg"
-            alt="Tajawul Logo"
-            width={120}
-            height={100}
-          />
+          <Logo width={120} height={100} />
           <div className={styles.formContainerCenter}>
             <p className={styles.title}>Email Confirmation</p>
             {/* ✅ Loading State */}
