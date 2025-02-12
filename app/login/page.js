@@ -109,7 +109,7 @@ export default function LoginPage() {
             <p className={styles.registerText}>
               <Link href="../signup" className={styles.link}>
                 Register
-              </Link>{" "}
+              </Link>
               &nbsp;to unlock the best of Tajawul
             </p>
           </div>
