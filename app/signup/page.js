@@ -113,7 +113,7 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className={styles.container}>
+    <div className={styles.authContainer}>
       <div className={styles.right}>
         <div className={styles.locationTag}>
           <PlaceIcon

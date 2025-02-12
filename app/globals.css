@@ -75,6 +75,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.container {
+  padding-top: 65px; /* Pushes content below navbar */
+}
+
 * {
   box-sizing: border-box;
   padding: 0;

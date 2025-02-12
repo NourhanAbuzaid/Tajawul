@@ -53,7 +53,7 @@ export default function EmailVerifyPage() {
   }, [success]);
 
   return (
-    <div className={styles.container}>
+    <div className={styles.authContainer}>
       <Suspense fallback={<p className={styles.subtitle}>Loading...</p>}>
         <SearchParamsWrapper
           setParams={setParams}

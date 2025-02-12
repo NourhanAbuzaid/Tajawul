@@ -33,7 +33,7 @@ export default function ForgotPassPage() {
   };
 
   return (
-    <div className={styles.container}>
+    <div className={styles.authContainer}>
       {/* Header: Logo */}
       <div className={styles.left}>
         <div className={styles.leftContent}>
