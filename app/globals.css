@@ -76,7 +76,7 @@ body {
 }
 
 .container {
-  padding-top: 65px; /* Pushes content below navbar */
+  margin-top: 65px; /* Pushes content below navbar */
 }
 
 * {
