@@ -1,6 +1,6 @@
 "use client";
 
-import { login } from "@/utils/auth"; // ✅ Import login function
+import { login } from "@/utils/auth";
 import Logo from "@/components/ui/Logo";
 import styles from "../login.module.css";
 import GoogleIcon from "@mui/icons-material/Google";
@@ -11,23 +11,26 @@ import PlaceIcon from "@mui/icons-material/Place";
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+import Loading from "@/components/ui/Loading"; // Import Loading Component
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
 
-    const success = await login(email, password); // ✅ Call login function
+    const success = await login(email, password);
 
+    setLoading(false);
     if (success) {
       console.log("Login Successful");
-      // Redirect to home page after login
-      window.location.href = "/"; // Change this route if needed
+      window.location.href = "/";
     } else {
       setError("Invalid email or password. Please try again.");
     }
@@ -35,24 +38,18 @@ export default function LoginPage() {
 
   return (
     <div className={styles.container}>
-      {/* Header: Logo */}
+      {loading && <Loading />} {/* Show Loading Component when loading */}
       <div className={styles.left}>
         <div className={styles.leftContent}>
           <Logo width={120} height={100} />
-          {/* Form Container */}
           <div className={styles.formContainer}>
             <p className={styles.title}>Welcome Back</p>
-
-            {/* Google Authentication */}
             <button className={styles.googleButton}>
               <GoogleIcon /> Continue with Google
             </button>
-
             <div className={styles.divider}>
               <span>Or</span>
             </div>
-
-            {/* Start Form Items */}
             <form onSubmit={handleSubmit} className={styles.formWidth}>
               <label>
                 Email Address
@@ -64,7 +61,6 @@ export default function LoginPage() {
                   placeholder="Email Address"
                 />
               </label>
-
               <label className={styles.passwordLabel}>
                 Password
                 <div className={styles.passwordContainer}>
@@ -84,8 +80,6 @@ export default function LoginPage() {
                   </button>
                 </div>
               </label>
-
-              {/* Error message display */}
               {error && (
                 <div className={styles.errorMessage}>
                   <ErrorOutlineIcon
@@ -98,36 +92,32 @@ export default function LoginPage() {
                   {error}
                 </div>
               )}
-
               <Link href="../forgot-password" className={styles.link}>
                 <div className={styles.forgot}>Forgot Password?</div>
               </Link>
-              <button type="submit" className={styles.submitButton}>
-                Log In
+              <button
+                type="submit"
+                className={styles.submitButton}
+                disabled={loading}
+              >
+                {loading ? "Logging in..." : "Log In"}
               </button>
             </form>
-
             <div className={styles.divider}>
               <span>Not a Member?</span>
             </div>
             <p className={styles.registerText}>
               <Link href="../signup" className={styles.link}>
                 Register
-              </Link>
+              </Link>{" "}
               &nbsp;to unlock the best of Tajawul
             </p>
           </div>
         </div>
       </div>
-
       <div className={styles.right}>
         <div className={styles.locationTag}>
-          <PlaceIcon
-            style={{
-              fontSize: "20px",
-            }}
-          />{" "}
-          <p>United Arab Emirates</p>
+          <PlaceIcon style={{ fontSize: "20px" }} /> <p>United Arab Emirates</p>
         </div>
         <Image
           src="/GRAND_MOSQUE.jpg"
