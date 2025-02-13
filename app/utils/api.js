@@ -3,13 +3,11 @@ import useAuthStore from "@/store/authStore";
 import Router from "next/router";
 
 const API = axios.create({
-  baseURL: "/api/proxy", // ✅ Proxying all requests through Next.js API
-  headers: {
-    "Content-Type": "application/json",
-  },
+  baseURL: "/api/proxy",
+  headers: { "Content-Type": "application/json" },
 });
 
-// Request Interceptor: Attach token
+// Attach access token
 API.interceptors.request.use(
   (config) => {
     const { accessToken } = useAuthStore.getState();
@@ -21,32 +19,29 @@ API.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response Interceptor: Handle 401 errors
+// Handle expired access token
 API.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-
     if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true; // Prevent loop
+      originalRequest._retry = true;
 
       try {
         const { refreshToken, setTokens, clearTokens } =
           useAuthStore.getState();
         if (!refreshToken) throw new Error("No refresh token available");
 
-        // Refresh token using the proxy API
+        // Refresh the access token
         const response = await axios.post("/api/proxy/refreshToken", {
           refreshToken,
         });
 
-        const newAccessToken = response.data.accessToken;
-        const newRefreshToken = response.data.refreshToken;
+        const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
+          response.data;
 
-        // Update tokens
-        setTokens(newAccessToken, newRefreshToken);
+        setTokens(newAccessToken, newRefreshToken); // ✅ Store new tokens
 
-        // Retry request with new token
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return API(originalRequest);
       } catch (refreshError) {
@@ -55,7 +50,6 @@ API.interceptors.response.use(
         Router.push("/login");
       }
     }
-
     return Promise.reject(error);
   }
 );

@@ -1,3 +1,4 @@
+import { logout } from "@/utils/auth";
 import axios from "axios";
 
 export async function POST(req) {
@@ -15,6 +16,7 @@ export async function POST(req) {
       confirmEmail: "http://tajawul.runasp.net/api/Auth/confirmEmail",
       resendEmail: "http://tajawul.runasp.net/api/Auth/sendEmailVerification",
       refreshToken: "http://tajawul.runasp.net/api/Auth/refreshToken",
+      logout: "http://tajawul.runasp.net/api/Auth/logout",
     };
 
     // Validate the requested route

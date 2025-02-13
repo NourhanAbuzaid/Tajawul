@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation"; // ✅ Use Next.js router for navigation
 import { login } from "@/utils/auth";
 import Logo from "@/components/ui/Logo";
 import styles from "../login.module.css";
@@ -10,10 +12,10 @@ import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import PlaceIcon from "@mui/icons-material/Place";
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
 import Loading from "@/components/ui/Loading"; // Import Loading Component
 
 export default function LoginPage() {
+  const router = useRouter(); // ✅ Initialize Next.js router
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -29,8 +31,7 @@ export default function LoginPage() {
 
     setLoading(false);
     if (success) {
-      console.log("Login Successful");
-      window.location.href = "/";
+      router.push("/"); // ✅ Use Next.js navigation instead of window.location.href
     } else {
       setError("Invalid email or password. Please try again.");
     }
