@@ -1,0 +1,67 @@
+.progressContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: 8px;
+  margin-bottom: 28px;
+  position: relative;
+  width: 100%;
+}
+
+.stepWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  flex: 1;
+}
+
+.step {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 20px;
+  font-weight: bold;
+  background: var(--Neutrals-Background);
+  color: var(--Neutrals-Black-Text);
+  transition: all 0.3s ease;
+  border: 1px solid var(--Neutrals-Medium-Outline);
+}
+
+.step:hover {
+  background: var(--Neutrals-Light-Outline);
+}
+
+.active {
+  background: var(--Neutrals-Black-Text);
+  border: none;
+  color: var(--Neutrals-Background);
+}
+
+.completed {
+  background: var(--Green-Hover);
+  border: none;
+  color: var(--Neutrals-Background);
+}
+
+.stepLabel {
+  margin-top: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: DM Sans;
+  color: var(--Neutrals-Medium-Outline);
+}
+
+.stepLine {
+  position: absolute;
+  top: 25px; /* Half of the circle height (50px) */
+  transform: translateX(-50%);
+  width: 100%;
+  height: 1px;
+  background: var(--Neutrals-Medium-Outline);
+  z-index: -1;
+}

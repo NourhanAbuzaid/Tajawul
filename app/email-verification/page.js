@@ -5,7 +5,6 @@ import Logo from "@/components/ui/Logo";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import axios from "axios";
-import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, Suspense } from "react";
 import SearchParamsWrapper from "@/components/SearchParamsWrapper";

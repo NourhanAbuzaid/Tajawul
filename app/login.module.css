@@ -357,7 +357,7 @@
   align-items: flex-start;
   flex-shrink: 0;
   background-color: var(--very-bright-beige, #f9f4e8);
-  z-index: 1;
+  z-index: -1;
 }
 
 .formFrame {
