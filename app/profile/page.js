@@ -1,6 +1,7 @@
 "use client";
 
 import withAuth from "@/utils/withAuth"; // ✅ Import the HOC
+import NavBar from "./components/ui/NavBar";
 
 function ProfilePage() {
   return (
