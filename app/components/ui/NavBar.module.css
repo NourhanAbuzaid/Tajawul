@@ -44,3 +44,13 @@
   align-items: center;
   gap: 16px;
 }
+
+.profileFrame {
+  display: flex;
+  width: 222px;
+  padding: 14px 17px;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 24px;
+  flex-shrink: 0;
+}

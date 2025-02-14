@@ -27,12 +27,16 @@ export async function login(email, password) {
 
 export async function logout() {
   try {
-    // 🔹 Send a logout request through the proxy to invalidate the refresh token
-    await axios.post("/api/proxy/logout", {}, { withCredentials: true });
+    const { accessToken, clearTokens } = useAuthStore.getState();
+    if (!accessToken) return; // ✅ Prevents unnecessary API calls
 
-    // 🔹 Clear tokens from Zustand & localStorage
-    useAuthStore.getState().clearTokens();
+    await axios.post(
+      "/api/proxy/logout",
+      { token: accessToken }, // ✅ Send only the access token
+      { headers: { Authorization: `Bearer ${accessToken}` } } // ✅ Attach token in headers
+    );
 
+    clearTokens(); // ✅ Clears tokens from Zustand & localStorage
     // 🔹 Redirect to login page
     window.location.href = "/login";
   } catch (error) {
