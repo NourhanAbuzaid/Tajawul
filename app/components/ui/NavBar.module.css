@@ -28,6 +28,8 @@
   font-style: normal;
   font-weight: 700;
   line-height: 120%; /* 19.2px */
+  background-color: transparent;
+  border: none;
 }
 
 .loginFrame {
@@ -53,4 +55,69 @@
   align-items: center;
   gap: 24px;
   flex-shrink: 0;
+}
+
+.avatarButton {
+  background-color: transparent;
+  border: none;
+}
+
+/* 🔹 Container for the dropdown */
+.dropdownContainer {
+  position: relative;
+  display: inline-block;
+}
+
+/* 🔹 Dropdown menu */
+.dropdownMenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: var(--Beige-Perfect, #f3ddbb);
+  border: 1px solid var(--Neutrals-Light-Outline, #d5c3b5);
+  border-radius: 12px;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 8px 0;
+  min-width: 180px;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  margin-top: 24px;
+  text-align: left;
+}
+
+.dropdownMenuAvatar {
+  position: absolute;
+  top: 100%;
+  right: 0; /* ✅ Align dropdown to the right edge of the avatar */
+  background-color: var(--Beige-Perfect, #f3ddbb);
+  border: 1px solid var(--Neutrals-Light-Outline, #d5c3b5);
+  border-radius: 12px;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 8px 0;
+  min-width: 140px;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  margin-top: 14px; /* ✅ Reduced gap for better positioning */
+  text-align: left;
+}
+
+/* 🔹 Dropdown items */
+.dropdownItem {
+  padding: 10px 15px;
+  font-family: Merriweather;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  color: var(--Neutrals-Black-Text, #221a14);
+  text-decoration: none;
+  transition: background 0.2s ease-in-out;
+  background-color: transparent;
+  border: none;
+  text-align: center;
+}
+
+.dropdownItem:hover {
+  background: var(--Beige-Hover);
 }

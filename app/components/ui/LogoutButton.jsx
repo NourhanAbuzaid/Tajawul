@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { logout } from "@/utils/auth";
-import styles from "./Button.module.css"; // Import styles
+import styles from "./NavBar.module.css";
 
 export default function LogoutButton() {
   const [loading, setLoading] = useState(false);
@@ -14,7 +14,11 @@ export default function LogoutButton() {
   };
 
   return (
-    <button onClick={handleLogout} disabled={loading}>
+    <button
+      onClick={handleLogout}
+      disabled={loading}
+      className={styles.dropdownItem}
+    >
       {loading ? "Logging out..." : "Logout"}
     </button>
   );
