@@ -1,0 +1,139 @@
+.destinationCover {
+  width: 100vw;
+  height: 480px;
+  position: relative;
+  overflow: hidden;
+}
+
+/*The Gradient Overlay above the image*/
+.destinationCover::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(
+    --Image-Overlay,
+    linear-gradient(
+      180deg,
+      rgba(34, 26, 20, 0) 44.2%,
+      rgba(34, 26, 20, 0.85) 88.17%
+    )
+  );
+  z-index: 1; /* Ensure it's above the image */
+}
+
+.coverContent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  z-index: 2; /* Above overlay */
+  margin-top: 80px;
+  padding-bottom: 26px;
+  padding-left: 4%;
+  padding-right: 4%;
+}
+
+.breadcrumb {
+  display: flex;
+  width: 403px;
+  height: 32px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  background: rgba(34, 26, 20, 0.6);
+  backdrop-filter: blur(4px);
+  /*Font*/
+  color: var(--Neutrals-Background, #fffbf4);
+  font-family: "DM Sans";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 120%; /* 19.2px */
+}
+
+.breadcrumb p {
+  display: flex;
+  gap: 8px;
+}
+
+.verified {
+  display: flex;
+  gap: 4px;
+  margin-left: 8px;
+}
+
+.verified p {
+  color: var(--Neutrals-Background, #fffbf4);
+  font-family: "DM Sans";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 120%; /* 19.2px */
+}
+
+.destinationName {
+  color: var(--Neutrals-Background, #fffbf4);
+  font-family: Merriweather;
+  font-size: 56px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 90%;
+  text-align: left;
+}
+
+.ratingContainer {
+  display: flex;
+  gap: 8px;
+  margin-left: 8px;
+}
+
+.reviewsCount {
+  color: var(--Neutrals-Background, #fffbf4);
+  font-family: "DM Sans";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 120%; /* 19.2px */
+}
+
+.buttomLeftContainer {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.saveButton {
+  display: flex;
+  height: 46px;
+  padding: 8px 26px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 24px;
+  background: var(--Neutrals-Background, #fffbf4);
+  backdrop-filter: blur(4px);
+  color: var(--Neutrals-Black-Text, #221a14);
+  text-align: right;
+  font-family: "DM Sans";
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 120%; /* 24px */
+  border: none;
+}
+
+.buttomContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  align-self: stretch;
+}

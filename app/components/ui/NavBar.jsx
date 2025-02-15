@@ -49,7 +49,7 @@ export default function NavBar() {
         </Link>
         <TranslationShortcut />
       </div>
-      <Link className={styles.navItem} href="/.">
+      <Link className={styles.navItem} href="/explore">
         Explore
       </Link>
 

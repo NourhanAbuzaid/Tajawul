@@ -168,3 +168,26 @@ h6 {
   transition: width 400ms cubic-bezier(0.68, -0.55, 0.27, 1.55),
     background 400ms ease-in-out;
 }
+
+/* Rating.jsx */
+.rating {
+  display: flex;
+  gap: 2px;
+}
+
+.star {
+  font-size: 16px;
+  color: var(--Neutrals-Background, #fffbf4);
+}
+
+.star.filled {
+  color: var(--Green-Hover, #5c9c92);
+}
+
+.star.half {
+  color: var(--Green-Hover, #5c9c92);
+}
+
+.star.empty {
+  color: var(--Neutrals-Background, #fffbf4);
+}
