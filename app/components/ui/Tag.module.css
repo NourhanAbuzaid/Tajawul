@@ -1,0 +1,50 @@
+.tag {
+  display: flex;
+  height: 30px;
+  padding: 7px 14px;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  border-radius: 38px;
+  font-family: "DM Sans";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 120%; /* 19.2px */
+}
+
+/* Green */
+.green {
+  color: var(--Green-Very-Bright, #c8dfdb);
+  border: 1px solid var(--Green-Perfect, #3b655f);
+  background: var(--Green-Perfect, #3b655f);
+}
+
+/* Orange */
+.orange {
+  color: var(--Sienna-Very-Bright, #ffd3c1);
+  border: 1px solid var(--Sienna-Perfect, #853512);
+  background: var(--Sienna-Perfect, #853512);
+}
+
+/* Yellow */
+.yellow {
+  color: #fff8eb;
+  border: 1px solid #bc7d00;
+  background: #bc7d00;
+}
+
+/* Brown */
+.brown {
+  color: var(--Beige-Very-Bright, #fbf3e6);
+  border: 1px solid var(--Brown-Perfect, #7b4d35);
+  background: var(--Brown-Perfect, #7b4d35);
+}
+
+/* Blue */
+.blue {
+  color: var(--Blue-Very-Bright, #cde9ea);
+  border: 1px solid var(--Blue-Perfect, #1b818f);
+  background: var(--Blue-Perfect, #1b818f);
+}

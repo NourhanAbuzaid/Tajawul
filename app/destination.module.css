@@ -219,6 +219,13 @@
   text-align: left;
 }
 
+.tags {
+  display: flex;
+  gap: 8px;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
 /*Mobile Responsive*/
 @media (max-width: 768px) {
   .saveButton {

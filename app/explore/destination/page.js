@@ -1,4 +1,5 @@
 import styles from "@/destination.module.css";
+import Tag from "@/components/ui/Tag";
 import Image from "next/image";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -87,9 +88,13 @@ export default function DestinationPage() {
       <div className={styles.mainContent}>
         {/* Left Column */}
         <div className={styles.leftColumn}>
-          <div id="tags" className={styles.section}>
-            <h2>Tags</h2>
-            <p>Tags will be here</p>
+          <div id="tags" className={`${styles.section} ${styles.tags}`}>
+            <Tag text="$$ Mid-range" color="green" />
+            <Tag text="Seasonal Tourism" color="blue" />
+            <Tag text="Nature & Adventure" color="orange" />
+            <Tag text="$$ Mid-range" color="green" />
+            <Tag text="Seasonal Tourism" color="blue" />
+            <Tag text="Nature & Adventure" color="orange" />
           </div>
           <div id="images" className={styles.section}>
             <h2>Images</h2>
