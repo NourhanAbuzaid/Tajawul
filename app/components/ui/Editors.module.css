@@ -1,0 +1,19 @@
+.container {
+  display: flex;
+  gap: 4px;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.important {
+  color: var(--Neutrals-Black-Text, #221a14);
+  font-family: "DM Sans";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+.names {
+  text-align: left;
+}

@@ -6,10 +6,20 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import Divider from "@mui/material/Divider";
+import Avatar from "@mui/material/Avatar";
+import Editors from "@/components/ui/Editors";
 import Rating from "@/components/ui/Rating";
 import OpenClose from "@/components/ui/OpenClose";
 import Stats from "@/components/ui/Stats";
 import Link from "next/link";
+
+const fakeEditors = [
+  { id: 1, name: "Remy Sharp", url: "/static/images/avatar/1.jpg" },
+  { id: 2, name: "Travis Howard", url: "/static/images/avatar/2.jpg" },
+  { id: 3, name: "Cindy Baker", url: "/static/images/avatar/3.jpg" },
+  { id: 4, name: "Agnes Walker", url: "/static/images/avatar/4.jpg" },
+  { id: 5, name: "Trevor Henderson", url: "/static/images/avatar/5.jpg" },
+];
 
 export default function DestinationPage() {
   return (
@@ -143,6 +153,36 @@ export default function DestinationPage() {
               scelerisque lorem. Nulla facilisi. Nullam nec scelerisque lorem.
               Nulla facilisi. Nullam nec scelerisque lorem.
             </p>
+            <Divider
+              sx={{
+                height: "1px",
+                width: "100%",
+                bgcolor: "var(--Neutrals-Light-Outline)",
+              }}
+            />
+            <span>
+              <strong className={styles.important}>Established At:</strong>{" "}
+              14/2/2024
+            </span>
+          </div>
+          <div
+            id="contributers"
+            className={`${styles.section} ${styles.contributers}`}
+          >
+            <h2>Contributers</h2>
+            <div className={styles.creator}>
+              <Avatar alt="Remy Sharp" src="" sx={{ width: 56, height: 56 }} />
+              <span className={styles.important}>Created By</span>
+              <span>@creator_username</span>
+            </div>
+            <Divider
+              sx={{
+                height: "1px",
+                width: "100%",
+                bgcolor: "var(--Neutrals-Light-Outline)",
+              }}
+            />
+            <Editors editors={fakeEditors} />
           </div>
           <div id="location" className={styles.section}>
             <h2>Location</h2>
