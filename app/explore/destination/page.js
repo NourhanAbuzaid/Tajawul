@@ -5,8 +5,10 @@ import VerifiedIcon from "@mui/icons-material/Verified";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
+import Divider from "@mui/material/Divider";
 import Rating from "@/components/ui/Rating";
 import OpenClose from "@/components/ui/OpenClose";
+import Stats from "@/components/ui/Stats";
 import Link from "next/link";
 
 export default function DestinationPage() {
@@ -109,9 +111,38 @@ export default function DestinationPage() {
 
         {/* Right Column */}
         <div className={styles.rightColumn}>
-          <div id="about" className={styles.section}>
-            <h2>About</h2>
+          <div id="about" className={`${styles.section} ${styles.about}`}>
+            {/* Open/Close Time */}
             <OpenClose openTime="08:00" closeTime="22:00" />
+            <Divider
+              sx={{
+                height: "1px",
+                width: "100%",
+                bgcolor: "var(--Neutrals-Light-Outline)",
+              }}
+            />
+            {/* Destination Stats */}
+            <div className={styles.statsContainer}>
+              <Stats type="Followers" count={1200} />
+              <Stats type="Visitors" count={3500} />
+              <Stats type="Events" count={15} />
+            </div>
+            <Divider
+              sx={{
+                height: "1px",
+                width: "100%",
+                bgcolor: "var(--Neutrals-Light-Outline)",
+              }}
+            />
+            {/* About */}
+            <h2>About</h2>
+            <p className={styles.description}>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
+              tincidunt, nunc nec ultricies tincidunt, nisi eros luctus purus,
+              ac aliquam nunc felis vitae justo. Nulla facilisi. Nullam nec
+              scelerisque lorem. Nulla facilisi. Nullam nec scelerisque lorem.
+              Nulla facilisi. Nullam nec scelerisque lorem.
+            </p>
           </div>
           <div id="location" className={styles.section}>
             <h2>Location</h2>
