@@ -6,6 +6,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import Rating from "@/components/ui/Rating";
+import OpenClose from "@/components/ui/OpenClose";
 import Link from "next/link";
 
 export default function DestinationPage() {
@@ -110,7 +111,7 @@ export default function DestinationPage() {
         <div className={styles.rightColumn}>
           <div id="about" className={styles.section}>
             <h2>About</h2>
-            <p>About will be here</p>
+            <OpenClose openTime="08:00" closeTime="22:00" />
           </div>
           <div id="location" className={styles.section}>
             <h2>Location</h2>
