@@ -276,6 +276,11 @@
   margin-top: 6px;
 }
 
+.images {
+  border: none;
+  padding: 0px;
+}
+
 /*Mobile Responsive*/
 @media (max-width: 768px) {
   .saveButton {

@@ -11,6 +11,7 @@ import Editors from "@/components/ui/Editors";
 import Rating from "@/components/ui/Rating";
 import OpenClose from "@/components/ui/OpenClose";
 import Stats from "@/components/ui/Stats";
+import ImageList from "@/components/ui/ImageList";
 import Link from "next/link";
 
 const fakeEditors = [
@@ -24,6 +25,14 @@ const fakeEditors = [
   { id: 8, name: "Cindy Baker", url: "/static/images/avatar/3.jpg" },
   { id: 9, name: "Agnes Walker", url: "/static/images/avatar/4.jpg" },
   { id: 10, name: "Trevor Henderson", url: "/static/images/avatar/5.jpg" },
+];
+
+const fakeImages = [
+  "/Mena/Abu Dhabi.jpeg",
+  "/Mena/Alexandria.jpg",
+  "/Mena/Algeria.jpg",
+  "/Mena/Bahrain.jpg",
+  "/Mena/Dahab.jpeg",
 ];
 
 export default function DestinationPage() {
@@ -114,9 +123,8 @@ export default function DestinationPage() {
             <Tag text="Seasonal Tourism" color="blue" />
             <Tag text="Nature & Adventure" color="orange" />
           </div>
-          <div id="images" className={styles.section}>
-            <h2>Images</h2>
-            <p>Images will be here</p>
+          <div id="images" className={`${styles.section} ${styles.images}`}>
+            <ImageList images={fakeImages} />
           </div>
           <div id="posts" className={styles.section}>
             <h2>Posts</h2>
