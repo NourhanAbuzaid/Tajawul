@@ -19,6 +19,11 @@ const fakeEditors = [
   { id: 3, name: "Cindy Baker", url: "/static/images/avatar/3.jpg" },
   { id: 4, name: "Agnes Walker", url: "/static/images/avatar/4.jpg" },
   { id: 5, name: "Trevor Henderson", url: "/static/images/avatar/5.jpg" },
+  { id: 6, name: "Remy Sharp", url: "/static/images/avatar/1.jpg" },
+  { id: 7, name: "Travis Howard", url: "/static/images/avatar/2.jpg" },
+  { id: 8, name: "Cindy Baker", url: "/static/images/avatar/3.jpg" },
+  { id: 9, name: "Agnes Walker", url: "/static/images/avatar/4.jpg" },
+  { id: 10, name: "Trevor Henderson", url: "/static/images/avatar/5.jpg" },
 ];
 
 export default function DestinationPage() {
@@ -172,7 +177,7 @@ export default function DestinationPage() {
             <h2>Contributers</h2>
             <div className={styles.creator}>
               <Avatar alt="Remy Sharp" src="" sx={{ width: 56, height: 56 }} />
-              <span className={styles.important}>Created By</span>
+              <span className={styles.important}>Created By:</span>
               <span>@creator_username</span>
             </div>
             <Divider
