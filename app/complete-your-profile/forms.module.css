@@ -21,10 +21,11 @@
   position: absolute; /* Positions it relative to the parent */
   max-width: 550px;
   bottom: 0;
-  right: 0;
+  left: 0;
   z-index: -2; /* Keeps it behind all content */
   pointer-events: none; /* Avoids interference with clicks */
   opacity: 0.6;
+  transform: scaleX(-1);
 }
 
 .formFrame {

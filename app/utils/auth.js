@@ -27,17 +27,59 @@ export async function login(email, password) {
 
 export async function logout() {
   try {
-    const { accessToken, clearTokens } = useAuthStore.getState();
-    if (!accessToken) return; // ✅ Prevents unnecessary API calls
+    const { accessToken, refreshToken, clearTokens } = useAuthStore.getState();
 
-    await axios.post(
-      "/api/proxy/logout",
-      { token: accessToken }, // ✅ Send only the access token
-      { headers: { Authorization: `Bearer ${accessToken}` } } // ✅ Attach token in headers
-    );
+    if (!accessToken) {
+      console.warn("No access token available, logging out locally.");
+      clearTokens();
 
-    clearTokens(); // ✅ Clears tokens from Zustand & localStorage
-    // 🔹 Redirect to login page
+      return;
+    }
+
+    // Try refreshing the token if accessToken is expired
+    try {
+      await axios.post(
+        "/api/proxy/logout",
+        { token: accessToken },
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
+    } catch (logoutError) {
+      if (logoutError.response?.status === 401) {
+        console.warn("Access token expired, attempting refresh...");
+
+        // Try refreshing the token before retrying logout
+        try {
+          const refreshResponse = await axios.post("/api/proxy/refreshToken", {
+            refreshToken,
+          });
+          const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
+            refreshResponse.data;
+
+          useAuthStore.getState().setTokens(newAccessToken, newRefreshToken);
+
+          // Retry logout with the new access token
+          await axios.post(
+            "/api/proxy/logout",
+            { token: newAccessToken },
+            {
+              headers: { Authorization: `Bearer ${newAccessToken}` },
+            }
+          );
+        } catch (refreshError) {
+          console.error("Refresh token also expired, logging out...");
+          clearTokens();
+
+          return;
+        }
+      } else {
+        throw logoutError; // Handle other errors
+      }
+    }
+
+    // If logout API succeeds, clear stored tokens
+    clearTokens();
     window.location.href = "/login";
   } catch (error) {
     console.error("Logout failed:", error);
