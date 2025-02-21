@@ -3,8 +3,17 @@
 import styles from "../forms.module.css";
 import Input from "app/components/ui/Input";
 import { RadioGroup, RadioGroupItem } from "app/components/ui/RadioGroup";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { stepOneSchema } from "./actions";
+
+// Utility function for debouncing
+const debounce = (func, delay) => {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), delay);
+  };
+};
 
 export default function StepOneForm() {
   const [formData, setFormData] = useState({
@@ -20,7 +29,7 @@ export default function StepOneForm() {
 
   const [errors, setErrors] = useState({});
 
-  // 🟢 Load saved form data from local storage
+  // Load saved form data from local storage
   useEffect(() => {
     const savedData = localStorage.getItem("stepOneForm");
     if (savedData) {
@@ -28,37 +37,42 @@ export default function StepOneForm() {
     }
   }, []);
 
-  // 🟢 Save to local storage whenever formData changes
-  useEffect(() => {
-    localStorage.setItem("stepOneForm", JSON.stringify(formData));
-  }, [formData]);
+  // Save form data to local storage with debounce
+  const saveToLocalStorage = useCallback(
+    debounce((data) => {
+      localStorage.setItem("stepOneForm", JSON.stringify(data));
+    }, 500),
+    []
+  );
 
-  // 🟢 Handle Input Changes and Validate Immediately
+  useEffect(() => {
+    saveToLocalStorage(formData);
+  }, [formData, saveToLocalStorage]);
+
+  // Handle Input Changes with Validation
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
 
-    // Validate the field and update errors
     try {
       stepOneSchema
         .pick({ [name]: stepOneSchema.shape[name] })
         .parse({ [name]: value });
-      setErrors((prev) => ({ ...prev, [name]: null })); // Clear error if valid
+      setErrors((prev) => ({ ...prev, [name]: null }));
     } catch (error) {
       setErrors((prev) => ({ ...prev, [name]: error.errors[0].message }));
     }
   };
 
-  // 🟢 Handle Radio Button Changes
+  // Handle Gender Selection
   const handleGenderChange = (value) => {
     setFormData((prev) => ({ ...prev, gender: value }));
   };
 
-  // 🟢 Handle Form Submission
+  // Handle Form Submission
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Validate all fields before proceeding
     const validation = stepOneSchema.safeParse(formData);
     if (!validation.success) {
       const newErrors = validation.error.format();
@@ -71,7 +85,6 @@ export default function StepOneForm() {
       return;
     }
 
-    // Move to next step (Modify this logic as needed)
     console.log("Moving to step 2 with data:", formData);
   };
 
@@ -81,6 +94,7 @@ export default function StepOneForm() {
         <Input
           label="Phone Number"
           id="phoneNumber"
+          description="Include country code if applicable."
           type="tel"
           required
           value={formData.phoneNumber}
@@ -139,7 +153,6 @@ export default function StepOneForm() {
           errorMsg={errors.nationality}
         />
 
-        {/* ✅ Fixed Gender Selection */}
         <div className={styles.genderContainer}>
           <span className={styles.label}>Gender</span>
           <RadioGroup
