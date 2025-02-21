@@ -2,6 +2,7 @@
 
 import styles from "../forms.module.css";
 import Input from "app/components/ui/Input";
+import { RadioGroup, RadioGroupItem } from "app/components/ui/RadioGroup";
 import { useState } from "react";
 
 export default function StepOneForm() {
@@ -79,14 +80,19 @@ export default function StepOneForm() {
           onChange={handleChange}
         />
 
-        <Input
-          label="Gender"
-          id="gender"
-          type="text"
-          required
-          description="Male, Female"
-          onChange={handleChange}
-        />
+        <div className={styles.genderContainer}>
+          <span className={styles.label}>Gender</span>
+          <RadioGroup defaultValue="male">
+            <label style={{ display: "flex", alignItems: "center" }}>
+              <RadioGroupItem value="male" />
+              Male
+            </label>
+            <label style={{ display: "flex", alignItems: "center" }}>
+              <RadioGroupItem value="female" />
+              Female
+            </label>
+          </RadioGroup>
+        </div>
 
         <Input
           label="Preferred Language"

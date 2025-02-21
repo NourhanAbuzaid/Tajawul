@@ -97,6 +97,25 @@
   flex-direction: row;
 }
 
+.genderContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.label {
+  color: var(--Neutrals-Black-Text, #221a14);
+  font-family: Merriweather;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 120%; /* 19.2px */
+  width: 100%;
+  text-align: left;
+}
+
 .buttonContainer {
   display: flex;
   flex-direction: row;
