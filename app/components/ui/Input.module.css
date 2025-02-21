@@ -36,6 +36,11 @@
   align-self: stretch;
   border-radius: 12px;
   border: 1px solid var(--Neutrals-Light-Outline, #d5c3b5);
+  transition: border-color 0.2s ease;
+}
+
+.inputField:hover {
+  border-color: var(--Neutrals-Black-Text, #221a14);
 }
 
 .inputField.error {

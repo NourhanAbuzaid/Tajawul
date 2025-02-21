@@ -161,6 +161,7 @@
   border-radius: 12px;
   border: 1px solid var(--Neutrals-Light-Outline, #d5c3b5);
   margin: 4px 0;
+  transition: border 0.2s ease;
 }
 
 .formContainer input::placeholder {
@@ -170,6 +171,10 @@
   font-style: normal;
   font-weight: 300;
   line-height: 120%; /* 16.8px */
+}
+
+.formContainer input:hover {
+  border: 1px solid var(--Neutrals-Black-Text, #221a14);
 }
 
 .passwordContainer {
@@ -465,7 +470,7 @@
   right: 0;
   z-index: -1; /* Keeps it behind all content */
   pointer-events: none; /* Avoids interference with clicks */
-  opacity: 0.6;
+  opacity: 0.4;
 }
 
 @media (max-width: 768px) {

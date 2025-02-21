@@ -24,7 +24,7 @@
   left: 0;
   z-index: -2; /* Keeps it behind all content */
   pointer-events: none; /* Avoids interference with clicks */
-  opacity: 0.6;
+  opacity: 0.4;
   transform: scaleX(-1);
 }
 
