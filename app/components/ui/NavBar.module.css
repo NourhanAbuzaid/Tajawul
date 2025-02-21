@@ -10,7 +10,8 @@
   gap: 5%;
   flex-shrink: 0;
   border: 1.5px solid var(--Neutrals-Light-Outline, #d5c3b5);
-  background: var(--Beige-Perfect, #f3ddbb);
+  background: #f0dcbeeb;
+  backdrop-filter: blur(4px);
   box-shadow: 0px 1px 8px 0px rgba(38, 29, 28, 0.15);
   z-index: 1000; /* Ensures navbar stays on top */
   justify-content: space-evenly;
