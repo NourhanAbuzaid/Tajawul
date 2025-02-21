@@ -5,11 +5,9 @@ export default function Input({
   label,
   id,
   required,
-  pattern,
   type,
-  minLength,
-  min,
-  max,
+  value,
+  onChange,
   description,
   errorMsg,
 }) {
@@ -27,14 +25,10 @@ export default function Input({
         name={id}
         id={id}
         required={required}
-        pattern={pattern}
-        minLength={minLength}
-        min={min}
-        max={max}
+        value={value}
+        onChange={onChange}
       />
-      <div className={styles.inputError}>
-        {errorMsg && <span>{errorMsg}</span>}
-      </div>
+      {errorMsg && <div className={styles.inputError}>{errorMsg}</div>}
     </div>
   );
 }
