@@ -33,6 +33,7 @@ const RadioGroupItem = React.forwardRef(({ style, ...props }, ref) => {
           borderRadius: "50%",
           border: "1px solid currentColor",
           color: "var(--Green-Perfect)",
+          backgroundColor: "transparent",
           outline: "none",
           opacity: props.disabled ? 0.5 : 1,
           cursor: props.disabled ? "not-allowed" : "pointer",
