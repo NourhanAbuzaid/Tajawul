@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import DestinationCard from "@/components/ui/DestinationCard";
+import styles from "@/Explore.module.css";
 
 export default function ExplorePage() {
   const [destinations, setDestinations] = useState([]);
@@ -28,7 +29,7 @@ export default function ExplorePage() {
   }, []);
 
   return (
-    <div className="container">
+    <div className={styles.destinationContainer}>
       {loading && <p>Loading destinations...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
       {!loading && !error && destinations.length === 0 && (
