@@ -6,7 +6,6 @@ import Rating from "./Rating";
 import Tag from "./Tag";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import PlaceIcon from "@mui/icons-material/Place";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 const DestinationCard = ({
