@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 import styles from "./DestinationCard.module.css";
 import Rating from "./Rating";
 import Tag from "./Tag";
@@ -24,7 +23,7 @@ const DestinationCard = ({
   return (
     <div className={styles.card}>
       <div className={styles.imageWrapper}>
-        <Image src={image} alt={name} layout="fill" objectFit="cover" />
+        <img src={image} alt={name} />
         <button className={styles.wishlistButton} onClick={onWishlist}>
           <FavoriteBorderIcon sx={{ color: "var(--Neutrals-Background)" }} />
         </button>
