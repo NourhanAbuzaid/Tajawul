@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import DestinationCard from "@/components/ui/DestinationCard";
 import styles from "@/Explore.module.css";
+import Loading from "@/components/ui/Loading";
 
 export default function ExplorePage() {
   const [destinations, setDestinations] = useState([]);
@@ -30,7 +31,7 @@ export default function ExplorePage() {
 
   return (
     <div className={styles.destinationContainer}>
-      {loading && <p>Loading destinations...</p>}
+      {loading && <Loading />}
       {error && <p style={{ color: "red" }}>{error}</p>}
       {!loading && !error && destinations.length === 0 && (
         <p>No destinations found.</p>
@@ -42,7 +43,7 @@ export default function ExplorePage() {
             key={destination.destinationId}
             image={destination.coverImage}
             name={destination.name}
-            description={destination.description}
+            type={destination.type}
             location={`${destination.city}, ${destination.country}`}
             typeIcon={null} // Adjust if needed
             rating={destination.averageRating}

@@ -11,7 +11,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 const DestinationCard = ({
   image,
   name,
-  description,
+  type,
   location,
   typeIcon,
   rating,
@@ -36,7 +36,7 @@ const DestinationCard = ({
           <span className={styles.name}>{name}</span>
           <div className={styles.description}>
             <span className={styles.typeIcon}>{typeIcon}</span>
-            {description}
+            {type}
           </div>
           <div className={styles.rating}>
             <Rating average={rating} /> <span>{ratingCount}</span>
