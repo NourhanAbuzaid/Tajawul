@@ -38,13 +38,9 @@ export async function logout() {
 
     // Try refreshing the token if accessToken is expired
     try {
-      await axios.post(
-        "/api/proxy/logout",
-        { token: accessToken },
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        }
-      );
+      await axios.post("/api/proxy/logout", {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
     } catch (logoutError) {
       if (logoutError.response?.status === 401) {
         console.warn("Access token expired, attempting refresh...");
