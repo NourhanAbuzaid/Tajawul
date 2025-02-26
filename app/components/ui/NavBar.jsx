@@ -20,7 +20,7 @@ export default function NavBar() {
     <nav className={styles.navBar}>
       <div className={styles.logoTransFrame}>
         <Link
-          className={`${styles.navItem} ${
+          className={`${styles.homeItem} ${
             pathname === "/" ? styles.active : ""
           }`}
           href="/"
@@ -42,7 +42,7 @@ export default function NavBar() {
 
       {/* 🔹 Trips Dropdown - Opens/Closes on Hover */}
       <div className={styles.dropdownContainer}>
-        <button className={styles.navItem} aria-label="Trips">
+        <button className={styles.dropItem} aria-label="Trips">
           Trips{" "}
           <KeyboardArrowDownIcon
             className={styles.arrowIcon}

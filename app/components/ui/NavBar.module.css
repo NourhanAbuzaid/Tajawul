@@ -30,10 +30,33 @@
   font-style: normal;
   font-weight: 700;
   line-height: 120%;
+  height: 60px;
+  transition: color 0.3s ease;
+}
+
+.homeItem {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 60px;
+}
+
+.dropItem {
   background-color: transparent;
   border: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  color: var(--Neutrals-Black-Text, #221a14);
+  font-family: Merriweather;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 120%;
   height: 70px;
-  transition: color 0.3s ease;
 }
 
 .navItem:hover {
@@ -42,16 +65,13 @@
 
 .navItem.active {
   color: var(--Green-Hover);
+  border-bottom: var(--Green-Hover) 2px solid;
 }
 
 /* 🔹 Fix Arrow Rotation Issue */
 .arrowIcon {
   transform: rotate(0deg); /* Ensure default state */
   transition: transform 0.4s ease; /* Smooth transition */
-}
-
-.navItem:hover .arrowIcon {
-  transform: rotate(180deg);
 }
 
 /* 🔹 Keep Arrow Rotated When Dropdown is Open */
