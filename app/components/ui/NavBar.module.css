@@ -17,20 +17,46 @@
   justify-content: space-evenly;
 }
 
+/* 🔹 General Navigation Item */
 .navItem {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
-  gap: 5px;
+  gap: 8px;
   color: var(--Neutrals-Black-Text, #221a14);
   font-family: Merriweather;
   font-size: 16px;
   font-style: normal;
   font-weight: 700;
-  line-height: 120%; /* 19.2px */
+  line-height: 120%;
   background-color: transparent;
   border: none;
+  height: 70px;
+  transition: color 0.3s ease;
+}
+
+.navItem:hover {
+  color: var(--Green-Hover);
+}
+
+.navItem.active {
+  color: var(--Green-Hover);
+}
+
+/* 🔹 Fix Arrow Rotation Issue */
+.arrowIcon {
+  transform: rotate(0deg); /* Ensure default state */
+  transition: transform 0.4s ease; /* Smooth transition */
+}
+
+.navItem:hover .arrowIcon {
+  transform: rotate(180deg);
+}
+
+/* 🔹 Keep Arrow Rotated When Dropdown is Open */
+.dropdownContainer:hover .arrowIcon {
+  transform: rotate(180deg);
 }
 
 .loginFrame {
@@ -63,14 +89,25 @@
   border: none;
 }
 
-/* 🔹 Container for the dropdown */
+/* 🔹 Dropdown Container */
 .dropdownContainer {
   position: relative;
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
 }
 
-/* 🔹 Dropdown menu */
+.dropdownContainer:hover .dropdownMenu,
+.dropdownContainer:hover .dropdownMenuAvatar {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 🔹 Dropdown Menu Styling */
 .dropdownMenu {
+  display: flex;
+  flex-direction: column;
   position: absolute;
   top: 100%;
   left: 0;
@@ -80,36 +117,38 @@
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
   padding: 8px 0;
   min-width: 180px;
-  display: flex;
-  flex-direction: column;
-  z-index: 1000;
-  margin-top: 24px;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: visibility 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
   text-align: left;
 }
 
+/* 🔹 Dropdown Menu for Avatar */
 .dropdownMenuAvatar {
+  display: flex;
+  flex-direction: column;
   position: absolute;
   top: 100%;
-  right: 0; /* ✅ Align dropdown to the right edge of the avatar */
+  right: 0;
   background-color: var(--Beige-Perfect, #f3ddbb);
   border: 1px solid var(--Neutrals-Light-Outline, #d5c3b5);
   border-radius: 12px;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
   padding: 8px 0;
   min-width: 140px;
-  display: flex;
-  flex-direction: column;
-  z-index: 1000;
-  margin-top: 14px; /* ✅ Reduced gap for better positioning */
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: visibility 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
   text-align: left;
 }
 
-/* 🔹 Dropdown items */
+/* 🔹 Dropdown Items */
 .dropdownItem {
   padding: 10px 15px;
   font-family: Merriweather;
   font-size: 16px;
-  font-style: normal;
   font-weight: 700;
   color: var(--Neutrals-Black-Text, #221a14);
   text-decoration: none;

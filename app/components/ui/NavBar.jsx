@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect, useRef } from "react"; // ✅ Import useRef for click detection
+import { usePathname } from "next/navigation"; // ✅ Import usePathname for active link detection
 import useAuthStore from "@/store/authStore"; // ✅ Import Zustand store
 import Logo from "./Logo";
 import TranslationShortcut from "./TranslationShortcut";
 import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import Avatar from "@mui/material/Avatar";
 import Button from "./Button";
 import styles from "./NavBar.module.css";
@@ -13,70 +14,67 @@ import LogoutButton from "@/components/ui/LogoutButton"; // ✅ Import the Logou
 
 export default function NavBar() {
   const { accessToken } = useAuthStore(); // ✅ Get authentication state
-
-  const [isTripsDropdownOpen, setIsTripsDropdownOpen] = useState(false); // ✅ State for "Trips" dropdown
-  const [isAvatarDropdownOpen, setIsAvatarDropdownOpen] = useState(false); // ✅ State for Avatar dropdown
-
-  const tripsDropdownRef = useRef(null); // ✅ Reference for Trips dropdown
-  const avatarDropdownRef = useRef(null); // ✅ Reference for Avatar dropdown
-
-  // ✅ Close dropdowns when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        tripsDropdownRef.current &&
-        !tripsDropdownRef.current.contains(event.target)
-      ) {
-        setIsTripsDropdownOpen(false);
-      }
-      if (
-        avatarDropdownRef.current &&
-        !avatarDropdownRef.current.contains(event.target)
-      ) {
-        setIsAvatarDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  const pathname = usePathname(); // ✅ Get current pathname
 
   return (
     <nav className={styles.navBar}>
       <div className={styles.logoTransFrame}>
-        <Link className={styles.navItem} href="/.">
+        <Link
+          className={`${styles.navItem} ${
+            pathname === "/" ? styles.active : ""
+          }`}
+          href="/"
+          aria-label="Home"
+        >
           <Logo />
         </Link>
         <TranslationShortcut />
       </div>
-      <Link className={styles.navItem} href="/explore">
+      <Link
+        className={`${styles.navItem} ${
+          pathname === "/explore" ? styles.active : ""
+        }`}
+        href="/explore"
+        aria-label="Explore"
+      >
         Explore
       </Link>
 
-      {/* 🔹 Trips Dropdown - Opens/Closes on Click */}
-      <div className={styles.dropdownContainer} ref={tripsDropdownRef}>
-        <button
-          className={styles.navItem}
-          onClick={() => setIsTripsDropdownOpen((prev) => !prev)}
-        >
-          Trips ▾
+      {/* 🔹 Trips Dropdown - Opens/Closes on Hover */}
+      <div className={styles.dropdownContainer}>
+        <button className={styles.navItem} aria-label="Trips">
+          Trips{" "}
+          <KeyboardArrowDownIcon
+            className={styles.arrowIcon}
+            sx={{ fontSize: 18 }}
+          />
         </button>
-        {isTripsDropdownOpen && (
-          <div className={styles.dropdownMenu}>
-            <Link href="/triphub" className={styles.dropdownItem}>
-              TripHub
-            </Link>
-            <Link href="/create-trip" className={styles.dropdownItem}>
-              Create New Trip
-            </Link>
-          </div>
-        )}
+        <div className={styles.dropdownMenu}>
+          <Link href="/triphub" className={styles.dropdownItem}>
+            TripHub
+          </Link>
+          <Link href="/create-trip" className={styles.dropdownItem}>
+            Create New Trip
+          </Link>
+        </div>
       </div>
 
-      <Link className={styles.navItem} href="/.">
+      <Link
+        className={`${styles.navItem} ${
+          pathname === "/connect" ? styles.active : ""
+        }`}
+        href="/connect"
+        aria-label="Connect"
+      >
         Connect
       </Link>
-      <Link className={styles.navItem} href="/.">
+      <Link
+        className={`${styles.navItem} ${
+          pathname === "/about" ? styles.active : ""
+        }`}
+        href="/about"
+        aria-label="About"
+      >
         About
       </Link>
 
@@ -101,13 +99,11 @@ export default function NavBar() {
         <div className={styles.profileFrame}>
           <CircleNotificationsIcon
             sx={{ width: 48, height: 48, color: "var(--Neutrals-Black-Text)" }}
+            aria-label="Notifications"
           />
           {/* 🔹 Avatar Dropdown */}
-          <div className={styles.dropdownContainer} ref={avatarDropdownRef}>
-            <button
-              onClick={() => setIsAvatarDropdownOpen((prev) => !prev)}
-              className={styles.avatarButton}
-            >
+          <div className={styles.dropdownContainer}>
+            <button className={styles.avatarButton} aria-label="Profile">
               <Avatar
                 sx={{
                   width: 40,
@@ -118,17 +114,15 @@ export default function NavBar() {
                 OP
               </Avatar>
             </button>
-            {isAvatarDropdownOpen && (
-              <div className={styles.dropdownMenuAvatar}>
-                <Link href="/profile" className={styles.dropdownItem}>
-                  Profile
-                </Link>
-                <Link href="/settings" className={styles.dropdownItem}>
-                  Settings
-                </Link>
-                <LogoutButton className={styles.dropdownItem} />
-              </div>
-            )}
+            <div className={styles.dropdownMenuAvatar}>
+              <Link href="/profile" className={styles.dropdownItem}>
+                Profile
+              </Link>
+              <Link href="/settings" className={styles.dropdownItem}>
+                Settings
+              </Link>
+              <LogoutButton className={styles.dropdownItem} />
+            </div>
           </div>
         </div>
       )}
