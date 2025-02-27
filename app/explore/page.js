@@ -5,7 +5,7 @@ import styles from "@/Explore.module.css";
 
 export default async function ExplorePage() {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"; // ✅ Ensure absolute URL
+    const baseUrl = "https://tajawul.vercel.app" || "http://localhost:3000"; // ✅ Ensure absolute URL
     const response = await axios.get(`${baseUrl}/api/proxy/getDestinations`, {
       next: { revalidate: 120 },
     });
