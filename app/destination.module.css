@@ -265,6 +265,11 @@
   margin-bottom: 4px;
 }
 
+.location p {
+  text-align: left;
+  margin-top: 20px;
+}
+
 .contributers {
   display: flex;
   gap: 20px;

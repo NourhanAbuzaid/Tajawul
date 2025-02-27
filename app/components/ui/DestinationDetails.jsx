@@ -51,14 +51,6 @@ export default async function DestinationDetails({ destinationId }) {
     { id: 10, name: "Trevor Henderson", url: "/static/images/avatar/5.jpg" },
   ];
 
-  const fakeImages = [
-    "/Mena/Abu Dhabi.jpeg",
-    "/Mena/Alexandria.jpg",
-    "/Mena/Algeria.jpg",
-    "/Mena/Bahrain.jpg",
-    "/Mena/Dahab.jpeg",
-  ];
-
   return (
     <div>
       <div className={styles.coverWrapper}>
@@ -155,7 +147,7 @@ export default async function DestinationDetails({ destinationId }) {
             <Tag text="Nature & Adventure" color="orange" />
           </div>
           <div id="images" className={`${styles.section} ${styles.images}`}>
-            <ImageList images={fakeImages} />
+            <ImageList images={destination.images} />
           </div>
           <div id="posts" className={styles.section}>
             <h2>Posts</h2>
@@ -216,9 +208,13 @@ export default async function DestinationDetails({ destinationId }) {
           >
             <h2>Contributers</h2>
             <div className={styles.creator}>
-              <Avatar alt="Remy Sharp" src="" sx={{ width: 56, height: 56 }} />
+              <Avatar
+                alt={destination.creator[1]}
+                src={destination.creator[2]}
+                sx={{ width: 56, height: 56 }}
+              />
               <span className={styles.important}>Created By:</span>
-              <span>@creator_username</span>
+              <span>{destination.creator[1]}</span>
             </div>
             <Divider
               sx={{
@@ -229,10 +225,13 @@ export default async function DestinationDetails({ destinationId }) {
             />
             <Editors editors={fakeEditors} />
           </div>
-          <div id="location" className={styles.section}>
+          <div id="location" className={`${styles.section} ${styles.location}`}>
             <h2>Location</h2>
-            <p>Location will be here</p>
+            <p>
+              {destination.locations?.[0]?.address || "Location not available"}
+            </p>
           </div>
+
           <div id="events" className={styles.section}>
             <h2>Upcoming Events</h2>
             <p>Events will be here</p>
