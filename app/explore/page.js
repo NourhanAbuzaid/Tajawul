@@ -1,58 +1,42 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import axios from "axios";
 import DestinationCard from "@/components/ui/DestinationCard";
 import styles from "@/Explore.module.css";
-import Loading from "@/components/ui/Loading";
 
-export default function ExplorePage() {
-  const [destinations, setDestinations] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const router = useRouter();
+export default async function ExplorePage() {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"; // ✅ Ensure absolute URL
+    const response = await axios.get(`${baseUrl}/api/proxy/getDestinations`, {
+      next: { revalidate: 120 },
+    });
 
-  useEffect(() => {
-    const fetchDestinations = async () => {
-      try {
-        const response = await axios.get("/api/proxy/getDestinations");
-        setDestinations(response.data.destinations || []);
-      } catch (err) {
-        console.error("Error fetching destinations:", err);
-        setError("Failed to load destinations.");
-      } finally {
-        setLoading(false);
-      }
-    };
+    const destinations = response.data.destinations || [];
 
-    fetchDestinations();
-  }, []);
+    return (
+      <div className={styles.destinationContainer}>
+        {destinations.length === 0 && <p>No destinations found.</p>}
 
-  return (
-    <div className={styles.destinationContainer}>
-      {loading && <Loading />}
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {!loading && !error && destinations.length === 0 && (
-        <p>No destinations found.</p>
-      )}
-      {!loading &&
-        !error &&
-        destinations.map((destination) => (
-          <DestinationCard
+        {destinations.map((destination) => (
+          <Link
             key={destination.destinationId}
-            image={destination.coverImage}
-            name={destination.name}
-            type={destination.type}
-            location={`${destination.city}, ${destination.country}`}
-            typeIcon={null} // Adjust if needed
-            rating={destination.averageRating}
-            ratingCount={destination.reviewsCount}
-            priceRange={destination.priceRange}
-            onOpen={() => router.push(`/explore/${destination.destinationId}`)}
-            onWishlist={() => alert(`Added ${destination.name} to wishlist!`)}
-          />
+            href={`/explore/${destination.destinationId}`}
+          >
+            <DestinationCard
+              image={destination.coverImage}
+              name={destination.name}
+              type={destination.type}
+              location={`${destination.city}, ${destination.country}`}
+              typeIcon={null} // Adjust if needed
+              rating={destination.averageRating}
+              ratingCount={destination.reviewsCount}
+              priceRange={destination.priceRange}
+            />
+          </Link>
         ))}
-    </div>
-  );
+      </div>
+    );
+  } catch (error) {
+    console.error("Error fetching destinations:", error);
+    return <p style={{ color: "red" }}>Failed to load destinations.</p>;
+  }
 }

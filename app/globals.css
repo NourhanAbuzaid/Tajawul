@@ -189,5 +189,5 @@ h6 {
 }
 
 .star.empty {
-  color: var(--Neutrals-Background, #fffbf4);
+  color: var(--Green-Hover, #5c9c92);
 }
