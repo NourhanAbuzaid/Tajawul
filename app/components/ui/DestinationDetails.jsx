@@ -15,20 +15,27 @@ import Tag from "@/components/ui/Tag";
 import styles from "@/destination.module.css";
 
 export default async function DestinationDetails({ destinationId }) {
-  await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulating delay
+  await new Promise((resolve) => setTimeout(resolve, 2000));
 
-  let destination = null;
+  const baseUrl = "https://tajawul.vercel.app" || "http://localhost:3000";
+
+  let destination = null; // ✅ Ensure destination is defined
 
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"; // Use an absolute base URL
-    const response = await axios.get(
-      `${baseUrl}/api/proxy/getDestinations?DestinationId=${destinationId}`
+    const { data } = await axios.get(`${baseUrl}/api/proxy/getDestinations`, {
+      params: { DestinationId: destinationId },
+    });
+
+    // ✅ Extract the specific destination
+    destination = data.destinations?.find(
+      (dest) => dest.destinationId === destinationId
     );
 
-    destination = response.data; // ✅ Axios automatically parses JSON
+    if (!destination) throw new Error("Destination not found");
+
+    console.log("Destination Details:", destination);
   } catch (error) {
     console.error("Failed to fetch destination details:", error);
-    return <p>Error loading destination details. Please try again later.</p>;
   }
 
   const fakeEditors = [
@@ -56,14 +63,15 @@ export default async function DestinationDetails({ destinationId }) {
     <div>
       <div className={styles.coverWrapper}>
         <div className={styles.destinationCover}>
-          {/* Destination Cover*/}
-          <Image
-            src="/Tunisia.jpg"
-            alt="Destination is Tunisia"
-            fill={true}
-            style={{ objectFit: "cover" }}
-            priority
-          />
+          {destination?.coverImage && (
+            <Image
+              src={destination.coverImage}
+              alt={`Destination is ${destination.name}`}
+              fill={true}
+              style={{ objectFit: "cover" }}
+              priority
+            />
+          )}
         </div>
         {/* Content Above the Image */}
         <div className={styles.coverContent}>
@@ -72,11 +80,11 @@ export default async function DestinationDetails({ destinationId }) {
             <p>
               <span>All</span>
               <span className={styles.separator}>&gt;</span>
-              <span>Country</span>
+              <span>{destination.country}</span>
               <span className={styles.separator}>&gt;</span>
-              <span>City</span>
+              <span>{destination.city}</span>
               <span className={styles.separator}>&gt;</span>
-              <span>Destination Name</span>
+              <span>{destination.name}</span>
             </p>
           </div>
           <div className={styles.buttomContainer}>
@@ -89,7 +97,7 @@ export default async function DestinationDetails({ destinationId }) {
                 <p>Verified Destination</p>
               </div>
               {/* Destination Name */}
-              <h1 className={styles.destinationName}>Destination Name</h1>
+              <h1 className={styles.destinationName}>{destination.name}</h1>
               {/* Rating and Reviews Count */}
               <div className={styles.ratingContainer}>
                 <Rating average={3.7} />
