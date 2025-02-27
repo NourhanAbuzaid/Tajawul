@@ -254,6 +254,17 @@
   line-height: 130%; /* 20.8px */
 }
 
+.type {
+  text-align: left;
+  color: var(--Burgundy-Perfect, #8c2d2d);
+  font-family: "DM Sans";
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 130%; /* 20.8px */
+  margin-bottom: 4px;
+}
+
 .contributers {
   display: flex;
   gap: 20px;

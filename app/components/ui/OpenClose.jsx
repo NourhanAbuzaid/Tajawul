@@ -3,6 +3,9 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import styles from "./OpenClose.module.css";
 
 const OpenClose = ({ openTime, closeTime }) => {
+  // ✅ Extract only "hh:mm" from the provided time string
+  const formatTime = (timeStr) => timeStr?.slice(0, 5) || "N/A";
+
   const parseTime = (timeStr) => {
     const [hours, minutes] = timeStr.split(":").map(Number);
     return new Date().setHours(hours, minutes, 0, 0);
@@ -20,7 +23,7 @@ const OpenClose = ({ openTime, closeTime }) => {
         {isOpen ? "Open Now" : "Closed Now"}
       </div>
       <span>
-        • {openTime} - {closeTime}
+        • {formatTime(openTime)} - {formatTime(closeTime)}
       </span>
     </div>
   );

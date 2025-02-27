@@ -80,9 +80,9 @@ export default async function DestinationDetails({ destinationId }) {
             <p>
               <span>All</span>
               <span className={styles.separator}>&gt;</span>
-              <span>{destination.country}</span>
+              <span>country</span>
               <span className={styles.separator}>&gt;</span>
-              <span>{destination.city}</span>
+              <span>city</span>
               <span className={styles.separator}>&gt;</span>
               <span>{destination.name}</span>
             </p>
@@ -90,18 +90,25 @@ export default async function DestinationDetails({ destinationId }) {
           <div className={styles.buttomContainer}>
             <div className={styles.buttomLeftContainer}>
               {/* Is Verified */}
-              <div className={styles.verified}>
-                <VerifiedIcon
-                  sx={{ fontSize: "20px", color: "var(--Neutrals-Background)" }}
-                />
-                <p>Verified Destination</p>
-              </div>
+              {destination.isVerified && (
+                <div className={styles.verified}>
+                  <VerifiedIcon
+                    sx={{
+                      fontSize: "20px",
+                      color: "var(--Neutrals-Background)",
+                    }}
+                  />
+                  <p>Verified Destination</p>
+                </div>
+              )}
               {/* Destination Name */}
               <h1 className={styles.destinationName}>{destination.name}</h1>
               {/* Rating and Reviews Count */}
               <div className={styles.ratingContainer}>
-                <Rating average={3.7} />
-                <p className={styles.reviewsCount}>5,324 Reviews</p>
+                <Rating average={destination.averageRating} />
+                <p className={styles.reviewsCount}>
+                  {destination.reviewsCount} Reviews
+                </p>
               </div>
             </div>
             <div className={styles.buttomRightContainer}>
@@ -160,7 +167,10 @@ export default async function DestinationDetails({ destinationId }) {
         <div className={styles.rightColumn}>
           <div id="about" className={`${styles.section} ${styles.about}`}>
             {/* Open/Close Time */}
-            <OpenClose openTime="08:00" closeTime="22:00" />
+            <OpenClose
+              openTime={destination.openTime}
+              closeTime={destination.closeTime}
+            />
             <Divider
               sx={{
                 height: "1px",
@@ -183,13 +193,11 @@ export default async function DestinationDetails({ destinationId }) {
             />
             {/* About */}
             <h2>About</h2>
-            <p className={styles.description}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-              tincidunt, nunc nec ultricies tincidunt, nisi eros luctus purus,
-              ac aliquam nunc felis vitae justo. Nulla facilisi. Nullam nec
-              scelerisque lorem. Nulla facilisi. Nullam nec scelerisque lorem.
-              Nulla facilisi. Nullam nec scelerisque lorem.
-            </p>
+            <div>
+              <p className={styles.type}>{destination.type}</p>
+              <p className={styles.description}>{destination.description}</p>
+            </div>
+
             <Divider
               sx={{
                 height: "1px",
@@ -199,7 +207,7 @@ export default async function DestinationDetails({ destinationId }) {
             />
             <span>
               <strong className={styles.important}>Established At:</strong>{" "}
-              14/2/2024
+              {destination.establishedAt.slice(0, 10)}
             </span>
           </div>
           <div
