@@ -12,27 +12,22 @@ export const addDestinationSchema = z.object({
   city: z.string().optional(),
   openTime: z
     .string()
-    .regex(
-      /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/,
-      "Invalid time format (hh:mm:ss)"
-    ),
+    .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format (hh:mm)"),
   closeTime: z
     .string()
-    .regex(
-      /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/,
-      "Invalid time format (hh:mm:ss)"
-    ),
+    .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format (hh:mm)"),
   priceRange: z.enum(["low", "medium", "high"], "Invalid price range"),
-  contactInfo: z.array(
-    z.string().min(6, "Contact info must be at least 6 characters long")
-  ),
-  images: z.array(z.string().url("Each image must be a valid URL")).optional(),
+  contactInfo: z
+    .string()
+    .min(6, "Contact info must be at least 6 characters long"),
+  images: z.string().url("Each image must be a valid URL").optional(),
   address: z
     .string()
     .min(10, "Address must be at least 10 characters long")
     .max(200),
   socialMediaLinks: z
-    .array(z.string().url("Each social media link must be a valid URL"))
+    .string()
+    .url("Each social media link must be a valid URL")
     .optional(),
   establishedAt: z
     .string()

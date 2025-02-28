@@ -45,7 +45,7 @@ export default function NewPassPage() {
 
     // Password validation regex:
     const passwordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,}$/;
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.:#,])[A-Za-z\d@$!%*?&.:#,]{8,}$/;
 
     if (!passwordRegex.test(newPassword)) {
       setError(

@@ -25,7 +25,7 @@ export default function CreateDestinationForm() {
     openTime: "",
     closeTime: "",
     priceRange: "",
-    contactInfo: [],
+    contactInfo: "",
     images: [],
     address: "",
     socialMediaLinks: [],
