@@ -1,5 +1,6 @@
 import NavBar from "@/components/ui/NavBar";
 import styles from "@/forms.module.css";
+import CreateDestinationForm from "./CreateDestinationForm";
 
 export default function AddDestination() {
   return (
@@ -12,7 +13,8 @@ export default function AddDestination() {
           className={styles.svgPattern}
         />
         <div className={styles.formFrame}>
-          <p className={styles.title}>Add </p>
+          <p className={styles.title}>Add Destination</p>
+          <CreateDestinationForm />
         </div>
       </div>
     </div>
