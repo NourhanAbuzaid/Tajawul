@@ -1,0 +1,44 @@
+.container {
+  min-height: 100vh;
+  width: 100vw;
+  overflow-y: auto; /* Make the container scrollable */
+  align-items: stretch; /* Ensures both columns stay equal */
+  z-index: 0;
+}
+
+.coverWrapper {
+  width: 100vw;
+  position: relative;
+  overflow: hidden; /* Prevent scrolling */
+}
+
+.mainCover {
+  width: 100%;
+  height: 790px;
+  position: fixed; /* Fix the image position */
+  top: 0;
+  left: 0;
+  overflow: hidden;
+}
+
+/*The Gradient Overlay above the image*/
+.mainCover::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 1; /* Ensure it's above the image */
+}
+
+.sectionBelowImage {
+  position: absolute;
+  top: 680px;
+  width: 100vw;
+  height: 836px;
+  border-radius: 84px 84px 0px 0px;
+  z-index: 2; /* Above overlay */
+  background-color: var(--Neutrals-Background);
+}
