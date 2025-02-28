@@ -15,6 +15,8 @@ const postRoutes = {
   resendEmail: "http://tajawul.runasp.net/api/Auth/sendEmailVerification",
   refreshToken: "http://tajawul.runasp.net/api/Auth/refreshToken",
   logout: "http://tajawul.runasp.net/api/Auth/logout",
+
+  createDestination: "http://tajawul.runasp.net/api/Destination",
 };
 
 export async function GET(req) {
