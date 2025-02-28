@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "../forms.module.css";
+import styles from "@/forms.module.css";
 import Input from "app/components/ui/Input";
 import { RadioGroup, RadioGroupItem } from "app/components/ui/RadioGroup";
 import { useState, useEffect, useCallback } from "react";

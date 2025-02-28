@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "../forms.module.css";
+import styles from "@/forms.module.css";
 import Input from "app/components/ui/Input";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
