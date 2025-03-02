@@ -28,6 +28,17 @@
   margin-top: 2px;
 }
 
+/* 🔹 Search Input (Inside Dropdown) */
+.searchInput {
+  width: 100%;
+  border: none;
+  outline: none;
+  font-family: "DM Sans";
+  font-size: 14px;
+  background: transparent;
+  cursor: text;
+}
+
 /* 🔹 Dropdown Wrapper (Clickable) */
 .dropdownWrapper {
   position: relative;
@@ -44,9 +55,13 @@
   transition: border-color 0.2s ease;
 }
 
+.dropdownWrapper:hover {
+  border-color: var(--Neutrals-Black-Text);
+}
+
 /* 🔹 When Active */
 .dropdownWrapper.active {
-  border-color: var(--Neutrals-Black-Text, #221a14);
+  border: 2px solid var(--Neutrals-Black-Text);
 }
 
 /* 🔹 Selected Value */
@@ -79,8 +94,16 @@
   margin-top: 6px;
   z-index: 100;
   overflow-y: auto; /* ✅ Enables vertical scrolling */
+  display: flex;
+  flex-direction: column;
+  text-align: left;
   max-height: 160px; /* ✅ Restricts dropdown height */
   transition: all 0.3s ease-in-out;
+}
+
+.dropdownMenu div {
+  padding: 10px 16px;
+  font-size: 14px;
 }
 
 /* ✅ Optional: Customize the scrollbar */
@@ -101,7 +124,6 @@
   font-family: "DM Sans";
   font-size: 14px;
   text-align: left;
-  padding: 10px 16px;
   color: var(--Neutrals-Black-Text);
   cursor: pointer;
   transition: background 0.2s ease-in-out;

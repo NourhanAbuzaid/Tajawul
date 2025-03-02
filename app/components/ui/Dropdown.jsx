@@ -12,20 +12,30 @@ export default function Dropdown({
   options,
   description,
   errorMsg,
+  placeholder,
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [searchText, setSearchText] = useState("");
   const dropdownRef = useRef(null);
 
-  // ✅ Toggle Dropdown Open/Close
+  // Filter options based on search input
+  const filteredOptions = options.filter((opt) =>
+    opt.label.toLowerCase().includes(searchText.toLowerCase())
+  );
+
+  // Toggle dropdown
   const toggleDropdown = () => setIsOpen((prev) => !prev);
 
-  // ✅ Handle selection
+  // Select option
   const handleSelect = (selectedValue) => {
     onChange({ target: { name: id, value: selectedValue } });
-    setIsOpen(false); // Close dropdown after selection
+    setSearchText(
+      options.find((opt) => opt.value === selectedValue)?.label || ""
+    );
+    setIsOpen(false);
   };
 
-  // ✅ Close dropdown when clicking outside
+  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -55,11 +65,17 @@ export default function Dropdown({
         className={`${styles.dropdownWrapper} ${isOpen ? styles.active : ""}`}
         onClick={toggleDropdown}
       >
-        <div className={styles.selectedValue}>
-          {value
-            ? options.find((opt) => opt.value === value)?.label
-            : "Select an option"}
-        </div>
+        <input
+          type="text"
+          className={styles.searchInput}
+          value={searchText}
+          onChange={(e) => {
+            setSearchText(e.target.value);
+            setIsOpen(true);
+          }}
+          placeholder={placeholder}
+          autoComplete="off"
+        />
         <KeyboardArrowDownIcon
           className={`${styles.dropdownIcon} ${isOpen ? styles.rotated : ""}`}
         />
@@ -67,15 +83,19 @@ export default function Dropdown({
 
       {isOpen && (
         <div className={styles.dropdownMenu}>
-          {options.map((option, index) => (
-            <div
-              key={index}
-              className={styles.dropdownItem}
-              onClick={() => handleSelect(option.value)}
-            >
-              {option.label}
-            </div>
-          ))}
+          {filteredOptions.length > 0 ? (
+            filteredOptions.map((option, index) => (
+              <div
+                key={index}
+                className={styles.dropdownItem}
+                onClick={() => handleSelect(option.value)}
+              >
+                {option.label}
+              </div>
+            ))
+          ) : (
+            <div className={styles.noResults}>No results found</div>
+          )}
         </div>
       )}
 
