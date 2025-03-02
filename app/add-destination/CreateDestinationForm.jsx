@@ -38,19 +38,87 @@ export default function CreateDestinationForm() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
+  const [cities, setCities] = useState([]);
+  const [cityClicked, setCityClicked] = useState(false);
 
-  // Load saved form data from local storage
+  // Hardcoded list of Arab countries
+  const arabCountries = [
+    "Saudi Arabia",
+    "United Arab Emirates",
+    "Kuwait",
+    "Qatar",
+    "Bahrain",
+    "Oman",
+    "Yemen",
+    "Jordan",
+    "Syria",
+    "Lebanon",
+    "Palestine",
+    "Egypt",
+    "Iraq",
+    "Libya",
+    "Tunisia",
+    "Algeria",
+    "Morocco",
+    "Mauritania",
+    "Sudan",
+    "Djibouti",
+    "Somalia",
+    "Comoros",
+  ].map((country) => ({ value: country, label: country }));
+
+  useEffect(() => {
+    const fetchCities = async () => {
+      if (!formData.country) return;
+
+      console.log("Fetching cities for country:", formData.country); // ✅ Debugging
+
+      try {
+        const response = await fetch(
+          "https://countriesnow.space/api/v0.1/countries/cities",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ country: formData.country }),
+          }
+        );
+        const data = await response.json();
+
+        console.log("API Response:", data); // ✅ Debugging API Response
+
+        if (!data.data || data.error) {
+          throw new Error("Failed to load cities");
+        }
+
+        setCities(data.data.map((city) => ({ value: city, label: city })));
+        console.log("Updated Cities:", data.data); // ✅ Debugging Cities
+      } catch (error) {
+        console.error("Error fetching cities:", error);
+        setCities([]);
+      }
+    };
+
+    fetchCities();
+  }, [formData.country]); // ✅ Depend on country selection
+
   useEffect(() => {
     const savedData = localStorage.getItem("createDestinationForm");
     if (savedData) {
-      setFormData(JSON.parse(savedData));
+      setFormData((prev) => ({
+        ...JSON.parse(savedData),
+        country: "", // ✅ Reset country
+        city: "", // ✅ Reset city
+      }));
     }
   }, []);
 
-  // Save form data to local storage with debounce
   const saveToLocalStorage = useCallback(
     debounce((data) => {
-      localStorage.setItem("createDestinationForm", JSON.stringify(data));
+      const { country, city, ...filteredData } = data; // ✅ Exclude country & city
+      localStorage.setItem(
+        "createDestinationForm",
+        JSON.stringify(filteredData)
+      );
     }, 500),
     []
   );
@@ -61,7 +129,11 @@ export default function CreateDestinationForm() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+      ...(name === "country" ? { city: "" } : {}), // ✅ Reset city when country changes
+    }));
 
     try {
       addDestinationSchema
@@ -194,23 +266,31 @@ export default function CreateDestinationForm() {
           errorMsg={errors.coverImage}
         />
         <div className={styles.formRow}>
-          <Input
+          {/* Country Dropdown */}
+          <Dropdown
             label="Country"
             id="country"
-            type="text"
             required
             value={formData.country}
             onChange={handleChange}
+            options={arabCountries}
             errorMsg={errors.country}
           />
-          <Input
+          {/* City Dropdown (Disabled if no country is selected) */}
+          <Dropdown
             label="City"
             id="city"
-            type="text"
             required
             value={formData.city}
             onChange={handleChange}
-            errorMsg={errors.city}
+            options={cities}
+            errorMsg={
+              cityClicked && !formData.country
+                ? "Please Select a Country"
+                : errors.city
+            }
+            disabled={!formData.country || cities.length === 0}
+            onDropdownClick={() => setCityClicked(true)} // ✅ Pass this event
           />
         </div>
         <Input

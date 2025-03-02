@@ -41,6 +41,12 @@
   cursor: text;
 }
 
+.searchInput:disabled {
+  background: transparent;
+  cursor: not-allowed;
+  color: #aaa;
+}
+
 .noResults {
   color: var(--Neutrals-Medium-Outline);
 }
@@ -146,4 +152,18 @@
   margin-top: 2px;
   font-size: 0.875rem;
   color: #ef4444;
+}
+
+/* Style for Disabled Dropdown */
+.dropdownWrapper.disabled {
+  background: #f0f0f0; /* Light gray background */
+  border: 1px solid #ccc; /* Gray border */
+  color: #aaa; /* Dimmed text */
+  cursor: not-allowed;
+}
+
+/* 🔹 Prevent Hover Effect on Disabled Dropdown */
+.dropdownWrapper.disabled:hover {
+  border-color: #ccc !important; /* Ensures it overrides any hover effect */
+  cursor: not-allowed;
 }

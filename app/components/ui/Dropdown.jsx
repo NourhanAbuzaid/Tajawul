@@ -12,21 +12,21 @@ export default function Dropdown({
   options,
   description,
   errorMsg,
-  placeholder,
+  placeholder = "Select an option",
+  disabled = false,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
   const dropdownRef = useRef(null);
 
-  // Filter options based on search input
   const filteredOptions = options.filter((opt) =>
     opt.label.toLowerCase().includes(searchText.toLowerCase())
   );
 
-  // Toggle dropdown
-  const toggleDropdown = () => setIsOpen((prev) => !prev);
+  const toggleDropdown = () => {
+    if (!disabled) setIsOpen((prev) => !prev);
+  };
 
-  // Select option
   const handleSelect = (selectedValue) => {
     onChange({ target: { name: id, value: selectedValue } });
     setSearchText(
@@ -35,7 +35,6 @@ export default function Dropdown({
     setIsOpen(false);
   };
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -62,7 +61,9 @@ export default function Dropdown({
       </label>
 
       <div
-        className={`${styles.dropdownWrapper} ${isOpen ? styles.active : ""}`}
+        className={`${styles.dropdownWrapper} ${isOpen ? styles.active : ""} ${
+          disabled ? styles.disabled : ""
+        }`}
         onClick={toggleDropdown}
       >
         <input
@@ -70,12 +71,16 @@ export default function Dropdown({
           className={styles.searchInput}
           value={searchText}
           onChange={(e) => {
-            setSearchText(e.target.value);
-            setIsOpen(true);
+            if (!disabled) {
+              setSearchText(e.target.value);
+              setIsOpen(true);
+            }
           }}
           placeholder={placeholder}
           autoComplete="off"
+          disabled={disabled}
         />
+
         <KeyboardArrowDownIcon
           className={`${styles.dropdownIcon} ${isOpen ? styles.rotated : ""}`}
         />
