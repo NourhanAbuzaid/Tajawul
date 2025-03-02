@@ -3,6 +3,7 @@
 import styles from "@/forms.module.css";
 import Input from "app/components/ui/Input";
 import Textarea from "app/components/ui/Textarea";
+import Dropdown from "app/components/ui/Dropdown";
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { addDestinationSchema } from "./actions";
@@ -159,15 +160,21 @@ export default function CreateDestinationForm() {
           onChange={handleChange}
           errorMsg={errors.name}
         />
-        <Input
-          label="Type"
+        <Dropdown
+          label="Destination Type"
           id="type"
-          type="text"
           required
           value={formData.type}
           onChange={handleChange}
+          options={[
+            { value: "cafe", label: "Cafe" },
+            { value: "restaurant", label: "Restaurant" },
+            { value: "park", label: "Park" },
+            { value: "museum", label: "Museum" },
+          ]}
           errorMsg={errors.type}
         />
+
         <Textarea
           label="Description"
           id="description"
