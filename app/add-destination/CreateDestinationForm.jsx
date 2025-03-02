@@ -26,9 +26,9 @@ export default function CreateDestinationForm() {
     closeTime: "",
     priceRange: "",
     contactInfo: "",
-    images: [],
+    images: "",
     address: "",
-    socialMediaLinks: [],
+    socialMediaLinks: "",
     establishedAt: "",
   });
 
@@ -71,13 +71,35 @@ export default function CreateDestinationForm() {
     }
   };
 
+  const formatTime = (timeStr) => {
+    return timeStr ? `${timeStr}:00` : "";
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setSuccess("");
     setError("");
 
-    const validation = addDestinationSchema.safeParse(formData);
+    const formattedData = {
+      ...formData,
+      openTime: formatTime(formData.openTime),
+      closeTime: formatTime(formData.closeTime),
+      establishedAt: formData.establishedAt
+        ? new Date(formData.establishedAt).toISOString()
+        : "",
+      contactInfo: formData.contactInfo
+        ? formData.contactInfo.split(",").map((c) => c.trim())
+        : [],
+      images: formData.images
+        ? formData.images.split(",").map((img) => img.trim())
+        : [],
+      socialMediaLinks: formData.socialMediaLinks
+        ? formData.socialMediaLinks.split(",").map((link) => link.trim())
+        : [],
+    };
+
+    const validation = addDestinationSchema.safeParse(formattedData);
     if (!validation.success) {
       const newErrors = validation.error.format();
       setErrors(
@@ -93,7 +115,7 @@ export default function CreateDestinationForm() {
     try {
       const response = await axios.post(
         "/api/proxy/createDestination",
-        formData,
+        formattedData,
         {
           headers: { "Content-Type": "application/json" },
         }
@@ -211,7 +233,7 @@ export default function CreateDestinationForm() {
           errorMsg={errors.priceRange}
         />
         <Input
-          label="Contact Info"
+          label="Contact Info (comma-separated)"
           id="contactInfo"
           type="text"
           required
