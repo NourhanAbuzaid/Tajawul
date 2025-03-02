@@ -2,6 +2,7 @@
 
 import styles from "@/forms.module.css";
 import Input from "app/components/ui/Input";
+import Textarea from "app/components/ui/Textarea";
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { addDestinationSchema } from "./actions";
@@ -167,15 +168,15 @@ export default function CreateDestinationForm() {
           onChange={handleChange}
           errorMsg={errors.type}
         />
-        <Input
+        <Textarea
           label="Description"
           id="description"
-          type="text"
           required
           value={formData.description}
           onChange={handleChange}
           errorMsg={errors.description}
         />
+
         <Input
           label="Cover Image URL"
           id="coverImage"
