@@ -90,6 +90,15 @@
   color: var(--Neutrals-Black-Text, #221a14);
 }
 
+.subheader {
+  width: 100%;
+  text-align: left;
+  padding: 0px;
+  color: var(--Green-Perfect);
+  font-weight: 700;
+  font-size: 24px;
+}
+
 .formRow {
   display: flex;
   gap: 12px;

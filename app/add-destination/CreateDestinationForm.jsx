@@ -4,6 +4,7 @@ import styles from "@/forms.module.css";
 import Input from "app/components/ui/Input";
 import Textarea from "app/components/ui/Textarea";
 import Dropdown from "app/components/ui/Dropdown";
+import Divider from "@mui/material/Divider";
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { addDestinationSchema } from "./actions";
@@ -230,6 +231,15 @@ export default function CreateDestinationForm() {
   return (
     <div className={styles.formContainer}>
       <form className={styles.formWidth} onSubmit={handleSubmit}>
+        <h2 className={styles.subheader}>General Info</h2>
+        <Divider
+          sx={{
+            height: "1px",
+            width: "100%",
+            bgcolor: "var(--Green-Perfect)",
+            marginBottom: "20px",
+          }}
+        />
         <Input
           label="Destination Name"
           id="name"
@@ -239,21 +249,32 @@ export default function CreateDestinationForm() {
           onChange={handleChange}
           errorMsg={errors.name}
         />
-        <Dropdown
-          label="Destination Type"
-          id="type"
-          required
-          value={formData.type}
-          onChange={handleChange}
-          options={[
-            { value: "cafe", label: "Cafe" },
-            { value: "restaurant", label: "Restaurant" },
-            { value: "park", label: "Park" },
-            { value: "museum", label: "Museum" },
-          ]}
-          errorMsg={errors.type}
-        />
-
+        <div className={styles.formRow}>
+          <Dropdown
+            label="Destination Type"
+            id="type"
+            required
+            value={formData.type}
+            onChange={handleChange}
+            options={[
+              { value: "cafe", label: "Cafe" },
+              { value: "restaurant", label: "Restaurant" },
+              { value: "park", label: "Park" },
+              { value: "museum", label: "Museum" },
+            ]}
+            errorMsg={errors.type}
+          />
+          {/* Country Dropdown */}
+          <Dropdown
+            label="Country"
+            id="country"
+            required
+            value={formData.country}
+            onChange={handleChange}
+            options={arabCountries}
+            errorMsg={errors.country}
+          />
+        </div>
         <Textarea
           label="Description"
           id="description"
@@ -261,6 +282,131 @@ export default function CreateDestinationForm() {
           value={formData.description}
           onChange={handleChange}
           errorMsg={errors.description}
+        />
+        <Input
+          label="Established At"
+          id="establishedAt"
+          type="date"
+          required
+          value={formData.establishedAt}
+          onChange={handleChange}
+          errorMsg={errors.establishedAt}
+        />
+
+        <h2 className={styles.subheader}>Location Details</h2>
+        <Divider
+          sx={{
+            height: "1px",
+            width: "100%",
+            bgcolor: "var(--Green-Perfect)",
+            marginBottom: "20px",
+          }}
+        />
+
+        {/* City Dropdown (Disabled if no country is selected) */}
+        <Dropdown
+          label="City"
+          id="city"
+          required
+          value={formData.city}
+          onChange={handleChange}
+          options={cities}
+          errorMsg={
+            cityClicked && !formData.country
+              ? "Please Select a Country"
+              : errors.city
+          }
+          disabled={!formData.country || cities.length === 0}
+          onDropdownClick={() => setCityClicked(true)}
+        />
+
+        <Input
+          label="Address"
+          id="address"
+          type="text"
+          required
+          value={formData.address}
+          onChange={handleChange}
+          errorMsg={errors.address}
+        />
+
+        <h2 className={styles.subheader}>Operating Hours & Pricing</h2>
+        <Divider
+          sx={{
+            height: "1px",
+            width: "100%",
+            bgcolor: "var(--Green-Perfect)",
+            marginBottom: "20px",
+          }}
+        />
+
+        <div className={styles.formRow}>
+          <Input
+            label="Open Time"
+            id="openTime"
+            type="time"
+            required
+            value={formData.openTime}
+            onChange={handleChange}
+            errorMsg={errors.openTime}
+          />
+          <Input
+            label="Close Time"
+            id="closeTime"
+            type="time"
+            required
+            value={formData.closeTime}
+            onChange={handleChange}
+            errorMsg={errors.closeTime}
+          />
+        </div>
+        <Input
+          label="Price Range"
+          id="priceRange"
+          type="text"
+          required
+          value={formData.priceRange}
+          onChange={handleChange}
+          errorMsg={errors.priceRange}
+        />
+
+        <h2 className={styles.subheader}>Contact & Social Media</h2>
+        <Divider
+          sx={{
+            height: "1px",
+            width: "100%",
+            bgcolor: "var(--Green-Perfect)",
+            marginBottom: "20px",
+          }}
+        />
+        <Input
+          label="Contact Info (comma-separated)"
+          id="contactInfo"
+          type="text"
+          required
+          value={formData.contactInfo}
+          onChange={handleChange}
+          errorMsg={errors.contactInfo}
+        />
+
+        <Input
+          label="Social Media Links (comma-separated URLs)"
+          id="socialMediaLinks"
+          type="text"
+          required
+          value={formData.socialMediaLinks}
+          onChange={handleChange}
+          errorMsg={errors.socialMediaLinks}
+        />
+
+        <h2 className={styles.subheader}>Media</h2>
+        <Divider
+          sx={{
+            height: "1px",
+            width: "100%",
+            bgcolor: "var(--Green-Perfect)",
+            marginBottom: "20px",
+          }}
         />
 
         <Input
@@ -272,70 +418,6 @@ export default function CreateDestinationForm() {
           onChange={handleChange}
           errorMsg={errors.coverImage}
         />
-        <div className={styles.formRow}>
-          {/* Country Dropdown */}
-          <Dropdown
-            label="Country"
-            id="country"
-            required
-            value={formData.country}
-            onChange={handleChange}
-            options={arabCountries}
-            errorMsg={errors.country}
-          />
-          {/* City Dropdown (Disabled if no country is selected) */}
-          <Dropdown
-            label="City"
-            id="city"
-            required
-            value={formData.city}
-            onChange={handleChange}
-            options={cities}
-            errorMsg={
-              cityClicked && !formData.country
-                ? "Please Select a Country"
-                : errors.city
-            }
-            disabled={!formData.country || cities.length === 0}
-            onDropdownClick={() => setCityClicked(true)}
-          />
-        </div>
-        <Input
-          label="Open Time"
-          id="openTime"
-          type="time"
-          required
-          value={formData.openTime}
-          onChange={handleChange}
-          errorMsg={errors.openTime}
-        />
-        <Input
-          label="Close Time"
-          id="closeTime"
-          type="time"
-          required
-          value={formData.closeTime}
-          onChange={handleChange}
-          errorMsg={errors.closeTime}
-        />
-        <Input
-          label="Price Range"
-          id="priceRange"
-          type="text"
-          required
-          value={formData.priceRange}
-          onChange={handleChange}
-          errorMsg={errors.priceRange}
-        />
-        <Input
-          label="Contact Info (comma-separated)"
-          id="contactInfo"
-          type="text"
-          required
-          value={formData.contactInfo}
-          onChange={handleChange}
-          errorMsg={errors.contactInfo}
-        />
         <Input
           label="Images (comma-separated URLs)"
           id="images"
@@ -344,33 +426,6 @@ export default function CreateDestinationForm() {
           value={formData.images}
           onChange={handleChange}
           errorMsg={errors.images}
-        />
-        <Input
-          label="Address"
-          id="address"
-          type="text"
-          required
-          value={formData.address}
-          onChange={handleChange}
-          errorMsg={errors.address}
-        />
-        <Input
-          label="Social Media Links (comma-separated URLs)"
-          id="socialMediaLinks"
-          type="text"
-          required
-          value={formData.socialMediaLinks}
-          onChange={handleChange}
-          errorMsg={errors.socialMediaLinks}
-        />
-        <Input
-          label="Established At"
-          id="establishedAt"
-          type="date"
-          required
-          value={formData.establishedAt}
-          onChange={handleChange}
-          errorMsg={errors.establishedAt}
         />
 
         {success && <p className={styles.successMessage}>{success}</p>}
