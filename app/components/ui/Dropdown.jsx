@@ -19,6 +19,12 @@ export default function Dropdown({
   const [searchText, setSearchText] = useState("");
   const dropdownRef = useRef(null);
 
+  // ✅ Reset searchText when value changes (e.g., when the country is changed)
+  useEffect(() => {
+    const selectedOption = options.find((opt) => opt.value === value);
+    setSearchText(selectedOption ? selectedOption.label : "");
+  }, [value, options]);
+
   const filteredOptions = options.filter((opt) =>
     opt.label.toLowerCase().includes(searchText.toLowerCase())
   );

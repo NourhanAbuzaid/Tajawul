@@ -69,9 +69,12 @@ export default function CreateDestinationForm() {
 
   useEffect(() => {
     const fetchCities = async () => {
-      if (!formData.country) return;
+      if (!formData.country) {
+        setCities([]); // ✅ Clear cities if no country is selected
+        return;
+      }
 
-      console.log("Fetching cities for country:", formData.country); // ✅ Debugging
+      console.log("Fetching cities for country:", formData.country);
 
       try {
         const response = await fetch(
@@ -84,14 +87,14 @@ export default function CreateDestinationForm() {
         );
         const data = await response.json();
 
-        console.log("API Response:", data); // ✅ Debugging API Response
+        console.log("API Response:", data);
 
         if (!data.data || data.error) {
           throw new Error("Failed to load cities");
         }
 
         setCities(data.data.map((city) => ({ value: city, label: city })));
-        console.log("Updated Cities:", data.data); // ✅ Debugging Cities
+        console.log("Updated Cities:", data.data);
       } catch (error) {
         console.error("Error fetching cities:", error);
         setCities([]);
@@ -99,7 +102,7 @@ export default function CreateDestinationForm() {
     };
 
     fetchCities();
-  }, [formData.country]); // ✅ Depend on country selection
+  }, [formData.country]); // ✅ Fetch cities only when country changes
 
   useEffect(() => {
     const savedData = localStorage.getItem("createDestinationForm");
@@ -134,6 +137,10 @@ export default function CreateDestinationForm() {
       [name]: value,
       ...(name === "country" ? { city: "" } : {}), // ✅ Reset city when country changes
     }));
+
+    if (name === "country") {
+      setCities([]); // ✅ Clear cities when country is changed
+    }
 
     try {
       addDestinationSchema
@@ -290,7 +297,7 @@ export default function CreateDestinationForm() {
                 : errors.city
             }
             disabled={!formData.country || cities.length === 0}
-            onDropdownClick={() => setCityClicked(true)} // ✅ Pass this event
+            onDropdownClick={() => setCityClicked(true)}
           />
         </div>
         <Input
