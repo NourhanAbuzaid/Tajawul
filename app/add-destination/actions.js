@@ -16,7 +16,7 @@ export const addDestinationSchema = z.object({
   closeTime: z
     .string()
     .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format (hh:mm)"),
-  priceRange: z.enum(["low", "medium", "high"], "Invalid price range"),
+  priceRange: z.enum(["low", "mid-range", "luxury"], "Invalid price range"),
   contactInfo: z
     .string()
     .min(6, "Contact info must be at least 6 characters long"),

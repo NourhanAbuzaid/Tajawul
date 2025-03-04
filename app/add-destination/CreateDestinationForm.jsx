@@ -360,14 +360,18 @@ export default function CreateDestinationForm() {
             errorMsg={errors.closeTime}
           />
         </div>
-        <Input
+        <Dropdown
           label="Price Range"
           id="priceRange"
-          type="text"
           required
-          value={formData.priceRange}
+          value={formData.priceRange} // ✅ Corrected value
           onChange={handleChange}
-          errorMsg={errors.priceRange}
+          options={[
+            { value: "low", label: "$ Low" },
+            { value: "mid-range", label: "$$ Mid-range" },
+            { value: "luxury", label: "$$$ Luxury" },
+          ]}
+          errorMsg={errors.priceRange} // ✅ Corrected error message
         />
 
         <h2 className={styles.subheader}>Contact & Social Media</h2>
