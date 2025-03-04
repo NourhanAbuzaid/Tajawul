@@ -14,7 +14,7 @@ export default function Input({
   return (
     <div className={styles.inputContainer}>
       <label className={styles.inputLabel} htmlFor={id}>
-        {label}
+        {label} {required && <span className={styles.requiredMark}>*</span>}
         {description && (
           <span className={styles.inputDescription}>{description}</span>
         )}

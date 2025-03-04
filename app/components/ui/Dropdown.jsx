@@ -60,7 +60,7 @@ export default function Dropdown({
   return (
     <div className={styles.dropdownContainer} ref={dropdownRef}>
       <label className={styles.dropdownLabel} htmlFor={id}>
-        {label}
+        {label} {required && <span className={styles.requiredMark}>*</span>}
         {description && (
           <span className={styles.dropdownDescription}>{description}</span>
         )}

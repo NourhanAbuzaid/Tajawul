@@ -19,6 +19,11 @@
   margin-bottom: 6px;
 }
 
+.requiredMark {
+  color: #ef4444;
+  font-family: "DM Sans";
+}
+
 /* 🔹 Description */
 .dropdownDescription {
   font-family: "DM Sans";

@@ -13,7 +13,7 @@ export default function Textarea({
   return (
     <div className={styles.textareaContainer}>
       <label className={styles.textareaLabel} htmlFor={id}>
-        {label}
+        {label} {required && <span className={styles.requiredMark}>*</span>}
         {description && (
           <span className={styles.textareaDescription}>{description}</span>
         )}

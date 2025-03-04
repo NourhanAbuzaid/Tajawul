@@ -18,6 +18,11 @@
   margin-bottom: 2px;
 }
 
+.requiredMark {
+  color: #ef4444;
+  font-family: "DM Sans";
+}
+
 .textareaDescription {
   font-family: "DM Sans";
   font-size: 0.875rem;
