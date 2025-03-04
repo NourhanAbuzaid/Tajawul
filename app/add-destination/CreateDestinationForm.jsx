@@ -287,7 +287,6 @@ export default function CreateDestinationForm() {
           label="Established At"
           id="establishedAt"
           type="date"
-          required
           value={formData.establishedAt}
           onChange={handleChange}
           errorMsg={errors.establishedAt}
@@ -329,6 +328,27 @@ export default function CreateDestinationForm() {
           onChange={handleChange}
           errorMsg={errors.address}
         />
+
+        <div className={styles.formRow}>
+          <Input
+            label="Longitude"
+            id="longitude"
+            type="text"
+            required
+            value={formData.longitude}
+            onChange={handleChange}
+            errorMsg={errors.longitude}
+          />
+          <Input
+            label="Latitude"
+            id="latitude"
+            type="text"
+            required
+            value={formData.latitude}
+            onChange={handleChange}
+            errorMsg={errors.latitude}
+          />
+        </div>
 
         <h2 className={styles.subheader}>Operating Hours & Pricing</h2>
         <Divider
@@ -387,7 +407,6 @@ export default function CreateDestinationForm() {
           label="Contact Info (comma-separated)"
           id="contactInfo"
           type="text"
-          required
           value={formData.contactInfo}
           onChange={handleChange}
           errorMsg={errors.contactInfo}
@@ -397,7 +416,6 @@ export default function CreateDestinationForm() {
           label="Social Media Links (comma-separated URLs)"
           id="socialMediaLinks"
           type="text"
-          required
           value={formData.socialMediaLinks}
           onChange={handleChange}
           errorMsg={errors.socialMediaLinks}
@@ -426,7 +444,6 @@ export default function CreateDestinationForm() {
           label="Images (comma-separated URLs)"
           id="images"
           type="text"
-          required
           value={formData.images}
           onChange={handleChange}
           errorMsg={errors.images}
