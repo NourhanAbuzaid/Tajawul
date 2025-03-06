@@ -30,7 +30,7 @@ export const addDestinationSchema = z.object({
     .array(
       z.union([
         z.string().regex(/^\+?\d{7,15}$/, "Invalid phone number format"), // ✅ Validates phone numbers
-        z.string().url("Invalid website URL"), // ✅ Validates websites
+        z.string().url("Invalid Website URL"), // ✅ Validates websites
       ])
     )
     .optional(),

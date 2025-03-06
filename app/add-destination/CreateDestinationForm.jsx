@@ -58,9 +58,22 @@ export default function CreateDestinationForm() {
   // State to manage dynamic contact information inputs
   const [contactInfo, setContactInfo] = useState([]);
 
+  // State to store social media links
+  const [socialMediaLinks, setSocialMediaLinks] = useState([]);
+
+  const [imageUrls, setImageUrls] = useState([]);
+
   // Function to Add a New Contact Input (Phone or Website)
   const addContactInfo = (type) => {
     setContactInfo([...contactInfo, { type, value: "" }]);
+  };
+
+  const addSocialMediaLink = () => {
+    setSocialMediaLinks([...socialMediaLinks, ""]);
+  };
+
+  const addImageUrl = () => {
+    setImageUrls([...imageUrls, ""]);
   };
 
   // Function to Handle Input Change for Dynamic Contact Info
@@ -88,10 +101,56 @@ export default function CreateDestinationForm() {
     }));
   };
 
+  const handleSocialMediaChange = (index, value) => {
+    const updatedLinks = [...socialMediaLinks];
+    updatedLinks[index] = value;
+    setSocialMediaLinks(updatedLinks);
+
+    // Validate URL format
+    let error = "";
+    if (!/^https?:\/\/[\w\-]+(\.[\w\-]+)+[/#?]?.*$/.test(value)) {
+      error = "Invalid social media URL";
+    }
+
+    // Set errors for each social media input
+    setErrors((prev) => ({
+      ...prev,
+      [`socialMedia-${index}`]: error,
+    }));
+  };
+
+  const handleImageChange = (index, value) => {
+    const updatedImages = [...imageUrls];
+    updatedImages[index] = value;
+    setImageUrls(updatedImages);
+
+    // Validate URL format
+    let error = "";
+    if (!/^https?:\/\/[\w\-]+(\.[\w\-]+)+[/#?]?.*$/.test(value)) {
+      error = "Invalid image URL";
+    }
+
+    // Set errors for each image input
+    setErrors((prev) => ({
+      ...prev,
+      [`image-${index}`]: error,
+    }));
+  };
+
   // Function to Remove a Contact Info Input
   const removeContactInfo = (index) => {
     const updatedContacts = contactInfo.filter((_, i) => i !== index);
     setContactInfo(updatedContacts);
+  };
+
+  const removeSocialMediaLink = (index) => {
+    const updatedLinks = socialMediaLinks.filter((_, i) => i !== index);
+    setSocialMediaLinks(updatedLinks);
+  };
+
+  const removeImageUrl = (index) => {
+    const updatedImages = imageUrls.filter((_, i) => i !== index);
+    setImageUrls(updatedImages);
   };
 
   // Hardcoded list of Arab countries with formatted options for dropdown
@@ -233,11 +292,11 @@ export default function CreateDestinationForm() {
         let error = "";
         if (c.type === "phone") {
           if (!/^\+?\d{7,15}$/.test(c.value)) {
-            error = "Invalid phone number format";
+            error = "Invalid Phone Number Format";
           }
         } else if (c.type === "website") {
           if (!/^https?:\/\/[\w\-]+(\.[\w\-]+)+[/#?]?.*$/.test(c.value)) {
-            error = "Invalid website URL";
+            error = "Invalid Website URL";
           }
         }
 
@@ -269,13 +328,9 @@ export default function CreateDestinationForm() {
       establishedAt: formData.establishedAt
         ? new Date(formData.establishedAt).toISOString()
         : "",
-      contactInfo: validatedContactInfo, // ✅ Uses only valid phone numbers & websites
-      images: formData.images
-        ? formData.images.split(",").map((img) => img.trim())
-        : [],
-      socialMediaLinks: formData.socialMediaLinks
-        ? formData.socialMediaLinks.split(",").map((link) => link.trim())
-        : [],
+      contactInfo: contactInfo.map((c) => c.value).filter((c) => c),
+      socialMediaLinks: socialMediaLinks.filter((link) => link),
+      images: imageUrls.filter((img) => img), // ✅ Includes only valid image URLs
     };
 
     // Validate the formatted data
@@ -508,7 +563,7 @@ export default function CreateDestinationForm() {
             marginBottom: "20px",
           }}
         />
-        {/* Buttons to Add Phone Number or Website */}
+        {/* Buttons to Add Phone Number, Website, or Social Media */}
         <div className={styles.contactButtons}>
           <button
             type="button"
@@ -523,6 +578,13 @@ export default function CreateDestinationForm() {
             className={styles.addButton}
           >
             + Add Website
+          </button>
+          <button
+            type="button"
+            onClick={addSocialMediaLink} // ✅ Adds social media input
+            className={styles.addButton}
+          >
+            + Add Social Media
           </button>
         </div>
 
@@ -547,14 +609,26 @@ export default function CreateDestinationForm() {
           </div>
         ))}
 
-        <Input
-          label="Social Media Links (comma-separated URLs)"
-          id="socialMediaLinks"
-          type="text"
-          value={formData.socialMediaLinks || ""}
-          onChange={handleChange}
-          errorMsg={errors.socialMediaLinks}
-        />
+        {/* Dynamic Inputs for Social Media Links */}
+        {socialMediaLinks.map((link, index) => (
+          <div key={index} className={styles.contactInput}>
+            <Input
+              label="Social Media Link"
+              id={`socialMedia-${index}`}
+              type="url"
+              value={link}
+              onChange={(e) => handleSocialMediaChange(index, e.target.value)}
+              errorMsg={errors[`socialMedia-${index}`]} // ✅ Displays validation error
+            />
+            <button
+              type="button"
+              onClick={() => removeSocialMediaLink(index)}
+              className={styles.removeButton}
+            >
+              Remove
+            </button>
+          </div>
+        ))}
 
         <h2 className={styles.subheader}>Media</h2>
         <Divider
@@ -575,14 +649,37 @@ export default function CreateDestinationForm() {
           onChange={handleChange}
           errorMsg={errors.coverImage}
         />
-        <Input
-          label="Images (comma-separated URLs)"
-          id="images"
-          type="text"
-          value={formData.images || ""}
-          onChange={handleChange}
-          errorMsg={errors.images}
-        />
+        {/* Button to Add Images */}
+        <div className={styles.contactButtons}>
+          <button
+            type="button"
+            onClick={addImageUrl} // ✅ Adds image input
+            className={styles.addButton}
+          >
+            + Add Image
+          </button>
+        </div>
+
+        {/* Dynamic Inputs for Image URLs */}
+        {imageUrls.map((img, index) => (
+          <div key={index} className={styles.contactInput}>
+            <Input
+              label="Image URL"
+              id={`image-${index}`}
+              type="url"
+              value={img}
+              onChange={(e) => handleImageChange(index, e.target.value)}
+              errorMsg={errors[`image-${index}`]} // ✅ Displays validation error
+            />
+            <button
+              type="button"
+              onClick={() => removeImageUrl(index)}
+              className={styles.removeButton}
+            >
+              Remove
+            </button>
+          </div>
+        ))}
 
         {success && <p className={styles.successMessage}>{success}</p>}
         {error && <p className={styles.errorMessage}>{error}</p>}
