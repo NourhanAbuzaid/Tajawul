@@ -33,6 +33,8 @@ export default function CreateDestinationForm() {
     address: "",
     socialMediaLinks: "",
     establishedAt: "",
+    longitude: "", // ✅ Defined longitude
+    latitude: "", // ✅ Defined latitude
   });
 
   const [errors, setErrors] = useState({});
@@ -136,17 +138,22 @@ export default function CreateDestinationForm() {
     setFormData((prev) => ({
       ...prev,
       [name]: value,
-      ...(name === "country" ? { city: "" } : {}), // ✅ Reset city when country changes
+      ...(name === "country" ? { city: "" } : {}),
     }));
 
     if (name === "country") {
-      setCities([]); // ✅ Clear cities when country is changed
+      setCities([]);
     }
 
     try {
-      addDestinationSchema
-        .pick({ [name]: addDestinationSchema.shape[name] })
-        .parse({ [name]: value });
+      if (
+        value ||
+        addDestinationSchema.shape[name]?._def?.isOptional !== true
+      ) {
+        addDestinationSchema
+          .pick({ [name]: addDestinationSchema.shape[name] })
+          .parse({ [name]: value });
+      }
       setErrors((prev) => ({ ...prev, [name]: null }));
     } catch (error) {
       setErrors((prev) => ({ ...prev, [name]: error.errors[0].message }));
@@ -219,6 +226,8 @@ export default function CreateDestinationForm() {
         address: "",
         socialMediaLinks: "",
         establishedAt: "",
+        longitude: "", // ✅ Defined longitude
+        latitude: "", // ✅ Defined latitude
       });
       localStorage.removeItem("createDestinationForm");
     } catch (err) {
@@ -287,7 +296,7 @@ export default function CreateDestinationForm() {
           label="Established At"
           id="establishedAt"
           type="date"
-          value={formData.establishedAt}
+          value={formData.establishedAt || ""}
           onChange={handleChange}
           errorMsg={errors.establishedAt}
         />
@@ -384,14 +393,14 @@ export default function CreateDestinationForm() {
           label="Price Range"
           id="priceRange"
           required
-          value={formData.priceRange} // ✅ Corrected value
+          value={formData.priceRange} // ✅ Fixed incorrect value assignment
           onChange={handleChange}
           options={[
             { value: "low", label: "$ Low" },
             { value: "mid-range", label: "$$ Mid-range" },
             { value: "luxury", label: "$$$ Luxury" },
           ]}
-          errorMsg={errors.priceRange} // ✅ Corrected error message
+          errorMsg={errors.priceRange} // ✅ Fixed incorrect error reference
         />
 
         <h2 className={styles.subheader}>Contact & Social Media</h2>
@@ -407,7 +416,7 @@ export default function CreateDestinationForm() {
           label="Contact Info (comma-separated)"
           id="contactInfo"
           type="text"
-          value={formData.contactInfo}
+          value={formData.contactInfo || ""}
           onChange={handleChange}
           errorMsg={errors.contactInfo}
         />
@@ -416,7 +425,7 @@ export default function CreateDestinationForm() {
           label="Social Media Links (comma-separated URLs)"
           id="socialMediaLinks"
           type="text"
-          value={formData.socialMediaLinks}
+          value={formData.socialMediaLinks || ""}
           onChange={handleChange}
           errorMsg={errors.socialMediaLinks}
         />
@@ -444,7 +453,7 @@ export default function CreateDestinationForm() {
           label="Images (comma-separated URLs)"
           id="images"
           type="text"
-          value={formData.images}
+          value={formData.images || ""}
           onChange={handleChange}
           errorMsg={errors.images}
         />
