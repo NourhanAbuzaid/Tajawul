@@ -27,8 +27,12 @@ export const addDestinationSchema = z.object({
   }),
 
   contactInfo: z
-    .string()
-    .min(6, "Contact info must be at least 6 characters long")
+    .array(
+      z.union([
+        z.string().regex(/^\+?\d{7,15}$/, "Invalid phone number format"), // ✅ Validates phone numbers
+        z.string().url("Invalid website URL"), // ✅ Validates websites
+      ])
+    )
     .optional(),
 
   socialMediaLinks: z
@@ -38,8 +42,5 @@ export const addDestinationSchema = z.object({
 
   images: z.string().url("Each image must be a valid URL").optional(),
 
-  establishedAt: z
-    .string()
-
-    .optional(),
+  establishedAt: z.string().optional(),
 });

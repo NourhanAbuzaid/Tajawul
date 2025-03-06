@@ -55,6 +55,45 @@ export default function CreateDestinationForm() {
   // State to track whether the city dropdown was clicked
   const [cityClicked, setCityClicked] = useState(false);
 
+  // State to manage dynamic contact information inputs
+  const [contactInfo, setContactInfo] = useState([]);
+
+  // Function to Add a New Contact Input (Phone or Website)
+  const addContactInfo = (type) => {
+    setContactInfo([...contactInfo, { type, value: "" }]);
+  };
+
+  // Function to Handle Input Change for Dynamic Contact Info
+  const handleContactChange = (index, value) => {
+    const updatedContacts = [...contactInfo];
+    updatedContacts[index].value = value;
+    setContactInfo(updatedContacts);
+
+    // Validate input based on type
+    let error = "";
+    if (updatedContacts[index].type === "phone") {
+      if (!/^\+?\d{7,15}$/.test(value)) {
+        error = "Invalid phone number format";
+      }
+    } else if (updatedContacts[index].type === "website") {
+      if (!/^https?:\/\/[\w\-]+(\.[\w\-]+)+[/#?]?.*$/.test(value)) {
+        error = "Invalid website URL";
+      }
+    }
+
+    // Set errors for each contact input
+    setErrors((prev) => ({
+      ...prev,
+      [`contactInfo-${index}`]: error,
+    }));
+  };
+
+  // Function to Remove a Contact Info Input
+  const removeContactInfo = (index) => {
+    const updatedContacts = contactInfo.filter((_, i) => i !== index);
+    setContactInfo(updatedContacts);
+  };
+
   // Hardcoded list of Arab countries with formatted options for dropdown
   const arabCountries = [
     "Saudi Arabia",
@@ -187,6 +226,41 @@ export default function CreateDestinationForm() {
     setSuccess("");
     setError("");
 
+    // Validate Contact Info: Store errors separately
+    let contactErrors = {};
+    const validatedContactInfo = contactInfo
+      .map((c, index) => {
+        let error = "";
+        if (c.type === "phone") {
+          if (!/^\+?\d{7,15}$/.test(c.value)) {
+            error = "Invalid phone number format";
+          }
+        } else if (c.type === "website") {
+          if (!/^https?:\/\/[\w\-]+(\.[\w\-]+)+[/#?]?.*$/.test(c.value)) {
+            error = "Invalid website URL";
+          }
+        }
+
+        if (error) {
+          contactErrors[`contactInfo-${index}`] = error;
+          return null; // Exclude invalid entries
+        }
+
+        return c.value;
+      })
+      .filter((c) => c); // Remove null values
+
+    // Update error state for contact info
+    setErrors((prev) => ({
+      ...prev,
+      ...contactErrors,
+    }));
+
+    if (Object.keys(contactErrors).length > 0) {
+      setLoading(false);
+      return; // Stop submission if errors exist
+    }
+
     // Format data before submission
     const formattedData = {
       ...formData,
@@ -195,9 +269,7 @@ export default function CreateDestinationForm() {
       establishedAt: formData.establishedAt
         ? new Date(formData.establishedAt).toISOString()
         : "",
-      contactInfo: formData.contactInfo
-        ? formData.contactInfo.split(",").map((c) => c.trim())
-        : [],
+      contactInfo: validatedContactInfo, // ✅ Uses only valid phone numbers & websites
       images: formData.images
         ? formData.images.split(",").map((img) => img.trim())
         : [],
@@ -252,6 +324,7 @@ export default function CreateDestinationForm() {
         latitude: "",
       });
 
+      setContactInfo([]); // ✅ Clears dynamic contact inputs
       localStorage.removeItem("createDestinationForm");
     } catch (err) {
       setError(err.response?.data?.message || "Failed to create destination.");
@@ -435,14 +508,44 @@ export default function CreateDestinationForm() {
             marginBottom: "20px",
           }}
         />
-        <Input
-          label="Contact Info (comma-separated)"
-          id="contactInfo"
-          type="text"
-          value={formData.contactInfo || ""}
-          onChange={handleChange}
-          errorMsg={errors.contactInfo}
-        />
+        {/* Buttons to Add Phone Number or Website */}
+        <div className={styles.contactButtons}>
+          <button
+            type="button"
+            onClick={() => addContactInfo("phone")}
+            className={styles.addButton}
+          >
+            + Add Phone Number
+          </button>
+          <button
+            type="button"
+            onClick={() => addContactInfo("website")}
+            className={styles.addButton}
+          >
+            + Add Website
+          </button>
+        </div>
+
+        {/* Dynamic Inputs for Contact Info */}
+        {contactInfo.map((contact, index) => (
+          <div key={index} className={styles.contactInput}>
+            <Input
+              label={contact.type === "phone" ? "Phone Number" : "Website"}
+              id={`contact-${index}`}
+              type={contact.type === "phone" ? "tel" : "url"}
+              value={contact.value}
+              onChange={(e) => handleContactChange(index, e.target.value)}
+              errorMsg={errors[`contactInfo-${index}`]} // ✅ Display dynamic error message
+            />
+            <button
+              type="button"
+              onClick={() => removeContactInfo(index)}
+              className={styles.removeButton}
+            >
+              Remove
+            </button>
+          </div>
+        ))}
 
         <Input
           label="Social Media Links (comma-separated URLs)"

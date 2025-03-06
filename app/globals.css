@@ -48,8 +48,8 @@
   --Gradient-Hover: linear-gradient(270deg, #253f3b -25.25%, #79b5ac 99.99%);
 
   /*Semantic Colors*/
-  --Error-Text: #a6001e;
-  --Error-Background: #ffb5c3;
+  --Error-Text: #ef4444;
+  --Error-Background: #ffe6eb;
 
   --Success-Text: #0d5f07;
   --Success-Background: #d2fbd0;

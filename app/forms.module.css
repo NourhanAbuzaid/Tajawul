@@ -198,3 +198,65 @@
 .submitButton:hover::before {
   opacity: 1;
 }
+
+.contactButtons {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.addButton {
+  display: flex;
+  border: none;
+  font-family: "DM Sans";
+  height: 38px;
+  padding: 16px 20px;
+  align-items: center;
+  border-radius: 24px;
+  border: 1px solid var(--Green-Hover);
+  background: var(--Green-Very-Bright);
+  color: var(--Green-Perfect);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.addButton:hover {
+  border: 1px solid var(--Green-Hover);
+  background: var(--Green-Hover);
+  color: var(--Neutrals-Background);
+}
+
+.contactInput {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+}
+
+.removeButton {
+  display: flex;
+  border: none;
+  font-family: "DM Sans";
+  height: 48px;
+  padding: 16px 20px;
+  align-items: center;
+  border-radius: 12px;
+  border: 1px solid var(--Neutrals-Light-Outline);
+  background: var(--Neutrals-Background);
+  color: var(--Neutrals-Medium-Outline);
+  font-weight: 600;
+  margin-top: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.removeButton:hover {
+  border: 1px solid var(--Error-Text);
+  background: var(--Error-Background);
+  color: var(--Error-Text);
+}
