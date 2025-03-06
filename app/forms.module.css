@@ -260,3 +260,61 @@
   background: var(--Error-Background);
   color: var(--Error-Text);
 }
+
+.checkboxContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  margin-bottom: 12px;
+  width: 100%;
+}
+
+/* Hide the default checkbox */
+.checkboxContainer input[type="checkbox"] {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--Green-Perfect); /* Customize border color */
+  border-radius: 4px;
+  background-color: white;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Custom checkmark */
+.checkboxContainer input[type="checkbox"]::before {
+  content: "✔"; /* Unicode checkmark */
+  font-size: 14px;
+  color: white;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: all 0.2s ease-in-out;
+}
+
+/* Change appearance when checked */
+.checkboxContainer input[type="checkbox"]:checked {
+  background-color: var(--Green-Perfect); /* Change to desired color */
+  border-color: var(--Green-Perfect);
+}
+
+.checkboxContainer input[type="checkbox"]:checked::before {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Style the label */
+.checkboxContainer label {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--Dark-Gray);
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+/* Hover effect */
+.checkboxContainer input[type="checkbox"]:hover {
+  border-color: var(--Green-Perfect);
+}

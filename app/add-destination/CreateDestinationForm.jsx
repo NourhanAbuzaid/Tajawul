@@ -63,6 +63,14 @@ export default function CreateDestinationForm() {
 
   const [imageUrls, setImageUrls] = useState([]);
 
+  // State for "Open 24 Hours" checkbox
+  const [isOpen24Hours, setIsOpen24Hours] = useState(false);
+
+  // Handle checkbox change
+  const handleCheckboxChange = (e) => {
+    setIsOpen24Hours(e.target.checked);
+  };
+
   // Function to Add a New Contact Input (Phone or Website)
   const addContactInfo = (type) => {
     setContactInfo([...contactInfo, { type, value: "" }]);
@@ -279,59 +287,29 @@ export default function CreateDestinationForm() {
   };
 
   // Handle form submission
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setSuccess("");
     setError("");
 
-    // Validate Contact Info: Store errors separately
-    let contactErrors = {};
-    const validatedContactInfo = contactInfo
-      .map((c, index) => {
-        let error = "";
-        if (c.type === "phone") {
-          if (!/^\+?\d{7,15}$/.test(c.value)) {
-            error = "Invalid Phone Number Format";
-          }
-        } else if (c.type === "website") {
-          if (!/^https?:\/\/[\w\-]+(\.[\w\-]+)+[/#?]?.*$/.test(c.value)) {
-            error = "Invalid Website URL";
-          }
-        }
-
-        if (error) {
-          contactErrors[`contactInfo-${index}`] = error;
-          return null; // Exclude invalid entries
-        }
-
-        return c.value;
-      })
-      .filter((c) => c); // Remove null values
-
-    // Update error state for contact info
-    setErrors((prev) => ({
-      ...prev,
-      ...contactErrors,
-    }));
-
-    if (Object.keys(contactErrors).length > 0) {
-      setLoading(false);
-      return; // Stop submission if errors exist
-    }
-
     // Format data before submission
     const formattedData = {
       ...formData,
-      openTime: formatTime(formData.openTime),
-      closeTime: formatTime(formData.closeTime),
+      isOpen24Hours,
+      openTime: isOpen24Hours ? "" : formatTime(formData.openTime),
+      closeTime: isOpen24Hours ? "" : formatTime(formData.closeTime),
       establishedAt: formData.establishedAt
         ? new Date(formData.establishedAt).toISOString()
         : "",
       contactInfo: contactInfo.map((c) => c.value).filter((c) => c),
       socialMediaLinks: socialMediaLinks.filter((link) => link),
-      images: imageUrls.filter((img) => img), // ✅ Includes only valid image URLs
+      images: imageUrls.filter((img) => img),
     };
+
+    // Log the data before submission
+    console.log("Submitting Data:", formattedData);
 
     // Validate the formatted data
     const validation = addDestinationSchema.safeParse(formattedData);
@@ -379,7 +357,10 @@ export default function CreateDestinationForm() {
         latitude: "",
       });
 
-      setContactInfo([]); // ✅ Clears dynamic contact inputs
+      setIsOpen24Hours(false); // Reset checkbox
+      setContactInfo([]);
+      setSocialMediaLinks([]);
+      setImageUrls([]);
       localStorage.removeItem("createDestinationForm");
     } catch (err) {
       setError(err.response?.data?.message || "Failed to create destination.");
@@ -520,26 +501,41 @@ export default function CreateDestinationForm() {
           }}
         />
 
-        <div className={styles.formRow}>
-          <Input
-            label="Open Time"
-            id="openTime"
-            type="time"
-            required
-            value={formData.openTime}
-            onChange={handleChange}
-            errorMsg={errors.openTime}
+        {/* Checkbox for 24/7 Open */}
+        <div className={styles.checkboxContainer}>
+          <input
+            type="checkbox"
+            id="isOpen24Hours"
+            checked={isOpen24Hours}
+            onChange={handleCheckboxChange}
           />
-          <Input
-            label="Close Time"
-            id="closeTime"
-            type="time"
-            required
-            value={formData.closeTime}
-            onChange={handleChange}
-            errorMsg={errors.closeTime}
-          />
+          <label htmlFor="isOpen24Hours">Open 24 Hours</label>
         </div>
+
+        {/* Conditionally render Open & Close Time */}
+        {!isOpen24Hours && (
+          <div className={styles.formRow}>
+            <Input
+              label="Open Time"
+              id="openTime"
+              type="time"
+              required
+              value={formData.openTime}
+              onChange={handleChange}
+              errorMsg={errors.openTime}
+            />
+            <Input
+              label="Close Time"
+              id="closeTime"
+              type="time"
+              required
+              value={formData.closeTime}
+              onChange={handleChange}
+              errorMsg={errors.closeTime}
+            />
+          </div>
+        )}
+
         <Dropdown
           label="Price Range"
           id="priceRange"
