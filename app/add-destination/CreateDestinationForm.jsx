@@ -9,6 +9,7 @@ import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { addDestinationSchema } from "./actions";
 
+// Debounce utility function to limit the number of calls to saveToLocalStorage
 const debounce = (func, delay) => {
   let timeout;
   return (...args) => {
@@ -17,6 +18,7 @@ const debounce = (func, delay) => {
   };
 };
 
+// State to hold form data, including all input fields
 export default function CreateDestinationForm() {
   const [formData, setFormData] = useState({
     name: "",
@@ -33,18 +35,27 @@ export default function CreateDestinationForm() {
     address: "",
     socialMediaLinks: "",
     establishedAt: "",
-    longitude: "", // ✅ Defined longitude
-    latitude: "", // ✅ Defined latitude
+    longitude: "",
+    latitude: "",
   });
 
+  // State for validation errors
   const [errors, setErrors] = useState({});
+
+  // Loading state for form submission
   const [loading, setLoading] = useState(false);
+
+  // Success and error messages for user feedback
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
+
+  // State to store fetched cities based on selected country
   const [cities, setCities] = useState([]);
+
+  // State to track whether the city dropdown was clicked
   const [cityClicked, setCityClicked] = useState(false);
 
-  // Hardcoded list of Arab countries
+  // Hardcoded list of Arab countries with formatted options for dropdown
   const arabCountries = [
     "Saudi Arabia",
     "United Arab Emirates",
@@ -70,6 +81,7 @@ export default function CreateDestinationForm() {
     "Comoros",
   ].map((country) => ({ value: country, label: country }));
 
+  // Fetching Cities When a Country is Selected
   useEffect(() => {
     const fetchCities = async () => {
       if (!formData.country) {
@@ -107,6 +119,7 @@ export default function CreateDestinationForm() {
     fetchCities();
   }, [formData.country]); // ✅ Fetch cities only when country changes
 
+  // Load saved form data from local storage
   useEffect(() => {
     const savedData = localStorage.getItem("createDestinationForm");
     if (savedData) {
@@ -118,6 +131,7 @@ export default function CreateDestinationForm() {
     }
   }, []);
 
+  // Save form data to local storage
   const saveToLocalStorage = useCallback(
     debounce((data) => {
       const { country, city, ...filteredData } = data; // ✅ Exclude country & city
@@ -133,6 +147,7 @@ export default function CreateDestinationForm() {
     saveToLocalStorage(formData);
   }, [formData, saveToLocalStorage]);
 
+  // Handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -160,16 +175,19 @@ export default function CreateDestinationForm() {
     }
   };
 
+  // Format time input to HH:MM format
   const formatTime = (timeStr) => {
     return timeStr ? `${timeStr}:00` : "";
   };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setSuccess("");
     setError("");
 
+    // Format data before submission
     const formattedData = {
       ...formData,
       openTime: formatTime(formData.openTime),
@@ -188,6 +206,7 @@ export default function CreateDestinationForm() {
         : [],
     };
 
+    // Validate the formatted data
     const validation = addDestinationSchema.safeParse(formattedData);
     if (!validation.success) {
       const newErrors = validation.error.format();
@@ -202,6 +221,7 @@ export default function CreateDestinationForm() {
     }
 
     try {
+      // Send data to API
       const response = await axios.post(
         "/api/proxy/createDestination",
         formattedData,
@@ -211,6 +231,8 @@ export default function CreateDestinationForm() {
       );
 
       setSuccess(response.data.message || "Destination created successfully!");
+
+      // Reset form fields after successful submission
       setFormData({
         name: "",
         type: "",
@@ -226,9 +248,10 @@ export default function CreateDestinationForm() {
         address: "",
         socialMediaLinks: "",
         establishedAt: "",
-        longitude: "", // ✅ Defined longitude
-        latitude: "", // ✅ Defined latitude
+        longitude: "",
+        latitude: "",
       });
+
       localStorage.removeItem("createDestinationForm");
     } catch (err) {
       setError(err.response?.data?.message || "Failed to create destination.");
