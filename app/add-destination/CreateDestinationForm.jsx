@@ -25,18 +25,17 @@ export default function CreateDestinationForm() {
     type: "",
     description: "",
     coverImage: "",
+    priceRange: "",
     country: "",
     city: "",
-    openTime: "",
-    closeTime: "",
-    priceRange: "",
-    contactInfo: "",
-    images: "",
-    address: "",
-    socialMediaLinks: "",
-    establishedAt: "",
-    longitude: "",
-    latitude: "",
+    locations: [{ longitude: "", latitude: "", address: "" }], // Changed
+    isOpen24Hours: false, // Added
+    openTime: { time: "" }, // Changed
+    closeTime: { time: "" }, // Changed
+    establishedAt: { date: "" }, // Changed
+    images: [], // Changed
+    socialMediaLinks: [], // Changed
+    contactInfo: [], // Changed
   });
 
   // State for validation errors
@@ -77,7 +76,7 @@ export default function CreateDestinationForm() {
   };
 
   const addSocialMediaLink = () => {
-    setSocialMediaLinks([...socialMediaLinks, ""]);
+    setSocialMediaLinks([...socialMediaLinks, { platform: "", url: "" }]);
   };
 
   const addImageUrl = () => {
@@ -93,7 +92,7 @@ export default function CreateDestinationForm() {
     // Validate input based on type
     let error = "";
     if (updatedContacts[index].type === "phone") {
-      if (!/^\+?\d{7,15}$/.test(value)) {
+      if (!/^\+?\d{1,4}[\s\d]{6,15}$/.test(value)) {
         error = "Invalid phone number format";
       }
     } else if (updatedContacts[index].type === "website") {
@@ -109,22 +108,24 @@ export default function CreateDestinationForm() {
     }));
   };
 
-  const handleSocialMediaChange = (index, value) => {
+  const handleSocialMediaChange = (index, field, value) => {
     const updatedLinks = [...socialMediaLinks];
-    updatedLinks[index] = value;
+    updatedLinks[index] = { ...updatedLinks[index], [field]: value };
     setSocialMediaLinks(updatedLinks);
 
-    // Validate URL format
-    let error = "";
-    if (!/^https?:\/\/[\w\-]+(\.[\w\-]+)+[/#?]?.*$/.test(value)) {
-      error = "Invalid social media URL";
-    }
+    // Validate URL format only when updating the URL field
+    if (field === "url") {
+      let error = "";
+      if (!/^https?:\/\/[\w\-]+(\.[\w\-]+)+[/#?]?.*$/.test(value)) {
+        error = "Invalid social media URL";
+      }
 
-    // Set errors for each social media input
-    setErrors((prev) => ({
-      ...prev,
-      [`socialMedia-${index}`]: error,
-    }));
+      // Set errors for each social media input
+      setErrors((prev) => ({
+        ...prev,
+        [`socialMedia-${index}`]: error,
+      }));
+    }
   };
 
   const handleImageChange = (index, value) => {
@@ -281,52 +282,64 @@ export default function CreateDestinationForm() {
     }
   };
 
-  // Format time input to HH:MM format
-  const formatTime = (timeStr) => {
-    return timeStr ? `${timeStr}:00` : "";
-  };
-
-  // Handle form submission
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setSuccess("");
     setError("");
 
+    console.log("🔍 Form Submission Started");
+    console.log("🌟 Current Form Data:", formData);
+    console.log("✅ isOpen24Hours:", isOpen24Hours);
+
     // Format data before submission
     const formattedData = {
       ...formData,
       isOpen24Hours,
-      openTime: isOpen24Hours ? "" : formatTime(formData.openTime),
-      closeTime: isOpen24Hours ? "" : formatTime(formData.closeTime),
-      establishedAt: formData.establishedAt
-        ? new Date(formData.establishedAt).toISOString()
-        : "",
-      contactInfo: contactInfo.map((c) => c.value).filter((c) => c),
-      socialMediaLinks: socialMediaLinks.filter((link) => link),
-      images: imageUrls.filter((img) => img),
+      openTime: isOpen24Hours
+        ? null
+        : {
+            hour: formData.openTime
+              ? parseInt(formData.openTime.split(":")[0])
+              : 0,
+            minute: formData.openTime
+              ? parseInt(formData.openTime.split(":")[1])
+              : 0,
+          },
+      closeTime: isOpen24Hours
+        ? null
+        : {
+            hour: formData.closeTime
+              ? parseInt(formData.closeTime.split(":")[0])
+              : 0,
+            minute: formData.closeTime
+              ? parseInt(formData.closeTime.split(":")[1])
+              : 0,
+          },
     };
 
-    // Log the data before submission
-    console.log("Submitting Data:", formattedData);
+    console.log("📦 Formatted Data Before Validation:", formattedData);
 
     // Validate the formatted data
     const validation = addDestinationSchema.safeParse(formattedData);
     if (!validation.success) {
       const newErrors = validation.error.format();
+      console.error("❌ Validation Errors:", newErrors);
+
       setErrors(
         Object.keys(newErrors).reduce((acc, key) => {
           acc[key] = newErrors[key]?._errors?.[0] || "";
           return acc;
         }, {})
       );
+
       setLoading(false);
       return;
     }
 
+    console.log("✅ Validation Passed, Proceeding to API Call");
+
     try {
-      // Send data to API
       const response = await axios.post(
         "/api/proxy/createDestination",
         formattedData,
@@ -335,6 +348,7 @@ export default function CreateDestinationForm() {
         }
       );
 
+      console.log("📨 API Response:", response.data);
       setSuccess(response.data.message || "Destination created successfully!");
 
       // Reset form fields after successful submission
@@ -348,23 +362,30 @@ export default function CreateDestinationForm() {
         openTime: "",
         closeTime: "",
         priceRange: "",
-        contactInfo: "",
-        images: "",
+        contactInfo: [],
+        images: [],
         address: "",
-        socialMediaLinks: "",
+        socialMediaLinks: [],
         establishedAt: "",
         longitude: "",
         latitude: "",
       });
 
-      setIsOpen24Hours(false); // Reset checkbox
+      setIsOpen24Hours(false);
       setContactInfo([]);
       setSocialMediaLinks([]);
       setImageUrls([]);
       localStorage.removeItem("createDestinationForm");
+
+      console.log("🎉 Form Submission Completed Successfully");
     } catch (err) {
+      console.error(
+        "❌ API Request Failed:",
+        err.response?.data || err.message
+      );
       setError(err.response?.data?.message || "Failed to create destination.");
     } finally {
+      console.log("⏳ Form Submission Process Finished");
       setLoading(false);
     }
   };
@@ -474,7 +495,8 @@ export default function CreateDestinationForm() {
           <Input
             label="Longitude"
             id="longitude"
-            type="text"
+            type="number"
+            step="any"
             required
             value={formData.longitude}
             onChange={handleChange}
@@ -483,7 +505,8 @@ export default function CreateDestinationForm() {
           <Input
             label="Latitude"
             id="latitude"
-            type="text"
+            type="number"
+            step="any"
             required
             value={formData.latitude}
             onChange={handleChange}
@@ -605,16 +628,33 @@ export default function CreateDestinationForm() {
           </div>
         ))}
 
-        {/* Dynamic Inputs for Social Media Links */}
         {socialMediaLinks.map((link, index) => (
           <div key={index} className={styles.contactInput}>
+            <Dropdown
+              label="Platform"
+              id={`socialMediaPlatform-${index}`}
+              required
+              value={link.platform}
+              onChange={(e) =>
+                handleSocialMediaChange(index, "platform", e.target.value)
+              }
+              options={[
+                { value: "Facebook", label: "Facebook" },
+                { value: "Instagram", label: "Instagram" },
+                { value: "Twitter", label: "Twitter" },
+                { value: "LinkedIn", label: "LinkedIn" },
+              ]}
+            />
             <Input
-              label="Social Media Link"
-              id={`socialMedia-${index}`}
+              label="URL"
+              id={`socialMediaUrl-${index}`}
               type="url"
-              value={link}
-              onChange={(e) => handleSocialMediaChange(index, e.target.value)}
-              errorMsg={errors[`socialMedia-${index}`]} // ✅ Displays validation error
+              required
+              value={link.url}
+              onChange={(e) =>
+                handleSocialMediaChange(index, "url", e.target.value)
+              }
+              errorMsg={errors[`socialMedia-${index}`]}
             />
             <button
               type="button"

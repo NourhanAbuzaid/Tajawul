@@ -6,7 +6,7 @@ export const addDestinationSchema = z.object({
   description: z
     .string()
     .min(10, "Description must be at least 10 characters long")
-    .max(500),
+    .max(1000),
   coverImage: z.string().url("Cover image must be a valid URL"),
 
   country: z.string().min(2, "Country is required"),
@@ -20,8 +20,15 @@ export const addDestinationSchema = z.object({
   longitude: z.string().regex(/^-?\d+(\.\d+)?$/, "Invalid longitude format"),
   latitude: z.string().regex(/^-?\d+(\.\d+)?$/, "Invalid latitude format"),
 
-  openTime: z.string(),
-  closeTime: z.string(),
+  openTime: z.object({
+    hour: z.number().min(0).max(23),
+    minute: z.number().min(0).max(59),
+  }),
+  closeTime: z.object({
+    hour: z.number().min(0).max(23),
+    minute: z.number().min(0).max(59),
+  }),
+
   priceRange: z.enum(["low", "mid-range", "luxury"], {
     errorMap: () => ({ message: "Invalid price range" }),
   }),
