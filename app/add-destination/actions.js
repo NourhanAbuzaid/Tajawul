@@ -20,12 +20,8 @@ export const addDestinationSchema = z.object({
   longitude: z.string().regex(/^-?\d+(\.\d+)?$/, "Invalid longitude format"),
   latitude: z.string().regex(/^-?\d+(\.\d+)?$/, "Invalid latitude format"),
 
-  openTime: z
-    .string()
-    .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format (hh:mm)"),
-  closeTime: z
-    .string()
-    .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format (hh:mm)"),
+  openTime: z.string(),
+  closeTime: z.string(),
   priceRange: z.enum(["low", "mid-range", "luxury"], {
     errorMap: () => ({ message: "Invalid price range" }),
   }),
@@ -44,6 +40,6 @@ export const addDestinationSchema = z.object({
 
   establishedAt: z
     .string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format (YYYY-MM-DD)")
+
     .optional(),
 });
