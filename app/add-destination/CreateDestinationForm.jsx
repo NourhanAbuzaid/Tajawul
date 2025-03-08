@@ -344,7 +344,7 @@ export default function CreateDestinationForm() {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `${accessToken}`,
           },
         }
       );
