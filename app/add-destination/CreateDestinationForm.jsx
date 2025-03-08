@@ -328,21 +328,28 @@ export default function CreateDestinationForm() {
       // Retrieve the accessToken from the auth store
       const { accessToken } = useAuthStore.getState();
 
+      console.log("Retrieved accessToken:", accessToken); // Debug: Log the retrieved token
+
       if (!accessToken) {
+        console.error("No access token available. Please log in."); // Debug: Log if no token is found
         throw new Error("No access token available. Please log in.");
       }
 
       // Include the accessToken in the headers
+      console.log("Including accessToken in headers:", accessToken); // Debug: Log the token being included in headers
+
       const response = await axios.post(
         "/api/proxy/createDestination",
         formattedData,
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`, // Add the token here
+            Authorization: `Bearer ${accessToken}`,
           },
         }
       );
+
+      console.log("API Response:", response.data); // Debug: Log the API response
 
       setSuccess(response.data.message || "Destination created successfully!");
 
