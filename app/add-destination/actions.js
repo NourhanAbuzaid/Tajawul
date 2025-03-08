@@ -2,52 +2,80 @@ import { z } from "zod";
 
 export const addDestinationSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters long").max(100),
-  type: z.string().min(2, "Type is required").max(50),
   description: z
     .string()
     .min(10, "Description must be at least 10 characters long")
     .max(1000),
   coverImage: z.string().url("Cover image must be a valid URL"),
-
-  country: z.string().min(2, "Country is required"),
-  city: z.string().min(2, "City is required"),
-
-  address: z
-    .string()
-    .min(10, "Address must be at least 10 characters long")
-    .max(200),
-
-  longitude: z.string().regex(/^-?\d+(\.\d+)?$/, "Invalid longitude format"),
-  latitude: z.string().regex(/^-?\d+(\.\d+)?$/, "Invalid latitude format"),
-
-  openTime: z.object({
-    hour: z.number().min(0).max(23),
-    minute: z.number().min(0).max(59),
-  }),
-  closeTime: z.object({
-    hour: z.number().min(0).max(23),
-    minute: z.number().min(0).max(59),
-  }),
-
+  type: z.string().min(2, "Type is required").max(50),
   priceRange: z.enum(["low", "mid-range", "luxury"], {
     errorMap: () => ({ message: "Invalid price range" }),
   }),
+  country: z.string().min(2, "Country is required"),
+  city: z.string().min(2, "City is required"),
 
-  contactInfo: z
+  // Locations array (longitude & latitude are numbers now)
+  locations: z.array(
+    z.object({
+      longitude: z.number().min(-180).max(180, "Invalid longitude"),
+      latitude: z.number().min(-90).max(90, "Invalid latitude"),
+      address: z
+        .string()
+        .min(10, "Address must be at least 10 characters long")
+        .max(200),
+    })
+  ),
+
+  // Boolean flag for 24-hour open status
+  isOpen24Hours: z.boolean(),
+
+  // Open & Close Time (Optional if isOpen24Hours is true)
+  openTime: z
+    .string()
+
+    .optional(),
+  closeTime: z
+    .string()
+
+    .optional(),
+
+  // Established At (Optional, must follow YYYY-MM-DD format)
+  establishedAt: z
+    .string()
+
+    .optional(),
+
+  // Arrays of strings for images
+  images: z.array(z.string().url("Each image must be a valid URL")).optional(),
+
+  // Social Media Links (Array of objects)
+  socialMediaLinks: z
     .array(
-      z.union([
-        z.string().regex(/^\+?\d{7,15}$/, "Invalid phone number format"), // ✅ Validates phone numbers
-        z.string().url("Invalid Website URL"), // ✅ Validates websites
-      ])
+      z.object({
+        platform: z.string().min(2, "Platform name is required"),
+        url: z.string().url("Invalid social media URL"),
+      })
     )
     .optional(),
 
-  socialMediaLinks: z
-    .string()
-    .url("Each social media link must be a valid URL")
+  // Contact Info (Array of objects)
+  contactInfo: z
+    .array(
+      z.object({
+        type: z.enum(["phone", "website"], {
+          errorMap: () => ({ message: "Type must be 'phone' or 'website'" }),
+        }),
+        value: z.string(),
+      })
+    )
     .optional(),
-
-  images: z.string().url("Each image must be a valid URL").optional(),
-
-  establishedAt: z.string().optional(),
 });
+
+// Conditional validation to ensure openTime and closeTime are required when isOpen24Hours is false
+export const validateOpenCloseTime = (data) => {
+  if (!data.isOpen24Hours && (!data.openTime || !data.closeTime)) {
+    throw new Error(
+      "Open time and close time are required unless open 24 hours."
+    );
+  }
+};

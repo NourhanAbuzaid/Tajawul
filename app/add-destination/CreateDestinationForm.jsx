@@ -7,7 +7,8 @@ import Dropdown from "app/components/ui/Dropdown";
 import Divider from "@mui/material/Divider";
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import { addDestinationSchema } from "./actions";
+import { addDestinationSchema, validateOpenCloseTime } from "./actions";
+import DOMPurify from "dompurify";
 
 // Debounce utility function to limit the number of calls to saveToLocalStorage
 const debounce = (func, delay) => {
@@ -18,7 +19,27 @@ const debounce = (func, delay) => {
   };
 };
 
-// State to hold form data, including all input fields
+// Reusable component for dynamic inputs
+const DynamicInput = ({ label, type, value, onChange, errorMsg, onRemove }) => (
+  <div className={styles.contactInput}>
+    <Input
+      label={label}
+      type={type}
+      value={value}
+      onChange={onChange}
+      errorMsg={errorMsg}
+    />
+    <button
+      type="button"
+      onClick={onRemove}
+      className={styles.removeButton}
+      aria-label={`Remove ${label}`}
+    >
+      Remove
+    </button>
+  </div>
+);
+
 export default function CreateDestinationForm() {
   const [formData, setFormData] = useState({
     name: "",
@@ -28,141 +49,23 @@ export default function CreateDestinationForm() {
     priceRange: "",
     country: "",
     city: "",
-    locations: [{ longitude: "", latitude: "", address: "" }], // Changed
-    isOpen24Hours: false, // Added
-    openTime: { time: "" }, // Changed
-    closeTime: { time: "" }, // Changed
-    establishedAt: { date: "" }, // Changed
-    images: [], // Changed
-    socialMediaLinks: [], // Changed
-    contactInfo: [], // Changed
+    locations: [{ longitude: 0, latitude: 0, address: "" }],
+    isOpen24Hours: false,
+    openTime: "",
+    closeTime: "",
+    establishedAt: "",
+    images: [],
+    socialMediaLinks: [],
+    contactInfo: [],
   });
 
-  // State for validation errors
   const [errors, setErrors] = useState({});
-
-  // Loading state for form submission
   const [loading, setLoading] = useState(false);
-
-  // Success and error messages for user feedback
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
-
-  // State to store fetched cities based on selected country
   const [cities, setCities] = useState([]);
-
-  // State to track whether the city dropdown was clicked
   const [cityClicked, setCityClicked] = useState(false);
 
-  // State to manage dynamic contact information inputs
-  const [contactInfo, setContactInfo] = useState([]);
-
-  // State to store social media links
-  const [socialMediaLinks, setSocialMediaLinks] = useState([]);
-
-  const [imageUrls, setImageUrls] = useState([]);
-
-  // State for "Open 24 Hours" checkbox
-  const [isOpen24Hours, setIsOpen24Hours] = useState(false);
-
-  // Handle checkbox change
-  const handleCheckboxChange = (e) => {
-    setIsOpen24Hours(e.target.checked);
-  };
-
-  // Function to Add a New Contact Input (Phone or Website)
-  const addContactInfo = (type) => {
-    setContactInfo([...contactInfo, { type, value: "" }]);
-  };
-
-  const addSocialMediaLink = () => {
-    setSocialMediaLinks([...socialMediaLinks, { platform: "", url: "" }]);
-  };
-
-  const addImageUrl = () => {
-    setImageUrls([...imageUrls, ""]);
-  };
-
-  // Function to Handle Input Change for Dynamic Contact Info
-  const handleContactChange = (index, value) => {
-    const updatedContacts = [...contactInfo];
-    updatedContacts[index].value = value;
-    setContactInfo(updatedContacts);
-
-    // Validate input based on type
-    let error = "";
-    if (updatedContacts[index].type === "phone") {
-      if (!/^\+?\d{1,4}[\s\d]{6,15}$/.test(value)) {
-        error = "Invalid phone number format";
-      }
-    } else if (updatedContacts[index].type === "website") {
-      if (!/^https?:\/\/[\w\-]+(\.[\w\-]+)+[/#?]?.*$/.test(value)) {
-        error = "Invalid website URL";
-      }
-    }
-
-    // Set errors for each contact input
-    setErrors((prev) => ({
-      ...prev,
-      [`contactInfo-${index}`]: error,
-    }));
-  };
-
-  const handleSocialMediaChange = (index, field, value) => {
-    const updatedLinks = [...socialMediaLinks];
-    updatedLinks[index] = { ...updatedLinks[index], [field]: value };
-    setSocialMediaLinks(updatedLinks);
-
-    // Validate URL format only when updating the URL field
-    if (field === "url") {
-      let error = "";
-      if (!/^https?:\/\/[\w\-]+(\.[\w\-]+)+[/#?]?.*$/.test(value)) {
-        error = "Invalid social media URL";
-      }
-
-      // Set errors for each social media input
-      setErrors((prev) => ({
-        ...prev,
-        [`socialMedia-${index}`]: error,
-      }));
-    }
-  };
-
-  const handleImageChange = (index, value) => {
-    const updatedImages = [...imageUrls];
-    updatedImages[index] = value;
-    setImageUrls(updatedImages);
-
-    // Validate URL format
-    let error = "";
-    if (!/^https?:\/\/[\w\-]+(\.[\w\-]+)+[/#?]?.*$/.test(value)) {
-      error = "Invalid image URL";
-    }
-
-    // Set errors for each image input
-    setErrors((prev) => ({
-      ...prev,
-      [`image-${index}`]: error,
-    }));
-  };
-
-  // Function to Remove a Contact Info Input
-  const removeContactInfo = (index) => {
-    const updatedContacts = contactInfo.filter((_, i) => i !== index);
-    setContactInfo(updatedContacts);
-  };
-
-  const removeSocialMediaLink = (index) => {
-    const updatedLinks = socialMediaLinks.filter((_, i) => i !== index);
-    setSocialMediaLinks(updatedLinks);
-  };
-
-  const removeImageUrl = (index) => {
-    const updatedImages = imageUrls.filter((_, i) => i !== index);
-    setImageUrls(updatedImages);
-  };
-
-  // Hardcoded list of Arab countries with formatted options for dropdown
   const arabCountries = [
     "Saudi Arabia",
     "United Arab Emirates",
@@ -188,15 +91,13 @@ export default function CreateDestinationForm() {
     "Comoros",
   ].map((country) => ({ value: country, label: country }));
 
-  // Fetching Cities When a Country is Selected
-  useEffect(() => {
-    const fetchCities = async () => {
-      if (!formData.country) {
-        setCities([]); // ✅ Clear cities if no country is selected
+  // Debounced fetch cities function
+  const fetchCities = useCallback(
+    debounce(async (country) => {
+      if (!country) {
+        setCities([]);
         return;
       }
-
-      console.log("Fetching cities for country:", formData.country);
 
       try {
         const response = await fetch(
@@ -204,27 +105,27 @@ export default function CreateDestinationForm() {
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ country: formData.country }),
+            body: JSON.stringify({ country }),
           }
         );
         const data = await response.json();
-
-        console.log("API Response:", data);
 
         if (!data.data || data.error) {
           throw new Error("Failed to load cities");
         }
 
         setCities(data.data.map((city) => ({ value: city, label: city })));
-        console.log("Updated Cities:", data.data);
       } catch (error) {
         console.error("Error fetching cities:", error);
         setCities([]);
       }
-    };
+    }, 500),
+    []
+  );
 
-    fetchCities();
-  }, [formData.country]); // ✅ Fetch cities only when country changes
+  useEffect(() => {
+    fetchCities(formData.country);
+  }, [formData.country, fetchCities]);
 
   // Load saved form data from local storage
   useEffect(() => {
@@ -232,8 +133,8 @@ export default function CreateDestinationForm() {
     if (savedData) {
       setFormData((prev) => ({
         ...JSON.parse(savedData),
-        country: "", // ✅ Reset country
-        city: "", // ✅ Reset city
+        country: "",
+        city: "",
       }));
     }
   }, []);
@@ -241,7 +142,7 @@ export default function CreateDestinationForm() {
   // Save form data to local storage
   const saveToLocalStorage = useCallback(
     debounce((data) => {
-      const { country, city, ...filteredData } = data; // ✅ Exclude country & city
+      const { country, city, ...filteredData } = data;
       localStorage.setItem(
         "createDestinationForm",
         JSON.stringify(filteredData)
@@ -254,7 +155,6 @@ export default function CreateDestinationForm() {
     saveToLocalStorage(formData);
   }, [formData, saveToLocalStorage]);
 
-  // Handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -262,10 +162,6 @@ export default function CreateDestinationForm() {
       [name]: value,
       ...(name === "country" ? { city: "" } : {}),
     }));
-
-    if (name === "country") {
-      setCities([]);
-    }
 
     try {
       if (
@@ -282,64 +178,138 @@ export default function CreateDestinationForm() {
     }
   };
 
+  const handleCheckboxChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      isOpen24Hours: e.target.checked,
+      openTime: e.target.checked ? "" : prev.openTime,
+      closeTime: e.target.checked ? "" : prev.closeTime,
+    }));
+  };
+
+  const addContactInfo = (type) => {
+    setFormData((prev) => ({
+      ...prev,
+      contactInfo: [...prev.contactInfo, { type, value: "" }],
+    }));
+  };
+
+  const addSocialMediaLink = () => {
+    setFormData((prev) => ({
+      ...prev,
+      socialMediaLinks: [...prev.socialMediaLinks, { platform: "", url: "" }],
+    }));
+  };
+
+  const addImageUrl = () => {
+    setFormData((prev) => ({
+      ...prev,
+      images: [...prev.images, ""],
+    }));
+  };
+
+  const handleContactChange = (index, value) => {
+    const updatedContacts = [...formData.contactInfo];
+    updatedContacts[index].value = value;
+    setFormData((prev) => ({ ...prev, contactInfo: updatedContacts }));
+
+    let error = "";
+    if (updatedContacts[index].type === "phone") {
+      if (!/^\+?\d{1,4}[\s\d]{6,15}$/.test(value)) {
+        error = "Invalid phone number format";
+      }
+    } else if (updatedContacts[index].type === "website") {
+      if (!/^https?:\/\/[\w\-]+(\.[\w\-]+)+[/#?]?.*$/.test(value)) {
+        error = "Invalid website URL";
+      }
+    }
+
+    setErrors((prev) => ({ ...prev, [`contactInfo-${index}`]: error }));
+  };
+
+  const handleSocialMediaChange = (index, field, value) => {
+    const updatedLinks = [...formData.socialMediaLinks];
+    updatedLinks[index] = { ...updatedLinks[index], [field]: value };
+    setFormData((prev) => ({ ...prev, socialMediaLinks: updatedLinks }));
+
+    if (field === "url") {
+      let error = "";
+      if (!/^https?:\/\/[\w\-]+(\.[\w\-]+)+[/#?]?.*$/.test(value)) {
+        error = "Invalid social media URL";
+      }
+
+      setErrors((prev) => ({ ...prev, [`socialMedia-${index}`]: error }));
+    }
+  };
+
+  const handleImageChange = (index, value) => {
+    const updatedImages = [...formData.images];
+    updatedImages[index] = DOMPurify.sanitize(value);
+    setFormData((prev) => ({ ...prev, images: updatedImages }));
+
+    let error = "";
+    if (!/^https?:\/\/[\w\-]+(\.[\w\-]+)+[/#?]?.*$/.test(value)) {
+      error = "Invalid image URL";
+    }
+
+    setErrors((prev) => ({ ...prev, [`image-${index}`]: error }));
+  };
+
+  const removeContactInfo = (index) => {
+    const updatedContacts = formData.contactInfo.filter((_, i) => i !== index);
+    setFormData((prev) => ({ ...prev, contactInfo: updatedContacts }));
+  };
+
+  const removeSocialMediaLink = (index) => {
+    const updatedLinks = formData.socialMediaLinks.filter(
+      (_, i) => i !== index
+    );
+    setFormData((prev) => ({ ...prev, socialMediaLinks: updatedLinks }));
+  };
+
+  const removeImageUrl = (index) => {
+    const updatedImages = formData.images.filter((_, i) => i !== index);
+    setFormData((prev) => ({ ...prev, images: updatedImages }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setSuccess("");
     setError("");
 
-    console.log("🔍 Form Submission Started");
-    console.log("🌟 Current Form Data:", formData);
-    console.log("✅ isOpen24Hours:", isOpen24Hours);
-
-    // Format data before submission
-    const formattedData = {
-      ...formData,
-      isOpen24Hours,
-      openTime: isOpen24Hours
-        ? null
-        : {
-            hour: formData.openTime
-              ? parseInt(formData.openTime.split(":")[0])
-              : 0,
-            minute: formData.openTime
-              ? parseInt(formData.openTime.split(":")[1])
-              : 0,
-          },
-      closeTime: isOpen24Hours
-        ? null
-        : {
-            hour: formData.closeTime
-              ? parseInt(formData.closeTime.split(":")[0])
-              : 0,
-            minute: formData.closeTime
-              ? parseInt(formData.closeTime.split(":")[1])
-              : 0,
-          },
-    };
-
-    console.log("📦 Formatted Data Before Validation:", formattedData);
-
-    // Validate the formatted data
-    const validation = addDestinationSchema.safeParse(formattedData);
-    if (!validation.success) {
-      const newErrors = validation.error.format();
-      console.error("❌ Validation Errors:", newErrors);
-
-      setErrors(
-        Object.keys(newErrors).reduce((acc, key) => {
-          acc[key] = newErrors[key]?._errors?.[0] || "";
-          return acc;
-        }, {})
-      );
-
-      setLoading(false);
-      return;
-    }
-
-    console.log("✅ Validation Passed, Proceeding to API Call");
-
     try {
+      validateOpenCloseTime(formData);
+
+      const formattedData = {
+        ...formData,
+        locations: formData.locations.map((loc) => ({
+          longitude: parseFloat(loc.longitude),
+          latitude: parseFloat(loc.latitude),
+          address: loc.address,
+        })),
+        images: formData.images.length > 0 ? formData.images : undefined,
+        socialMediaLinks:
+          formData.socialMediaLinks.length > 0
+            ? formData.socialMediaLinks
+            : undefined,
+        contactInfo:
+          formData.contactInfo.length > 0 ? formData.contactInfo : undefined,
+      };
+
+      const validation = addDestinationSchema.safeParse(formattedData);
+      if (!validation.success) {
+        const newErrors = validation.error.format();
+        setErrors(
+          Object.keys(newErrors).reduce((acc, key) => {
+            acc[key] = newErrors[key]?._errors?.[0] || "";
+            return acc;
+          }, {})
+        );
+        setLoading(false);
+        return;
+      }
+
       const response = await axios.post(
         "/api/proxy/createDestination",
         formattedData,
@@ -348,10 +318,9 @@ export default function CreateDestinationForm() {
         }
       );
 
-      console.log("📨 API Response:", response.data);
       setSuccess(response.data.message || "Destination created successfully!");
 
-      // Reset form fields after successful submission
+      // Reset form fields
       setFormData({
         name: "",
         type: "",
@@ -364,28 +333,17 @@ export default function CreateDestinationForm() {
         priceRange: "",
         contactInfo: [],
         images: [],
-        address: "",
         socialMediaLinks: [],
         establishedAt: "",
-        longitude: "",
-        latitude: "",
+        locations: [{ longitude: 0, latitude: 0, address: "" }],
+        isOpen24Hours: false,
       });
 
-      setIsOpen24Hours(false);
-      setContactInfo([]);
-      setSocialMediaLinks([]);
-      setImageUrls([]);
       localStorage.removeItem("createDestinationForm");
-
-      console.log("🎉 Form Submission Completed Successfully");
     } catch (err) {
-      console.error(
-        "❌ API Request Failed:",
-        err.response?.data || err.message
-      );
+      console.error("API Request Failed:", err.response?.data || err.message);
       setError(err.response?.data?.message || "Failed to create destination.");
     } finally {
-      console.log("⏳ Form Submission Process Finished");
       setLoading(false);
     }
   };
@@ -426,7 +384,6 @@ export default function CreateDestinationForm() {
             ]}
             errorMsg={errors.type}
           />
-          {/* Country Dropdown */}
           <Dropdown
             label="Country"
             id="country"
@@ -463,8 +420,6 @@ export default function CreateDestinationForm() {
             marginBottom: "20px",
           }}
         />
-
-        {/* City Dropdown (Disabled if no country is selected) */}
         <Dropdown
           label="City"
           id="city"
@@ -480,17 +435,20 @@ export default function CreateDestinationForm() {
           disabled={!formData.country || cities.length === 0}
           onDropdownClick={() => setCityClicked(true)}
         />
-
         <Input
           label="Address"
           id="address"
           type="text"
           required
-          value={formData.address}
-          onChange={handleChange}
+          value={formData.locations[0].address}
+          onChange={(e) =>
+            setFormData((prev) => ({
+              ...prev,
+              locations: [{ ...prev.locations[0], address: e.target.value }],
+            }))
+          }
           errorMsg={errors.address}
         />
-
         <div className={styles.formRow}>
           <Input
             label="Longitude"
@@ -498,8 +456,15 @@ export default function CreateDestinationForm() {
             type="number"
             step="any"
             required
-            value={formData.longitude}
-            onChange={handleChange}
+            value={formData.locations[0].longitude}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                locations: [
+                  { ...prev.locations[0], longitude: e.target.value },
+                ],
+              }))
+            }
             errorMsg={errors.longitude}
           />
           <Input
@@ -508,8 +473,13 @@ export default function CreateDestinationForm() {
             type="number"
             step="any"
             required
-            value={formData.latitude}
-            onChange={handleChange}
+            value={formData.locations[0].latitude}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                locations: [{ ...prev.locations[0], latitude: e.target.value }],
+              }))
+            }
             errorMsg={errors.latitude}
           />
         </div>
@@ -523,20 +493,16 @@ export default function CreateDestinationForm() {
             marginBottom: "20px",
           }}
         />
-
-        {/* Checkbox for 24/7 Open */}
         <div className={styles.checkboxContainer}>
           <input
             type="checkbox"
             id="isOpen24Hours"
-            checked={isOpen24Hours}
+            checked={formData.isOpen24Hours}
             onChange={handleCheckboxChange}
           />
           <label htmlFor="isOpen24Hours">Open 24 Hours</label>
         </div>
-
-        {/* Conditionally render Open & Close Time */}
-        {!isOpen24Hours && (
+        {!formData.isOpen24Hours && (
           <div className={styles.formRow}>
             <Input
               label="Open Time"
@@ -558,19 +524,18 @@ export default function CreateDestinationForm() {
             />
           </div>
         )}
-
         <Dropdown
           label="Price Range"
           id="priceRange"
           required
-          value={formData.priceRange} // ✅ Fixed incorrect value assignment
+          value={formData.priceRange}
           onChange={handleChange}
           options={[
             { value: "low", label: "$ Low" },
             { value: "mid-range", label: "$$ Mid-range" },
             { value: "luxury", label: "$$$ Luxury" },
           ]}
-          errorMsg={errors.priceRange} // ✅ Fixed incorrect error reference
+          errorMsg={errors.priceRange}
         />
 
         <h2 className={styles.subheader}>Contact & Social Media</h2>
@@ -582,7 +547,6 @@ export default function CreateDestinationForm() {
             marginBottom: "20px",
           }}
         />
-        {/* Buttons to Add Phone Number, Website, or Social Media */}
         <div className={styles.contactButtons}>
           <button
             type="button"
@@ -600,35 +564,24 @@ export default function CreateDestinationForm() {
           </button>
           <button
             type="button"
-            onClick={addSocialMediaLink} // ✅ Adds social media input
+            onClick={addSocialMediaLink}
             className={styles.addButton}
           >
             + Add Social Media
           </button>
         </div>
-
-        {/* Dynamic Inputs for Contact Info */}
-        {contactInfo.map((contact, index) => (
-          <div key={index} className={styles.contactInput}>
-            <Input
-              label={contact.type === "phone" ? "Phone Number" : "Website"}
-              id={`contact-${index}`}
-              type={contact.type === "phone" ? "tel" : "url"}
-              value={contact.value}
-              onChange={(e) => handleContactChange(index, e.target.value)}
-              errorMsg={errors[`contactInfo-${index}`]} // ✅ Display dynamic error message
-            />
-            <button
-              type="button"
-              onClick={() => removeContactInfo(index)}
-              className={styles.removeButton}
-            >
-              Remove
-            </button>
-          </div>
+        {formData.contactInfo.map((contact, index) => (
+          <DynamicInput
+            key={index}
+            label={contact.type === "phone" ? "Phone Number" : "Website"}
+            type={contact.type === "phone" ? "tel" : "url"}
+            value={contact.value}
+            onChange={(e) => handleContactChange(index, e.target.value)}
+            errorMsg={errors[`contactInfo-${index}`]}
+            onRemove={() => removeContactInfo(index)}
+          />
         ))}
-
-        {socialMediaLinks.map((link, index) => (
+        {formData.socialMediaLinks.map((link, index) => (
           <div key={index} className={styles.contactInput}>
             <Dropdown
               label="Platform"
@@ -675,7 +628,6 @@ export default function CreateDestinationForm() {
             marginBottom: "20px",
           }}
         />
-
         <Input
           label="Cover Image URL"
           id="coverImage"
@@ -685,36 +637,25 @@ export default function CreateDestinationForm() {
           onChange={handleChange}
           errorMsg={errors.coverImage}
         />
-        {/* Button to Add Images */}
         <div className={styles.contactButtons}>
           <button
             type="button"
-            onClick={addImageUrl} // ✅ Adds image input
+            onClick={addImageUrl}
             className={styles.addButton}
           >
             + Add Image
           </button>
         </div>
-
-        {/* Dynamic Inputs for Image URLs */}
-        {imageUrls.map((img, index) => (
-          <div key={index} className={styles.contactInput}>
-            <Input
-              label="Image URL"
-              id={`image-${index}`}
-              type="url"
-              value={img}
-              onChange={(e) => handleImageChange(index, e.target.value)}
-              errorMsg={errors[`image-${index}`]} // ✅ Displays validation error
-            />
-            <button
-              type="button"
-              onClick={() => removeImageUrl(index)}
-              className={styles.removeButton}
-            >
-              Remove
-            </button>
-          </div>
+        {formData.images.map((img, index) => (
+          <DynamicInput
+            key={index}
+            label="Image URL"
+            type="url"
+            value={img}
+            onChange={(e) => handleImageChange(index, e.target.value)}
+            errorMsg={errors[`image-${index}`]}
+            onRemove={() => removeImageUrl(index)}
+          />
         ))}
 
         {success && <p className={styles.successMessage}>{success}</p>}
