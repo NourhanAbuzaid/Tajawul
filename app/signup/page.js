@@ -13,8 +13,6 @@ import Image from "next/image";
 import { useState } from "react";
 
 export default function SignUpPage() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -31,12 +29,6 @@ export default function SignUpPage() {
 
     setError("");
     setLoading(true);
-
-    if (!firstName.trim() || !lastName.trim()) {
-      setError("First name and last name are required.");
-      setLoading(false);
-      return;
-    }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
@@ -71,8 +63,6 @@ export default function SignUpPage() {
 
     try {
       await axios.post("/api/proxy/signup", {
-        firstName: firstName,
-        lastName: lastName,
         email: email,
         password,
         confirmPassword,
@@ -147,28 +137,6 @@ export default function SignUpPage() {
 
             {/* Start Form Items */}
             <form onSubmit={handleSubmit} className={styles.formWidth}>
-              <div className={styles.nameContainer}>
-                <label>
-                  First Name
-                  <input
-                    type="text"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                    required
-                    placeholder="First Name"
-                  />
-                </label>
-                <label>
-                  Last Name
-                  <input
-                    type="text"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                    required
-                    placeholder="Last Name"
-                  />
-                </label>
-              </div>
               <label>
                 Email Address
                 <input
