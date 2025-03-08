@@ -34,7 +34,9 @@ export async function GET(req) {
     }
 
     // Make GET request to the backend API
-    const response = await axios.get(targetURL);
+    const response = await axios.get(targetURL, {
+      headers: { "Content-Type": "application/json", ...req.headers },
+    });
 
     return new Response(JSON.stringify(response.data), {
       status: response.status,
@@ -68,7 +70,7 @@ export async function POST(req) {
 
     const body = await req.json();
     const response = await axios.post(targetURL, body, {
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...req.headers },
     });
 
     return new Response(JSON.stringify(response.data), {
