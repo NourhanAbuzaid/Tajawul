@@ -9,6 +9,7 @@ import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { addDestinationSchema, validateOpenCloseTime } from "./actions";
 import DOMPurify from "dompurify";
+import useAuthStore from "@/store/authStore";
 
 // Debounce utility function to limit the number of calls to saveToLocalStorage
 const debounce = (func, delay) => {

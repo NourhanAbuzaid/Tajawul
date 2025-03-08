@@ -286,10 +286,10 @@
   align-items: center;
   width: 100%;
   max-height: 140px;
-  color: var(--Error-Text, #a6001e);
+  color: var(--Error-Text);
   font-weight: 600;
   text-transform: capitalize;
-  background-color: var(--Error-background, #ffb5c3);
+  background-color: var(--Error-background);
   border-radius: 12px;
   font-size: 14px;
   padding: 8px 16px;
