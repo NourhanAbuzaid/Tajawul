@@ -135,6 +135,9 @@ export default function CreateDestinationForm() {
         ...JSON.parse(savedData),
         country: "",
         city: "",
+        locations: savedData.locations?.length
+          ? savedData.locations
+          : [{ longitude: 0, latitude: 0, address: "" }],
       }));
     }
   }, []);
@@ -255,6 +258,15 @@ export default function CreateDestinationForm() {
     setErrors((prev) => ({ ...prev, [`image-${index}`]: error }));
   };
 
+  const handleLocationChange = (field, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      locations: prev.locations.length
+        ? [{ ...prev.locations[0], [field]: value }]
+        : [{ longitude: 0, latitude: 0, address: "", [field]: value }],
+    }));
+  };
+
   const removeContactInfo = (index) => {
     const updatedContacts = formData.contactInfo.filter((_, i) => i !== index);
     setFormData((prev) => ({ ...prev, contactInfo: updatedContacts }));
@@ -296,6 +308,8 @@ export default function CreateDestinationForm() {
         contactInfo:
           formData.contactInfo.length > 0 ? formData.contactInfo : undefined,
       };
+
+      console.log("Submitted Data:", formattedData); // Log the submitted data
 
       const validation = addDestinationSchema.safeParse(formattedData);
       if (!validation.success) {
@@ -456,30 +470,19 @@ export default function CreateDestinationForm() {
             type="number"
             step="any"
             required
-            value={formData.locations[0].longitude}
-            onChange={(e) =>
-              setFormData((prev) => ({
-                ...prev,
-                locations: [
-                  { ...prev.locations[0], longitude: e.target.value },
-                ],
-              }))
-            }
+            value={formData.locations?.[0]?.longitude || 0} // ✅ Prevents undefined access
+            onChange={(e) => handleLocationChange("longitude", e.target.value)}
             errorMsg={errors.longitude}
           />
+
           <Input
             label="Latitude"
             id="latitude"
             type="number"
             step="any"
             required
-            value={formData.locations[0].latitude}
-            onChange={(e) =>
-              setFormData((prev) => ({
-                ...prev,
-                locations: [{ ...prev.locations[0], latitude: e.target.value }],
-              }))
-            }
+            value={formData.locations?.[0]?.latitude || 0} // ✅ Prevents undefined access
+            onChange={(e) => handleLocationChange("latitude", e.target.value)}
             errorMsg={errors.latitude}
           />
         </div>
