@@ -69,8 +69,17 @@ export async function POST(req) {
     }
 
     const body = await req.json();
+
+    // console.log(targetURL, body, {
+    //   headers: { "Content-Type": "application/json", ...req.headers },
+    // });
+
+    console.log("Authorization", req.headers.get("Authorization"));
     const response = await axios.post(targetURL, body, {
-      headers: { "Content-Type": "application/json", ...req.headers },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: req.headers.get("Authorization"),
+      },
     });
 
     return new Response(JSON.stringify(response.data), {
