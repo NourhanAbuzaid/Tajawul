@@ -106,6 +106,7 @@
 .avatarButton {
   background-color: transparent;
   border: none;
+  height: 70px;
 }
 
 /* 🔹 Dropdown Container */
