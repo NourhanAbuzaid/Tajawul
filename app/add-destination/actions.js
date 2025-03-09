@@ -35,8 +35,21 @@ export const addDestinationSchema = z.object({
   openTime: z.string().optional(),
   closeTime: z.string().optional(),
 
-  // Established At (Optional, must follow YYYY-MM-DD format)
-  establishedAt: z.string().optional(),
+  // Established At (Optional, must follow YYYY-MM-DD format and not be in the future)
+  establishedAt: z
+    .string()
+    .optional()
+    .refine(
+      (value) => {
+        if (!value) return true; // Optional field, skip validation if empty
+        const establishedDate = new Date(value);
+        const today = new Date();
+        return establishedDate <= today;
+      },
+      {
+        message: "Established date cannot be in the future.",
+      }
+    ),
 
   // Arrays of strings for images
   images: z.array(z.string().url("Each image must be a valid URL")).optional(),
