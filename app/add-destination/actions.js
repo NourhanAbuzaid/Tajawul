@@ -5,11 +5,13 @@ export const addDestinationSchema = z.object({
   description: z
     .string()
     .min(10, "Description must be at least 10 characters long")
-    .max(1000),
+    .max(500),
   coverImage: z.string().url("Cover image must be a valid URL"),
   type: z.string().min(2, "Type is required").max(50),
-  priceRange: z.enum(["low", "mid-range", "luxury"], {
-    errorMap: () => ({ message: "Invalid price range" }),
+  priceRange: z.enum(["Low", "Mid", "Luxury"], {
+    errorMap: () => ({
+      message: "Invalid price range.",
+    }),
   }),
   country: z.string().min(2, "Country is required"),
   city: z.string().min(2, "City is required"),
@@ -30,20 +32,11 @@ export const addDestinationSchema = z.object({
   isOpen24Hours: z.boolean(),
 
   // Open & Close Time (Optional if isOpen24Hours is true)
-  openTime: z
-    .string()
-
-    .optional(),
-  closeTime: z
-    .string()
-
-    .optional(),
+  openTime: z.string().optional(),
+  closeTime: z.string().optional(),
 
   // Established At (Optional, must follow YYYY-MM-DD format)
-  establishedAt: z
-    .string()
-
-    .optional(),
+  establishedAt: z.string().optional(),
 
   // Arrays of strings for images
   images: z.array(z.string().url("Each image must be a valid URL")).optional(),
@@ -73,9 +66,11 @@ export const addDestinationSchema = z.object({
 
 // Conditional validation to ensure openTime and closeTime are required when isOpen24Hours is false
 export const validateOpenCloseTime = (data) => {
-  if (!data.isOpen24Hours && (!data.openTime || !data.closeTime)) {
-    throw new Error(
-      "Open time and close time are required unless open 24 hours."
-    );
+  if (!data.isOpen24Hours) {
+    if (!data.openTime || !data.closeTime) {
+      throw new Error(
+        "Open time and close time are required unless open 24 hours."
+      );
+    }
   }
 };

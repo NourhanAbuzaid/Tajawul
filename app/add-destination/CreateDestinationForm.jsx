@@ -294,21 +294,45 @@ export default function CreateDestinationForm() {
     try {
       validateOpenCloseTime(formData);
 
+      // Create a base object with required fields
       const formattedData = {
-        ...formData,
+        name: formData.name,
+        type: formData.type,
+        description: formData.description,
+        coverImage: formData.coverImage,
+        priceRange: formData.priceRange,
+        country: formData.country,
+        city: formData.city,
         locations: formData.locations.map((loc) => ({
           longitude: parseFloat(loc.longitude),
           latitude: parseFloat(loc.latitude),
           address: loc.address,
         })),
-        images: formData.images.length > 0 ? formData.images : undefined,
-        socialMediaLinks:
-          formData.socialMediaLinks.length > 0
-            ? formData.socialMediaLinks
-            : undefined,
-        contactInfo:
-          formData.contactInfo.length > 0 ? formData.contactInfo : undefined,
+        isOpen24Hours: formData.isOpen24Hours,
       };
+
+      // Add openTime and closeTime only if isOpen24Hours is false
+      if (!formData.isOpen24Hours) {
+        formattedData.openTime = formData.openTime;
+        formattedData.closeTime = formData.closeTime;
+      }
+
+      // Add optional fields only if they have a value
+      if (formData.establishedAt) {
+        formattedData.establishedAt = formData.establishedAt;
+      }
+
+      if (formData.images.length > 0) {
+        formattedData.images = formData.images;
+      }
+
+      if (formData.socialMediaLinks.length > 0) {
+        formattedData.socialMediaLinks = formData.socialMediaLinks;
+      }
+
+      if (formData.contactInfo.length > 0) {
+        formattedData.contactInfo = formData.contactInfo;
+      }
 
       console.log("Submitted Data:", formattedData); // Log the submitted data
 
@@ -412,6 +436,7 @@ export default function CreateDestinationForm() {
             options={[
               { value: "cafe", label: "Cafe" },
               { value: "restaurant", label: "Restaurant" },
+              { value: "hotel", label: "Hotel" },
               { value: "park", label: "Park" },
               { value: "museum", label: "Museum" },
             ]}
@@ -553,9 +578,9 @@ export default function CreateDestinationForm() {
           value={formData.priceRange}
           onChange={handleChange}
           options={[
-            { value: "low", label: "$ Low" },
-            { value: "mid-range", label: "$$ Mid-range" },
-            { value: "luxury", label: "$$$ Luxury" },
+            { value: "Low", label: "$ Low" },
+            { value: "Mid", label: "$$ Mid-range" },
+            { value: "Luxury", label: "$$$ Luxury" },
           ]}
           errorMsg={errors.priceRange}
         />
