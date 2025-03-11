@@ -12,6 +12,7 @@ import axios from "axios";
 import { addDestinationSchema, validateOpenCloseTime } from "./actions";
 import DOMPurify from "dompurify";
 import useAuthStore from "@/store/authStore";
+import arabCountries from "@/data/arabCountries.json";
 
 // Debounce utility function to limit the number of calls to saveToLocalStorage
 const debounce = (func, delay) => {
@@ -69,59 +70,21 @@ export default function CreateDestinationForm() {
   const [cities, setCities] = useState([]);
   const [cityClicked, setCityClicked] = useState(false);
 
-  const arabCountries = [
-    "Saudi Arabia",
-    "United Arab Emirates",
-    "Kuwait",
-    "Qatar",
-    "Bahrain",
-    "Oman",
-    "Yemen",
-    "Jordan",
-    "Syria",
-    "Lebanon",
-    "Palestine",
-    "Egypt",
-    "Iraq",
-    "Libya",
-    "Tunisia",
-    "Algeria",
-    "Morocco",
-    "Mauritania",
-    "Sudan",
-    "Djibouti",
-    "Somalia",
-    "Comoros",
-  ].map((country) => ({ value: country, label: country }));
+  const arabCountriesOptions = Object.keys(arabCountries).map((country) => ({
+    value: country,
+    label: country,
+  }));
 
   // Debounced fetch cities function
   const fetchCities = useCallback(
-    debounce(async (country) => {
+    debounce((country) => {
       if (!country) {
         setCities([]);
         return;
       }
 
-      try {
-        const response = await fetch(
-          "https://countriesnow.space/api/v0.1/countries/cities",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ country }),
-          }
-        );
-        const data = await response.json();
-
-        if (!data.data || data.error) {
-          throw new Error("Failed to load cities");
-        }
-
-        setCities(data.data.map((city) => ({ value: city, label: city })));
-      } catch (error) {
-        console.error("Error fetching cities:", error);
-        setCities([]);
-      }
+      const citiesForCountry = arabCountries[country] || [];
+      setCities(citiesForCountry.map((city) => ({ value: city, label: city })));
     }, 500),
     []
   );
@@ -450,7 +413,7 @@ export default function CreateDestinationForm() {
             required
             value={formData.country}
             onChange={handleChange}
-            options={arabCountries}
+            options={arabCountriesOptions}
             errorMsg={errors.country}
           />
         </div>
