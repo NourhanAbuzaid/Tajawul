@@ -4,6 +4,8 @@ import styles from "@/forms.module.css";
 import Input from "app/components/ui/Input";
 import Textarea from "app/components/ui/Textarea";
 import Dropdown from "app/components/ui/Dropdown";
+import ErrorMessage from "app/components/ui/ErrorMessage";
+import SuccessMessage from "app/components/ui/SuccessMessage";
 import Divider from "@mui/material/Divider";
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
@@ -705,8 +707,8 @@ export default function CreateDestinationForm() {
           />
         ))}
 
-        {success && <p className={styles.successMessage}>{success}</p>}
-        {error && <p className={styles.errorMessage}>{error}</p>}
+        {success && <SuccessMessage message={success} />}
+        {error && <ErrorMessage message={error} />}
 
         <button
           type="submit"
