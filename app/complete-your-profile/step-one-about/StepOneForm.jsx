@@ -17,6 +17,8 @@ const debounce = (func, delay) => {
 
 export default function StepOneForm() {
   const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
     phoneNumber: "",
     birthDate: "",
     country: "",
@@ -91,6 +93,27 @@ export default function StepOneForm() {
   return (
     <div className={styles.formContainer}>
       <form className={styles.formWidth} onSubmit={handleSubmit}>
+        <div className={styles.formRow}>
+          <Input
+            label="First Name"
+            id="firstName"
+            type="text"
+            required
+            value={formData.firstName}
+            onChange={handleChange}
+            errorMsg={errors.firstName}
+          />
+          <Input
+            label="Last Name"
+            id="lastName"
+            type="text"
+            required
+            value={formData.lastName}
+            onChange={handleChange}
+            errorMsg={errors.lastName}
+          />
+        </div>
+
         <Input
           label="Phone Number"
           id="phoneNumber"
