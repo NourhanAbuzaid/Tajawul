@@ -25,7 +25,12 @@ export default function Dropdown({
     setSearchText(selectedOption ? selectedOption.label : "");
   }, [value, options]);
 
-  const filteredOptions = options.filter((opt) =>
+  // Sort options alphabetically by label
+  const sortedOptions = [...options].sort((a, b) =>
+    a.label.localeCompare(b.label)
+  );
+
+  const filteredOptions = sortedOptions.filter((opt) =>
     opt.label.toLowerCase().includes(searchText.toLowerCase())
   );
 
