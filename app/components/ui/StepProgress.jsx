@@ -1,13 +1,30 @@
 "use client";
 
+import React from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import styles from "./StepProgress.module.css";
+import TextSnippetIcon from "@mui/icons-material/TextSnippet";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import FlightIcon from "@mui/icons-material/Flight";
+import CheckIcon from "@mui/icons-material/Check";
 
 const steps = [
-  { id: "step-one-about", label: "About" },
-  { id: "step-two-social", label: "Social Media" },
-  { id: "step-three-interests", label: "Travelling Interests" },
+  {
+    id: "user-info",
+    label: "User Info",
+    icon: <TextSnippetIcon sx={{ fontSize: 32 }} />,
+  },
+  {
+    id: "social-media",
+    label: "Social",
+    icon: <AccountCircleIcon sx={{ fontSize: 32 }} />,
+  },
+  {
+    id: "travel-interests",
+    label: "Interests",
+    icon: <FlightIcon sx={{ fontSize: 32 }} />,
+  },
 ];
 
 const StepProgress = ({ completedSteps = [] }) => {
@@ -27,23 +44,51 @@ const StepProgress = ({ completedSteps = [] }) => {
 
   return (
     <div className={styles.progressContainer}>
-      {steps.map((step, index) => (
-        <div key={step.id} className={styles.stepWrapper}>
-          {index > 0 && <div className={styles.stepLine} />}{" "}
-          {/* Add line between steps */}
-          <div
-            className={`${styles.step} ${
-              currentStep === step.id ? styles.active : ""
-            } ${completedSteps.includes(step.id) ? styles.completed : ""}`}
-            onClick={() => navigateToStep(step.id)}
-          >
-            {completedSteps.includes(step.id) ? "✔" : index + 1}{" "}
-            {/* Number or ✓ */}
-          </div>
-          <span className={styles.stepLabel}>{step.label}</span>{" "}
-          {/* Step name below */}
-        </div>
-      ))}
+      {/* Render the steps (circles and lines) */}
+      {steps.map((step, index) => {
+        const isCompleted = completedSteps.includes(step.id);
+        const isActive = currentStep === step.id;
+        const isPastStep = steps.findIndex((s) => s.id === currentStep) > index;
+
+        return (
+          <React.Fragment key={step.id}>
+            {index > 0 && (
+              <div
+                className={styles.line}
+                style={{
+                  backgroundColor:
+                    isPastStep || isCompleted
+                      ? "var(--Green-Hover)"
+                      : "var(--Neutrals-Light-Outline)",
+                }}
+              />
+            )}
+            <div
+              className={`${styles.stepWrapper} ${
+                isActive ? styles.activeStepWrapper : ""
+              }`}
+            >
+              <div
+                className={`${styles.step} ${isActive ? styles.active : ""} ${
+                  isCompleted ? styles.completed : ""
+                }`}
+                onClick={() => navigateToStep(step.id)}
+              >
+                {isCompleted ? <CheckIcon /> : step.icon}
+              </div>
+            </div>
+          </React.Fragment>
+        );
+      })}
+
+      {/* Render the labels separately */}
+      <div className={styles.labelsContainer}>
+        {steps.map((step) => (
+          <span key={step.id} className={styles.stepLabel}>
+            {step.label}
+          </span>
+        ))}
+      </div>
     </div>
   );
 };

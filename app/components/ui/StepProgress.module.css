@@ -1,9 +1,7 @@
 .progressContainer {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
   margin-top: 8px;
-  margin-bottom: 28px;
+  margin-bottom: 56px;
   position: relative;
   width: 100%;
 }
@@ -13,7 +11,7 @@
   flex-direction: column;
   align-items: center;
   position: relative;
-  flex: 1;
+  width: 60px;
 }
 
 .step {
@@ -26,20 +24,35 @@
   height: 50px;
   font-size: 20px;
   font-weight: bold;
-  background: var(--Neutrals-Background);
-  color: var(--Neutrals-Black-Text);
-  transition: all 0.3s ease;
-  border: 1px solid var(--Neutrals-Medium-Outline);
+  background: var(--Neutrals-Light-Outline);
+  color: var(--Beige-Very-Bright);
+  transition: all 0.3s ease-in-out;
+  position: relative;
 }
 
 .step:hover {
-  background: var(--Neutrals-Light-Outline);
+  background: var(--Neutrals-Medium-Outline);
+  color: var(--Neutrals-Background);
 }
 
 .active {
-  background: var(--Neutrals-Black-Text);
-  border: none;
+  position: relative;
+  background-color: var(--Neutrals-Black-Text);
   color: var(--Neutrals-Background);
+}
+
+.active::before {
+  display: flex;
+  content: "";
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  width: 54px; /* Circle width + 2 * spacing */
+  height: 54px; /* Circle height + 2 * spacing */
+  border-radius: 50%;
+  border: 2px solid var(--Neutrals-Black-Text); /* Outer border color */
+  background: var(--Neutrals-Background);
+  z-index: -1;
 }
 
 .completed {
@@ -49,19 +62,25 @@
 }
 
 .stepLabel {
-  margin-top: 4px;
+  width: 60px;
+  margin-top: 8px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   font-family: DM Sans;
   color: var(--Neutrals-Medium-Outline);
 }
 
-.stepLine {
-  position: absolute;
-  top: 25px; /* Half of the circle height (50px) */
-  transform: translateX(-50%);
+.line {
+  height: 4px;
+  flex: 1;
+  margin: 0 8px; /* 8px space on either side */
+  align-self: center;
+}
+
+.labelsContainer {
+  display: flex;
+  justify-content: space-between;
   width: 100%;
-  height: 1px;
-  background: var(--Neutrals-Medium-Outline);
-  z-index: -1;
+  position: absolute;
+  top: 50px; /* Adjust this value to control vertical position */
 }

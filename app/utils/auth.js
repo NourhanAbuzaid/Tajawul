@@ -49,7 +49,7 @@ export async function logout() {
     try {
       await axios.post(
         `${baseUrl}/Auth/logout`,
-        {}, // Empty body
+        {},
         {
           headers: { Authorization: `Bearer ${accessToken}` }, // Correctly pass headers here
         }
