@@ -17,19 +17,16 @@ import styles from "@/destination.module.css";
 export default async function DestinationDetails({ destinationId }) {
   await new Promise((resolve) => setTimeout(resolve, 2000));
 
-  const baseUrl = "https://tajawul.vercel.app" || "http://localhost:3000";
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   let destination = null; // ✅ Ensure destination is defined
 
   try {
-    const { data } = await axios.get(`${baseUrl}/api/proxy/getDestinations`, {
-      params: { DestinationId: destinationId },
-    });
-
-    // ✅ Extract the specific destination
-    destination = data.destinations?.find(
-      (dest) => dest.destinationId === destinationId
+    const { data } = await axios.get(
+      `${baseUrl}/Destination?DestinationId=${destinationId}`
     );
+
+    const destination = data;
 
     if (!destination) throw new Error("Destination not found");
 

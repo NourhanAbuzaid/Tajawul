@@ -2,9 +2,9 @@ import axios from "axios";
 import useAuthStore from "@/store/authStore";
 
 export async function login(email, password) {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
+  try {
     if (!baseUrl) {
       throw new Error("API base URL is not defined in environment variables.");
     }
@@ -47,8 +47,6 @@ export async function logout() {
 
     // Try refreshing the token if accessToken is expired
     try {
-      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-
       await axios.post(
         `${baseUrl}/Auth/logout`,
         {}, // Empty body

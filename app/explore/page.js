@@ -4,9 +4,9 @@ import DestinationCard from "@/components/ui/DestinationCard";
 import styles from "@/Explore.module.css";
 
 export default async function ExplorePage() {
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   try {
-    const baseUrl = "https://tajawul.vercel.app" || "http://localhost:3000"; // ✅ Ensure absolute URL
-    const response = await axios.get(`${baseUrl}/api/proxy/getDestinations`, {
+    const response = await axios.get(`${baseUrl}/Destination`, {
       next: { revalidate: 120 },
     });
 

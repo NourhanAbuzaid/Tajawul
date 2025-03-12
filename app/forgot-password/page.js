@@ -11,6 +11,7 @@ import Image from "next/image";
 import { useState } from "react";
 
 export default function ForgotPassPage() {
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(""); // ✅ New state for success message
@@ -22,7 +23,7 @@ export default function ForgotPassPage() {
 
     try {
       const response = await axios.post(
-        "https://tajawul-caddcdduayewd2bv.uaenorth-01.azurewebsites.net/api/Auth/sendResetPasswordEmail",
+        `${baseUrl}/Auth/sendResetPasswordEmail`,
         {
           email,
           clientURI: "https://tajawul.vercel.app/new-password", // ✅ Add client URI

@@ -11,6 +11,7 @@ import SearchParamsWrapper from "@/components/SearchParamsWrapper";
 import { motion } from "framer-motion";
 
 export default function EmailVerifyPage() {
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const [params, setParams] = useState({ personId: "", token: "" });
   const { personId, token } = params;
   const [error, setError] = useState("");
@@ -26,10 +27,7 @@ export default function EmailVerifyPage() {
     setSuccess("");
 
     axios
-      .post(
-        "https://tajawul-caddcdduayewd2bv.uaenorth-01.azurewebsites.net/api/Auth/confirmEmail",
-        { personId, token }
-      )
+      .post(`${baseUrl}/Auth/confirmEmail`, { personId, token })
       .then((response) => {
         setSuccess(
           response.data.message || "Your Email Has Been Confirmed Successfully"

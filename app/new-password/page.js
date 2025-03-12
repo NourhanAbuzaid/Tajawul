@@ -13,6 +13,7 @@ import SearchParamsWrapper from "@/components/SearchParamsWrapper";
 import { motion } from "framer-motion"; // ✅ Import motion
 
 export default function NewPassPage() {
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const [params, setParams] = useState({ email: "", token: "" });
   const { email, token } = params; // ✅ Destructure extracted params
   const [newPassword, setNewPassword] = useState("");
@@ -67,15 +68,12 @@ export default function NewPassPage() {
     setLoading(true);
 
     try {
-      const response = await axios.post(
-        "https://tajawul-caddcdduayewd2bv.uaenorth-01.azurewebsites.net/api/Auth/resetPassword",
-        {
-          email,
-          newPassword,
-          confirmPassword,
-          token,
-        }
-      );
+      const response = await axios.post(`${baseUrl}/Auth/resetPassword`, {
+        email,
+        newPassword,
+        confirmPassword,
+        token,
+      });
 
       setSuccess(response.data.message || "Password changed successfully!");
     } catch (err) {

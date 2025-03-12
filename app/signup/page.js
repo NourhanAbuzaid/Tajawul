@@ -13,6 +13,7 @@ import Image from "next/image";
 import { useState } from "react";
 
 export default function SignUpPage() {
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -62,15 +63,12 @@ export default function SignUpPage() {
     }
 
     try {
-      await axios.post(
-        "https://tajawul-caddcdduayewd2bv.uaenorth-01.azurewebsites.net/api/Auth/signup",
-        {
-          email: email,
-          password,
-          confirmPassword,
-          clientURI: "https://tajawul.vercel.app/email-verification",
-        }
-      );
+      await axios.post(`${baseUrl}/Auth/signup`, {
+        email: email,
+        password,
+        confirmPassword,
+        clientURI: "https://tajawul.vercel.app/email-verification",
+      });
 
       setShowPopup(true);
     } catch (err) {
@@ -90,7 +88,7 @@ export default function SignUpPage() {
     setResendLoading(true);
     try {
       const response = await axios.post(
-        "https://tajawul-caddcdduayewd2bv.uaenorth-01.azurewebsites.net/api/Auth/sendEmailVerification",
+        `${baseUrl}/Auth/sendEmailVerification`,
         {
           email,
           clientURI: "https://tajawul.vercel.app/email-verification",
