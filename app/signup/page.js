@@ -62,12 +62,15 @@ export default function SignUpPage() {
     }
 
     try {
-      await axios.post("/api/proxy/signup", {
-        email: email,
-        password,
-        confirmPassword,
-        clientURI: "https://tajawul.vercel.app/email-verification",
-      });
+      await axios.post(
+        "https://tajawul-caddcdduayewd2bv.uaenorth-01.azurewebsites.net/api/Auth/signup",
+        {
+          email: email,
+          password,
+          confirmPassword,
+          clientURI: "https://tajawul.vercel.app/email-verification",
+        }
+      );
 
       setShowPopup(true);
     } catch (err) {
@@ -86,10 +89,13 @@ export default function SignUpPage() {
 
     setResendLoading(true);
     try {
-      const response = await axios.post("/api/proxy/resendEmail", {
-        email,
-        clientURI: "https://tajawul.vercel.app/email-verification",
-      });
+      const response = await axios.post(
+        "https://tajawul-caddcdduayewd2bv.uaenorth-01.azurewebsites.net/api/Auth/sendEmailVerification",
+        {
+          email,
+          clientURI: "https://tajawul.vercel.app/email-verification",
+        }
+      );
       alert("A new confirmation email has been sent! 📩");
     } catch (error) {
       alert(
