@@ -6,19 +6,6 @@ const getRoutes = {
   getDestinations: "http://tajawul.runasp.net/api/Destination",
 };
 
-const postRoutes = {
-  signin: "http://tajawul.runasp.net/api/Auth/signin",
-  signup: "http://tajawul.runasp.net/api/Auth/signup",
-  forgotPass: "http://tajawul.runasp.net/api/Auth/sendResetPasswordEmail",
-  newPass: "http://tajawul.runasp.net/api/Auth/resetPassword",
-  confirmEmail: "http://tajawul.runasp.net/api/Auth/confirmEmail",
-  resendEmail: "http://tajawul.runasp.net/api/Auth/sendEmailVerification",
-  refreshToken: "http://tajawul.runasp.net/api/Auth/refreshToken",
-  logout: "http://tajawul.runasp.net/api/Auth/logout",
-
-  createDestination: "http://tajawul.runasp.net/api/Destination",
-};
-
 export async function GET(req) {
   try {
     const pathname = req.nextUrl.pathname;

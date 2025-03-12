@@ -328,7 +328,7 @@ export default function CreateDestinationForm() {
       console.log("Including accessToken in headers:", accessToken); // Debug: Log the token being included in headers
 
       const response = await axios.post(
-        "/api/proxy/createDestination",
+        "https://tajawul-caddcdduayewd2bv.uaenorth-01.azurewebsites.net/api/Destination",
         formattedData,
         {
           headers: {

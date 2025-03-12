@@ -204,7 +204,7 @@ h6 {
   background-color: var(--Error-Background);
   border-radius: 12px;
   font-size: 14px;
-  padding: 8px 16px;
+  padding: 10px 16px;
 }
 
 .successMessage {
@@ -219,5 +219,5 @@ h6 {
   text-transform: capitalize;
   border-radius: 12px;
   font-size: 14px;
-  padding: 8px 16px;
+  padding: 10px 16px;
 }
