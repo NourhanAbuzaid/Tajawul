@@ -38,13 +38,15 @@ export async function logout() {
 
       return;
     }
+    console.log(accessToken);
 
     // Try refreshing the token if accessToken is expired
     try {
       await axios.post(
         "https://tajawul-caddcdduayewd2bv.uaenorth-01.azurewebsites.net/api/Auth/logout",
+        {}, // Empty body
         {
-          headers: { Authorization: `Bearer ${accessToken}` },
+          headers: { Authorization: `Bearer ${accessToken}` }, // Correctly pass headers here
         }
       );
     } catch (logoutError) {
