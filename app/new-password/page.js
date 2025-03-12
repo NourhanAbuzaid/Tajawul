@@ -67,12 +67,15 @@ export default function NewPassPage() {
     setLoading(true);
 
     try {
-      const response = await axios.post("/api/proxy/newPass", {
-        email,
-        newPassword,
-        confirmPassword,
-        token,
-      });
+      const response = await axios.post(
+        "https://tajawul-caddcdduayewd2bv.uaenorth-01.azurewebsites.net/api/Auth/resetPassword",
+        {
+          email,
+          newPassword,
+          confirmPassword,
+          token,
+        }
+      );
 
       setSuccess(response.data.message || "Password changed successfully!");
     } catch (err) {

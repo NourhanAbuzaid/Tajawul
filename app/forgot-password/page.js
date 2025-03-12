@@ -21,10 +21,13 @@ export default function ForgotPassPage() {
     setSuccess(""); // ✅ Clear previous messages
 
     try {
-      const response = await axios.post("/api/proxy/forgotPass", {
-        email,
-        clientURI: "https://tajawul.vercel.app/new-password", // ✅ Add client URI
-      });
+      const response = await axios.post(
+        "https://tajawul-caddcdduayewd2bv.uaenorth-01.azurewebsites.net/api/Auth/sendResetPasswordEmail",
+        {
+          email,
+          clientURI: "https://tajawul.vercel.app/new-password", // ✅ Add client URI
+        }
+      );
 
       setSuccess(response.data.message || "Reset link sent successfully!"); // ✅ Store success message
     } catch (err) {
