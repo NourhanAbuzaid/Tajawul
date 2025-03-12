@@ -189,7 +189,7 @@ export default function NewPassPage() {
                 <div className={styles.errorMessage}>
                   <ErrorOutlineIcon
                     style={{
-                      color: "#a6001e",
+                      color: "var(--Error-Text)",
                       fontSize: "20px",
                       marginRight: "8px",
                     }}
