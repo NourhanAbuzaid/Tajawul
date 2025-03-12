@@ -35,7 +35,6 @@ export async function logout() {
     if (!accessToken) {
       console.warn("No access token available, logging out locally.");
       clearTokens();
-
       return;
     }
     console.log(accessToken);
@@ -69,15 +68,14 @@ export async function logout() {
           // Retry logout with the new access token
           await axios.post(
             "https://tajawul-caddcdduayewd2bv.uaenorth-01.azurewebsites.net/api/Auth/logout",
-            { token: newAccessToken },
+            {}, // Empty body
             {
-              headers: { Authorization: `Bearer ${newAccessToken}` },
+              headers: { Authorization: `Bearer ${newAccessToken}` }, // Correctly pass headers here
             }
           );
         } catch (refreshError) {
           console.error("Refresh token also expired, logging out...");
           clearTokens();
-
           return;
         }
       } else {
