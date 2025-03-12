@@ -3,10 +3,16 @@ import useAuthStore from "@/store/authStore";
 
 export async function login(email, password) {
   try {
-    const response = await axios.post(
-      "https://tajawul-caddcdduayewd2bv.uaenorth-01.azurewebsites.net/api/Auth/signin",
-      { email, password }
-    );
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+    if (!baseUrl) {
+      throw new Error("API base URL is not defined in environment variables.");
+    }
+
+    const response = await axios.post(`${baseUrl}/Auth/signin`, {
+      email,
+      password,
+    });
 
     // Extract tokens
     const { token, refreshToken } = response.data;
@@ -41,8 +47,10 @@ export async function logout() {
 
     // Try refreshing the token if accessToken is expired
     try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+
       await axios.post(
-        "https://tajawul-caddcdduayewd2bv.uaenorth-01.azurewebsites.net/api/Auth/logout",
+        `${baseUrl}/Auth/logout`,
         {}, // Empty body
         {
           headers: { Authorization: `Bearer ${accessToken}` }, // Correctly pass headers here
@@ -55,7 +63,7 @@ export async function logout() {
         // Try refreshing the token before retrying logout
         try {
           const refreshResponse = await axios.post(
-            "https://tajawul-caddcdduayewd2bv.uaenorth-01.azurewebsites.net/api/Auth/refreshToken",
+            `${baseUrl}/Auth/refreshToken`,
             {
               refreshToken,
             }
@@ -67,7 +75,7 @@ export async function logout() {
 
           // Retry logout with the new access token
           await axios.post(
-            "https://tajawul-caddcdduayewd2bv.uaenorth-01.azurewebsites.net/api/Auth/logout",
+            `${baseUrl}/Auth/logout`,
             {}, // Empty body
             {
               headers: { Authorization: `Bearer ${newAccessToken}` }, // Correctly pass headers here
