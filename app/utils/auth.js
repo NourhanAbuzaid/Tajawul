@@ -3,7 +3,10 @@ import useAuthStore from "@/store/authStore";
 
 export async function login(email, password) {
   try {
-    const response = await axios.post("/api/proxy/signin", { email, password });
+    const response = await axios.post(
+      "https://tajawul-caddcdduayewd2bv.uaenorth-01.azurewebsites.net/api/Auth/signin",
+      { email, password }
+    );
 
     // Extract tokens
     const { token, refreshToken } = response.data;
@@ -38,18 +41,24 @@ export async function logout() {
 
     // Try refreshing the token if accessToken is expired
     try {
-      await axios.post("/api/proxy/logout", {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
+      await axios.post(
+        "https://tajawul-caddcdduayewd2bv.uaenorth-01.azurewebsites.net/api/Auth/logout",
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
     } catch (logoutError) {
       if (logoutError.response?.status === 401) {
         console.warn("Access token expired, attempting refresh...");
 
         // Try refreshing the token before retrying logout
         try {
-          const refreshResponse = await axios.post("/api/proxy/refreshToken", {
-            refreshToken,
-          });
+          const refreshResponse = await axios.post(
+            "https://tajawul-caddcdduayewd2bv.uaenorth-01.azurewebsites.net/api/Auth/refreshToken",
+            {
+              refreshToken,
+            }
+          );
           const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
             refreshResponse.data;
 
@@ -57,7 +66,7 @@ export async function logout() {
 
           // Retry logout with the new access token
           await axios.post(
-            "/api/proxy/logout",
+            "https://tajawul-caddcdduayewd2bv.uaenorth-01.azurewebsites.net/api/Auth/logout",
             { token: newAccessToken },
             {
               headers: { Authorization: `Bearer ${newAccessToken}` },
