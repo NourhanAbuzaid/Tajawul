@@ -1,0 +1,143 @@
+/* 🔹 Main Container */
+.fileUploadContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+/* 🔹 Label */
+.fileUploadLabel {
+  color: var(--Neutrals-Black-Text, #221a14);
+  font-family: Merriweather;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 120%;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 6px;
+}
+
+.requiredMark {
+  color: #ef4444;
+  font-family: "DM Sans";
+}
+
+/* 🔹 Description */
+.fileUploadDescription {
+  font-family: "DM Sans";
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--Neutrals-Medium-Outline);
+  display: block;
+  margin-top: 2px;
+}
+
+/* 🔹 File Upload Wrapper */
+.fileUploadWrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+/* 🔹 File Input (Hidden) */
+.fileInput {
+  display: none;
+}
+
+/* 🔹 File Upload Button */
+.fileUploadButton {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 8px;
+  font-family: "DM Sans";
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 24px;
+  border-radius: 12px;
+  background: var(--Neutrals-Black-Text);
+  color: var(--Neutrals-Background);
+  cursor: pointer;
+  transition: background 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
+.fileUploadButton:hover {
+  background: var(--Neutrals-Dark-Outline);
+}
+
+.fileUploadButton:disabled {
+  background: #f0f0f0;
+  border-color: #ccc;
+  color: #aaa;
+  cursor: not-allowed;
+}
+
+/* 🔹 File Name Display */
+.fileName {
+  font-family: "DM Sans";
+  font-size: 14px;
+  color: var(--Neutrals-Medium-Outline);
+  flex-grow: 1;
+}
+
+/* 🔹 Error Message */
+.fileUploadError {
+  text-align: left;
+  min-height: 16px;
+  margin-top: 2px;
+  font-size: 0.875rem;
+  color: #ef4444;
+}
+
+.previewContainer {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+/* 🔹 Image Preview */
+.imagePreview {
+  margin-top: 12px;
+
+  position: relative;
+  overflow: hidden; /* Ensure the image doesn't overflow the container */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image {
+  object-fit: cover;
+  width: 300px; /* Fixed width for the preview container */
+  height: 300px; /* Fixed height for the preview container */
+  border-radius: 50%; /* Make the container circular */
+}
+
+/* 🔹 Remove Button */
+.removeButton {
+  z-index: 2;
+  position: absolute;
+  top: 30px;
+  right: 26px;
+  background: rgba(0, 0, 0, 0.6);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+.removeButton:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.removeButton svg {
+  color: var(--Neutrals-Background);
+  font-size: 18px;
+}

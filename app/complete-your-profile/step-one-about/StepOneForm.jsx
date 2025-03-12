@@ -2,6 +2,8 @@
 
 import styles from "@/forms.module.css";
 import Input from "app/components/ui/Input";
+import Textarea from "app/components/ui/Textarea";
+import ImageUpload from "@/components/ui/ImageUpload";
 import { RadioGroup, RadioGroupItem } from "app/components/ui/RadioGroup";
 import { useState, useEffect, useCallback } from "react";
 import { stepOneSchema } from "./actions";
@@ -19,13 +21,16 @@ export default function StepOneForm() {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
+    username: "",
+    bio: "",
+    profilePicture: "",
     phoneNumber: "",
     birthDate: "",
     country: "",
     city: "",
     address: "",
     nationality: "",
-    gender: "male",
+    gender: "",
     preferredLanguage: "",
   });
 
@@ -71,6 +76,10 @@ export default function StepOneForm() {
     setFormData((prev) => ({ ...prev, gender: value }));
   };
 
+  const handleFileUpload = (fileUrl) => {
+    setFormData((prev) => ({ ...prev, profilePicture: fileUrl }));
+  };
+
   // Handle Form Submission
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -114,6 +123,31 @@ export default function StepOneForm() {
           />
         </div>
 
+        <ImageUpload
+          label="Profile Picture"
+          id="profilePicture"
+          description="Accepted formats: jpg, jpeg, png, webp"
+          required
+          onUpload={handleFileUpload} // Pass the file URL to the parent
+          errorMsg={errors.profilePicture}
+          accept="image/*" // Restrict to image files
+        />
+        <Input
+          label="Username"
+          id="username"
+          type="text"
+          required
+          value={formData.username}
+          onChange={handleChange}
+          errorMsg={errors.username}
+        />
+        <Textarea
+          label="Bio"
+          id="bio"
+          value={formData.bio}
+          onChange={handleChange}
+          errorMsg={errors.bio}
+        />
         <Input
           label="Phone Number"
           id="phoneNumber"
