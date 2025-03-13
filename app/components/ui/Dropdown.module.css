@@ -171,3 +171,34 @@
   border-color: #ccc !important; /* Ensures it overrides any hover effect */
   cursor: not-allowed;
 }
+
+/* 🔹 Selected Options Container */
+.selectedOptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+/* 🔹 Selected Option */
+.selectedOption {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: var(--Beige-Hover);
+  border-radius: 4px;
+  font-size: 14px;
+  color: var(--Neutrals-Black-Text);
+}
+
+/* 🔹 Remove Icon */
+.removeIcon {
+  cursor: pointer;
+  color: var(--Neutrals-Medium-Outline);
+  font-size: 16px;
+}
+
+.removeIcon:hover {
+  color: var(--Neutrals-Black-Text);
+}
