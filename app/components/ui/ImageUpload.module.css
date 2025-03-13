@@ -64,7 +64,7 @@
 }
 
 .fileUploadButton:hover {
-  background: var(--Neutrals-Dark-Outline);
+  background: var(--Neutrals-Medium-Outline);
 }
 
 .fileUploadButton:disabled {
