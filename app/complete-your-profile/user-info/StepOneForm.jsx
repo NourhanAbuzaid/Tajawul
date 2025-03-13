@@ -4,6 +4,7 @@ import styles from "@/forms.module.css";
 import Input from "app/components/ui/Input";
 import Textarea from "app/components/ui/Textarea";
 import ImageUpload from "@/components/ui/ImageUpload";
+import Divider from "@mui/material/Divider";
 import { RadioGroup, RadioGroupItem } from "app/components/ui/RadioGroup";
 import { useState, useEffect, useCallback } from "react";
 import { stepOneSchema } from "./actions";
@@ -144,10 +145,12 @@ export default function StepOneForm() {
         <Textarea
           label="Bio"
           id="bio"
+          required
           value={formData.bio}
           onChange={handleChange}
           errorMsg={errors.bio}
         />
+
         <Input
           label="Phone Number"
           id="phoneNumber"
@@ -169,6 +172,15 @@ export default function StepOneForm() {
           errorMsg={errors.birthDate}
         />
 
+        <Input
+          label="Nationality"
+          id="nationality"
+          type="text"
+          required
+          value={formData.nationality}
+          onChange={handleChange}
+          errorMsg={errors.nationality}
+        />
         <div className={styles.formRow}>
           <Input
             label="Country"
@@ -198,16 +210,6 @@ export default function StepOneForm() {
           value={formData.address}
           onChange={handleChange}
           errorMsg={errors.address}
-        />
-
-        <Input
-          label="Nationality"
-          id="nationality"
-          type="text"
-          required
-          value={formData.nationality}
-          onChange={handleChange}
-          errorMsg={errors.nationality}
         />
 
         <div className={styles.genderContainer}>
