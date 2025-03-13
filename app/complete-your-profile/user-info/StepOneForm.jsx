@@ -8,6 +8,8 @@ import Divider from "@mui/material/Divider";
 import { RadioGroup, RadioGroupItem } from "app/components/ui/RadioGroup";
 import { useState, useEffect, useCallback } from "react";
 import { stepOneSchema } from "./actions";
+import Dropdown from "app/components/ui/Dropdown";
+import allCountriesStates from "@/data/allCountriesStates.json";
 
 // Utility function for debouncing
 const debounce = (func, delay) => {
@@ -36,6 +38,8 @@ export default function StepOneForm() {
   });
 
   const [errors, setErrors] = useState({});
+  const [cities, setCities] = useState([]);
+  const [cityClicked, setCityClicked] = useState(false);
 
   // Load saved form data from local storage
   useEffect(() => {
@@ -56,6 +60,24 @@ export default function StepOneForm() {
   useEffect(() => {
     saveToLocalStorage(formData);
   }, [formData, saveToLocalStorage]);
+
+  // Debounced fetch cities function
+  const fetchCities = useCallback(
+    debounce((country) => {
+      if (!country) {
+        setCities([]);
+        return;
+      }
+
+      const citiesForCountry = allCountriesStates[country] || [];
+      setCities(citiesForCountry.map((city) => ({ value: city, label: city })));
+    }, 500),
+    []
+  );
+
+  useEffect(() => {
+    fetchCities(formData.country);
+  }, [formData.country, fetchCities]);
 
   // Handle Input Changes with Validation
   const handleChange = (e) => {
@@ -129,9 +151,9 @@ export default function StepOneForm() {
           id="profilePicture"
           description="Accepted formats: jpg, jpeg, png, webp"
           required
-          onUpload={handleFileUpload} // Pass the file URL to the parent
+          onUpload={handleFileUpload}
           errorMsg={errors.profilePicture}
-          accept="image/*" // Restrict to image files
+          accept="image/*"
         />
         <Input
           label="Username"
@@ -182,23 +204,32 @@ export default function StepOneForm() {
           errorMsg={errors.nationality}
         />
         <div className={styles.formRow}>
-          <Input
+          <Dropdown
             label="Country"
             id="country"
-            type="text"
             required
             value={formData.country}
             onChange={handleChange}
+            options={Object.keys(allCountriesStates).map((country) => ({
+              value: country,
+              label: country,
+            }))}
             errorMsg={errors.country}
           />
-          <Input
+          <Dropdown
             label="City"
             id="city"
-            type="text"
             required
             value={formData.city}
             onChange={handleChange}
-            errorMsg={errors.city}
+            options={cities}
+            errorMsg={
+              cityClicked && !formData.country
+                ? "Please Select a Country"
+                : errors.city
+            }
+            disabled={!formData.country || cities.length === 0}
+            onDropdownClick={() => setCityClicked(true)}
           />
         </div>
 
