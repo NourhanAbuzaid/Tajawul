@@ -1,7 +1,7 @@
 .tag {
   display: flex;
   height: 30px;
-  padding: 7px 14px;
+  padding: 6px 14px;
   flex-direction: row;
   justify-content: center;
   align-items: center;

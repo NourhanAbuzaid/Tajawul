@@ -100,14 +100,14 @@
 /* 🔹 Dropdown Menu */
 .dropdownMenu {
   position: absolute;
-  top: 90%;
+  top: 100%;
   left: 0;
   width: 100%;
   background: #fff;
   border: 1px solid var(--Neutrals-Light-Outline, #d5c3b5);
   border-radius: 12px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  margin-top: 6px;
+  margin-top: 8px;
   z-index: 100;
   overflow-y: auto; /* ✅ Enables vertical scrolling */
   display: flex;
@@ -139,14 +139,16 @@
 .dropdownItem {
   font-family: "DM Sans";
   font-size: 14px;
+  font-weight: 500;
   text-align: left;
   color: var(--Neutrals-Black-Text);
   cursor: pointer;
-  transition: background 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 
 .dropdownItem:hover {
-  background: var(--Beige-Hover);
+  background: var(--Green-Very-Bright);
+  color: var(--Green-Dark);
 }
 
 /* 🔹 Error Message */
@@ -177,26 +179,30 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 8px;
+
+  top: 100%;
 }
 
 /* 🔹 Selected Option */
 .selectedOption {
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 4px 8px;
-  background: var(--Beige-Hover);
-  border-radius: 4px;
+  gap: 8px;
+  padding: 6px 14px;
+  background: var(--Green-Very-Bright);
+  color: var(--Green-Dark);
+  border-radius: 38px;
   font-size: 14px;
-  color: var(--Neutrals-Black-Text);
+  font-weight: 600;
+  margin-top: 8px;
 }
 
 /* 🔹 Remove Icon */
 .removeIcon {
   cursor: pointer;
-  color: var(--Neutrals-Medium-Outline);
+  color: var(--Green-Dark);
   font-size: 16px;
+  transition: color 0.2s ease-in-out;
 }
 
 .removeIcon:hover {

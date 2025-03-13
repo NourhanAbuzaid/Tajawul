@@ -4,7 +4,7 @@ import styles from "@/forms.module.css";
 import Input from "app/components/ui/Input";
 import Textarea from "app/components/ui/Textarea";
 import ImageUpload from "@/components/ui/ImageUpload";
-import Divider from "@mui/material/Divider";
+import MultiDropdown from "@/components/ui/MultiDropdown";
 import { RadioGroup, RadioGroupItem } from "app/components/ui/RadioGroup";
 import { useState, useEffect, useCallback } from "react";
 import { stepOneSchema } from "./actions";
@@ -37,6 +37,8 @@ export default function StepOneForm() {
     preferredLanguage: "",
   });
 
+  const [selectedValues, setSelectedValues] = useState([]); // Add this line
+
   const [errors, setErrors] = useState({});
   const [cities, setCities] = useState([]);
   const [cityClicked, setCityClicked] = useState(false);
@@ -45,7 +47,11 @@ export default function StepOneForm() {
   useEffect(() => {
     const savedData = localStorage.getItem("stepOneForm");
     if (savedData) {
-      setFormData(JSON.parse(savedData));
+      const parsedData = JSON.parse(savedData);
+      setFormData(parsedData);
+      if (parsedData.selectedValues) {
+        setSelectedValues(parsedData.selectedValues); // Load selectedValues from localStorage
+      }
     }
   }, []);
 
@@ -58,8 +64,8 @@ export default function StepOneForm() {
   );
 
   useEffect(() => {
-    saveToLocalStorage(formData);
-  }, [formData, saveToLocalStorage]);
+    saveToLocalStorage({ ...formData, selectedValues }); // Include selectedValues in saved data
+  }, [formData, selectedValues, saveToLocalStorage]);
 
   // Debounced fetch cities function
   const fetchCities = useCallback(
@@ -119,7 +125,7 @@ export default function StepOneForm() {
       return;
     }
 
-    console.log("Moving to step 2 with data:", formData);
+    console.log("Moving to step 2 with data:", { ...formData, selectedValues });
   };
 
   return (
@@ -155,6 +161,7 @@ export default function StepOneForm() {
           errorMsg={errors.profilePicture}
           accept="image/*"
         />
+
         <Input
           label="Username"
           id="username"
