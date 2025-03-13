@@ -10,6 +10,7 @@ import { useState, useEffect, useCallback } from "react";
 import { stepOneSchema } from "./actions";
 import Dropdown from "app/components/ui/Dropdown";
 import allCountriesStates from "@/data/allCountriesStates.json";
+import languages from "@/data/languages.json"; // Import the languages.json file
 
 // Utility function for debouncing
 const debounce = (func, delay) => {
@@ -35,9 +36,8 @@ export default function StepOneForm() {
     nationality: "",
     gender: "",
     preferredLanguage: "",
+    spokenLanguageNamesList: [], // Add this line to store selected languages
   });
-
-  const [selectedValues, setSelectedValues] = useState([]); // Add this line
 
   const [errors, setErrors] = useState({});
   const [cities, setCities] = useState([]);
@@ -49,9 +49,6 @@ export default function StepOneForm() {
     if (savedData) {
       const parsedData = JSON.parse(savedData);
       setFormData(parsedData);
-      if (parsedData.selectedValues) {
-        setSelectedValues(parsedData.selectedValues); // Load selectedValues from localStorage
-      }
     }
   }, []);
 
@@ -64,8 +61,8 @@ export default function StepOneForm() {
   );
 
   useEffect(() => {
-    saveToLocalStorage({ ...formData, selectedValues }); // Include selectedValues in saved data
-  }, [formData, selectedValues, saveToLocalStorage]);
+    saveToLocalStorage(formData);
+  }, [formData, saveToLocalStorage]);
 
   // Debounced fetch cities function
   const fetchCities = useCallback(
@@ -109,6 +106,14 @@ export default function StepOneForm() {
     setFormData((prev) => ({ ...prev, profilePicture: fileUrl }));
   };
 
+  // Handle Spoken Language Selection
+  const handleSpokenLanguagesChange = (selectedLanguages) => {
+    setFormData((prev) => ({
+      ...prev,
+      spokenLanguageNamesList: selectedLanguages,
+    }));
+  };
+
   // Handle Form Submission
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -125,8 +130,14 @@ export default function StepOneForm() {
       return;
     }
 
-    console.log("Moving to step 2 with data:", { ...formData, selectedValues });
+    console.log("Moving to step 2 with data:", formData);
   };
+
+  // Prepare language options for MultiDropdown
+  const languageOptions = languages.map((lang) => ({
+    value: lang.English, // Use the English name as the value
+    label: lang.English, // Use the English name as the label
+  }));
 
   return (
     <div className={styles.formContainer}>
@@ -267,14 +278,14 @@ export default function StepOneForm() {
           </RadioGroup>
         </div>
 
-        <Input
-          label="Preferred Language"
-          id="preferredLanguage"
-          type="text"
+        {/* MultiDropdown for Spoken Languages */}
+        <MultiDropdown
+          label="Spoken Language/s"
+          id="spokenLanguages"
           required
-          value={formData.preferredLanguage}
-          onChange={handleChange}
-          errorMsg={errors.preferredLanguage}
+          options={languageOptions}
+          value={formData.spokenLanguageNamesList}
+          onChange={(e) => handleSpokenLanguagesChange(e.target.value)}
         />
 
         <button type="submit" className={styles.submitButton}>
