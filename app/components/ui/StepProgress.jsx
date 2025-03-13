@@ -5,7 +5,6 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import styles from "./StepProgress.module.css";
 import TextSnippetIcon from "@mui/icons-material/TextSnippet";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import FlightIcon from "@mui/icons-material/Flight";
 import CheckIcon from "@mui/icons-material/Check";
 
@@ -14,11 +13,6 @@ const steps = [
     id: "user-info",
     label: "User Info",
     icon: <TextSnippetIcon sx={{ fontSize: 32 }} />,
-  },
-  {
-    id: "social-media",
-    label: "Social",
-    icon: <AccountCircleIcon sx={{ fontSize: 32 }} />,
   },
   {
     id: "travel-interests",
@@ -57,7 +51,7 @@ const StepProgress = ({ completedSteps = [] }) => {
                 className={styles.line}
                 style={{
                   backgroundColor:
-                    isPastStep || isCompleted
+                    (isPastStep || isCompleted) && currentStep === steps[1].id
                       ? "var(--Green-Hover)"
                       : "var(--Neutrals-Light-Outline)",
                 }}
