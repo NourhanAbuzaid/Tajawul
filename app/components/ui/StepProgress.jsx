@@ -74,7 +74,7 @@ const StepProgress = ({ completedSteps = [] }) => {
                 }`}
                 onClick={() => navigateToStep(step.id)}
               >
-                {isCompleted ? <CheckIcon /> : step.icon}
+                {isCompleted ? <CheckIcon sx={{ fontSize: 32 }} /> : step.icon}
               </div>
             </div>
           </React.Fragment>
@@ -83,11 +83,19 @@ const StepProgress = ({ completedSteps = [] }) => {
 
       {/* Render the labels separately */}
       <div className={styles.labelsContainer}>
-        {steps.map((step) => (
-          <span key={step.id} className={styles.stepLabel}>
-            {step.label}
-          </span>
-        ))}
+        {steps.map((step) => {
+          const isActive = currentStep === step.id;
+          return (
+            <span
+              key={step.id}
+              className={`${styles.stepLabel} ${
+                isActive ? styles.activeLabel : ""
+              }`}
+            >
+              {step.label}
+            </span>
+          );
+        })}
       </div>
     </div>
   );

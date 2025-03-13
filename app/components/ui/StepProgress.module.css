@@ -70,6 +70,12 @@
   color: var(--Neutrals-Medium-Outline);
 }
 
+.activeLabel {
+  color: var(
+    --Neutrals-Black-Text
+  ); /* Change this to your desired active label color */
+}
+
 .line {
   height: 4px;
   flex: 1;
