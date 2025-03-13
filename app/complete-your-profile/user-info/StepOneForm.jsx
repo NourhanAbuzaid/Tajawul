@@ -33,7 +33,7 @@ export default function StepOneForm() {
     country: "",
     city: "",
     address: "",
-    nationality: "",
+    nationality: "", // Nationality is now a dropdown
     gender: "",
     preferredLanguage: "",
     spokenLanguageNamesList: [], // Add this line to store selected languages
@@ -139,6 +139,12 @@ export default function StepOneForm() {
     label: lang.English, // Use the English name as the label
   }));
 
+  // Prepare country options for Nationality Dropdown
+  const countryOptions = Object.keys(allCountriesStates).map((country) => ({
+    value: country,
+    label: country,
+  }));
+
   return (
     <div className={styles.formContainer}>
       <form className={styles.formWidth} onSubmit={handleSubmit}>
@@ -212,15 +218,17 @@ export default function StepOneForm() {
           errorMsg={errors.birthDate}
         />
 
-        <Input
+        {/* Replace Nationality Input with Dropdown */}
+        <Dropdown
           label="Nationality"
           id="nationality"
-          type="text"
           required
           value={formData.nationality}
           onChange={handleChange}
+          options={countryOptions}
           errorMsg={errors.nationality}
         />
+
         <div className={styles.formRow}>
           <Dropdown
             label="Country"
@@ -228,10 +236,7 @@ export default function StepOneForm() {
             required
             value={formData.country}
             onChange={handleChange}
-            options={Object.keys(allCountriesStates).map((country) => ({
-              value: country,
-              label: country,
-            }))}
+            options={countryOptions}
             errorMsg={errors.country}
           />
           <Dropdown
