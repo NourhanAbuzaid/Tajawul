@@ -10,7 +10,11 @@ import { useState, useEffect, useCallback } from "react";
 import { stepOneSchema } from "./actions";
 import Dropdown from "app/components/ui/Dropdown";
 import allCountriesStates from "@/data/allCountriesStates.json";
-import languages from "@/data/languages.json"; // Import the languages.json file
+import languages from "@/data/languages.json";
+import axios from "axios";
+import ErrorMessage from "app/components/ui/ErrorMessage";
+import SuccessMessage from "app/components/ui/SuccessMessage";
+import useAuthStore from "@/store/authStore";
 
 // Utility function for debouncing
 const debounce = (func, delay) => {
@@ -33,15 +37,19 @@ export default function StepOneForm() {
     country: "",
     city: "",
     address: "",
-    nationality: "", // Nationality is now a dropdown
+    nationality: "",
     gender: "",
-    preferredLanguage: "",
-    spokenLanguageNamesList: [], // Add this line to store selected languages
+    spokenLanguageNamesList: [],
   });
 
   const [errors, setErrors] = useState({});
   const [cities, setCities] = useState([]);
   const [cityClicked, setCityClicked] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   // Load saved form data from local storage
   useEffect(() => {
@@ -115,28 +123,84 @@ export default function StepOneForm() {
   };
 
   // Handle Form Submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Form submitted"); // Debugging: Check if this logs
+    setLoading(true);
+    setSuccess("");
+    setError("");
 
-    const validation = stepOneSchema.safeParse(formData);
-    if (!validation.success) {
-      const newErrors = validation.error.format();
-      setErrors(
-        Object.keys(newErrors).reduce((acc, key) => {
-          acc[key] = newErrors[key]?._errors?.[0] || "";
-          return acc;
-        }, {})
+    try {
+      // Exclude profilePicture from the data to be submitted
+      const { profilePicture, ...dataToSubmit } = formData;
+
+      // Validate the remaining data
+      const validation = stepOneSchema.safeParse(dataToSubmit);
+      if (!validation.success) {
+        const newErrors = validation.error.format();
+        console.log("Validation errors:", newErrors); // Debugging: Log validation errors
+        setErrors(
+          Object.keys(newErrors).reduce((acc, key) => {
+            acc[key] = newErrors[key]?._errors?.[0] || "";
+            return acc;
+          }, {})
+        );
+        setLoading(false);
+        return;
+      }
+
+      // Format the data for the API
+      const formattedData = {
+        firstName: dataToSubmit.firstName,
+        lastName: dataToSubmit.lastName,
+        userName: dataToSubmit.username,
+        bio: dataToSubmit.bio,
+        phoneNumber: dataToSubmit.phoneNumber,
+        birthDate: dataToSubmit.birthDate,
+        cityName: dataToSubmit.city,
+        countryName: dataToSubmit.country,
+        address: dataToSubmit.address,
+        nationality: dataToSubmit.nationality,
+        gender: dataToSubmit.gender,
+        spokenLanguageNamesList: dataToSubmit.spokenLanguageNamesList,
+      };
+
+      console.log("Formatted data:", formattedData); // Debugging: Log the data being sent
+
+      // Get the access token
+      const { accessToken } = useAuthStore.getState();
+      console.log("Access token:", accessToken); // Debugging: Log the access token
+
+      if (!accessToken) {
+        throw new Error("No access token available. Please log in.");
+      }
+
+      // Submit the data to the API
+      const response = await axios.post(
+        `${baseUrl}/user/profile/complete1`,
+        formattedData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
       );
-      return;
-    }
 
-    console.log("Moving to step 2 with data:", formData);
+      console.log("API response:", response.data); // Debugging: Log the API response
+      setSuccess(response.data.message || "Profile updated successfully!");
+    } catch (err) {
+      console.error("API Request Failed:", err.response?.data || err.message);
+      setError(err.response?.data?.message || "Failed to update profile.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Prepare language options for MultiDropdown
   const languageOptions = languages.map((lang) => ({
-    value: lang.English, // Use the English name as the value
-    label: lang.English, // Use the English name as the label
+    value: lang.English,
+    label: lang.English,
   }));
 
   // Prepare country options for Nationality Dropdown
@@ -218,7 +282,6 @@ export default function StepOneForm() {
           errorMsg={errors.birthDate}
         />
 
-        {/* Replace Nationality Input with Dropdown */}
         <Dropdown
           label="Nationality"
           id="nationality"
@@ -283,7 +346,6 @@ export default function StepOneForm() {
           </RadioGroup>
         </div>
 
-        {/* MultiDropdown for Spoken Languages */}
         <MultiDropdown
           label="Spoken Language/s"
           id="spokenLanguages"
@@ -293,8 +355,15 @@ export default function StepOneForm() {
           onChange={(e) => handleSpokenLanguagesChange(e.target.value)}
         />
 
-        <button type="submit" className={styles.submitButton}>
-          Next Step
+        {success && <SuccessMessage message={success} />}
+        {error && <ErrorMessage message={error} />}
+
+        <button
+          type="submit"
+          className={styles.submitButton}
+          disabled={loading}
+        >
+          {loading ? "Submitting..." : "Next Step"}
         </button>
       </form>
     </div>

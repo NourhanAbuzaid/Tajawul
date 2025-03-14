@@ -13,19 +13,16 @@ export const stepOneSchema = z.object({
     ),
   phoneNumber: z
     .string()
-    .regex(/^\+?[0-9]{10,15}$/, "Invalid phone number. Include country code."),
+    .regex(
+      /^\+?[0-9\s\-.]{10,15}$/,
+      "Invalid phone number. Include country code."
+    ),
   birthDate: z.string().min(1, "Birth date is required."),
   country: z.string().min(2, "Country name must be at least 2 characters."),
   city: z.string().min(2, "City name must be at least 2 characters."),
   address: z.string().min(5, "Address must be at least 5 characters."),
   nationality: z.string().min(2, "Nationality must be at least 2 characters."),
   gender: z.string(),
-  preferredLanguage: z
-    .string()
-    .min(2, "Preferred language must be at least 2 characters."),
   bio: z.string().max(500, "Bio must be at most 500 characters."),
-  profilePicture: z
-    .string()
-    .url("Invalid profile picture URL.")
-    .regex(/\.(jpg|jpeg|png|webp)$/, "Profile picture must be an image file."),
+  profilePicture: z.string().optional(), // Make profilePicture optional
 });
