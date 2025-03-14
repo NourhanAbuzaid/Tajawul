@@ -12,6 +12,7 @@ import Dropdown from "app/components/ui/Dropdown";
 import allCountriesStates from "@/data/allCountriesStates.json";
 import languages from "@/data/languages.json";
 import axios from "axios";
+import API from "@/utils/api";
 import ErrorMessage from "app/components/ui/ErrorMessage";
 import SuccessMessage from "app/components/ui/SuccessMessage";
 import useAuthStore from "@/store/authStore";
@@ -167,25 +168,8 @@ export default function StepOneForm() {
 
       console.log("Formatted data:", formattedData); // Debugging: Log the data being sent
 
-      // Get the access token
-      const { accessToken } = useAuthStore.getState();
-      console.log("Access token:", accessToken); // Debugging: Log the access token
-
-      if (!accessToken) {
-        throw new Error("No access token available. Please log in.");
-      }
-
-      // Submit the data to the API
-      const response = await axios.post(
-        `${baseUrl}/user/profile/complete1`,
-        formattedData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      // Submit the data to the API using the API instance
+      const response = await API.post("/user/profile/complete1", formattedData);
 
       console.log("API response:", response.data); // Debugging: Log the API response
       setSuccess(response.data.message || "Profile updated successfully!");
