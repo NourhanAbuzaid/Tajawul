@@ -35,6 +35,7 @@ export async function login(email, password) {
 }
 
 export async function logout() {
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   try {
     const { accessToken, refreshToken, clearTokens } = useAuthStore.getState();
 
