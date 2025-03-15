@@ -33,8 +33,14 @@ API.interceptors.request.use(
             refreshToken,
           });
 
+          console.log("Refresh token response:", response.data); // Debugging: Log the response
+
           const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
             response.data;
+
+          if (!newAccessToken || !newRefreshToken) {
+            throw new Error("Invalid response from refresh token endpoint");
+          }
 
           console.log("New access token:", newAccessToken);
           console.log("New refresh token:", newRefreshToken);
@@ -74,6 +80,8 @@ API.interceptors.response.use(
 
         if (!refreshToken) {
           console.error("No refresh token available. Logging out...");
+          clearTokens(); // Clear tokens
+          Router.push("/login"); // Redirect to login
           throw new Error("No refresh token available");
         }
 
@@ -82,8 +90,14 @@ API.interceptors.response.use(
           refreshToken,
         });
 
+        console.log("Refresh token response:", response.data); // Debugging: Log the response
+
         const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
           response.data;
+
+        if (!newAccessToken || !newRefreshToken) {
+          throw new Error("Invalid response from refresh token endpoint");
+        }
 
         console.log("New access token:", newAccessToken);
         console.log("New refresh token:", newRefreshToken);
