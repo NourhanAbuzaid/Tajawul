@@ -1,10 +1,27 @@
 import React, { useState } from "react";
 import TagQuestion from "@/components/ui/TagQuestion";
 
-const options = [
-  { label: "Option 1", value: "1" },
-  { label: "Option 2", value: "2" },
-  { label: "Option 3", value: "3" },
+const durationOptions = [
+  { label: "Day", value: "day" },
+  { label: "3 Days", value: "3 days" },
+  { label: "Week", value: "week" },
+  { label: "2 Weeks", value: "2 weeks" },
+  { label: "Month", value: "month" },
+  { label: "More than a month", value: "more than a month" },
+];
+
+const budgetOptions = [
+  { label: "Low", value: "low" },
+  { label: "Mid-range", value: "mid-range" },
+  { label: "Luxury", value: "luxury" },
+];
+
+const groupSizeOptions = [
+  { label: "Solo", value: "solo" },
+  { label: "Couple", value: "couple" },
+  { label: "Family", value: "family" },
+  { label: "Group", value: "group" },
+  { label: "Big Group", value: "big-group" },
 ];
 
 export default function StepThreeForm() {
@@ -22,8 +39,22 @@ export default function StepThreeForm() {
   return (
     <div>
       <TagQuestion
-        question="What are your interests?"
-        options={options}
+        question="How long do you plan to travel?"
+        options={durationOptions}
+        selectedValues={selectedTags}
+        onChange={handleTagChange}
+        required
+      />
+      <TagQuestion
+        question="What is your budget range for most of your trips?"
+        options={budgetOptions}
+        selectedValues={selectedTags}
+        onChange={handleTagChange}
+        required
+      />
+      <TagQuestion
+        question="What is your preferred group size trips?"
+        options={groupSizeOptions}
         selectedValues={selectedTags}
         onChange={handleTagChange}
         required
