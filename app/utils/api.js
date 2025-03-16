@@ -35,17 +35,16 @@ API.interceptors.request.use(
 
           console.log("Refresh token response:", response.data); // Debugging: Log the response
 
-          const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
-            response.data;
+          const { token: newAccessToken } = response.data;
 
-          if (!newAccessToken || !newRefreshToken) {
+          if (!newAccessToken) {
             throw new Error("Invalid response from refresh token endpoint");
           }
 
           console.log("New access token:", newAccessToken);
-          console.log("New refresh token:", newRefreshToken);
 
-          setTokens(newAccessToken, newRefreshToken); // Update tokens in store
+          // Update only the access token, keep the existing refresh token
+          setTokens(newAccessToken, refreshToken); // Update tokens in store
           config.headers.Authorization = `Bearer ${newAccessToken}`; // Update request headers
         } catch (refreshError) {
           console.error("Failed to refresh token:", refreshError);
@@ -92,17 +91,16 @@ API.interceptors.response.use(
 
         console.log("Refresh token response:", response.data); // Debugging: Log the response
 
-        const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
-          response.data;
+        const { token: newAccessToken } = response.data;
 
-        if (!newAccessToken || !newRefreshToken) {
+        if (!newAccessToken) {
           throw new Error("Invalid response from refresh token endpoint");
         }
 
         console.log("New access token:", newAccessToken);
-        console.log("New refresh token:", newRefreshToken);
 
-        setTokens(newAccessToken, newRefreshToken); // Update tokens in store
+        // Update only the access token, keep the existing refresh token
+        setTokens(newAccessToken, refreshToken); // Update tokens in store
 
         // Retry the original request with the new access token
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;

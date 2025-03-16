@@ -306,6 +306,10 @@ export default function CreateDestinationForm() {
       const validation = addDestinationSchema.safeParse(formattedData);
       if (!validation.success) {
         const newErrors = validation.error.format();
+
+        // Log the errors to the console
+        console.log("Validation Errors:", newErrors);
+
         setErrors(
           Object.keys(newErrors).reduce((acc, key) => {
             acc[key] = newErrors[key]?._errors?.[0] || "";
