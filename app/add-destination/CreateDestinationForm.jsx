@@ -13,6 +13,7 @@ import { addDestinationSchema, validateOpenCloseTime } from "./actions";
 import DOMPurify from "dompurify";
 import useAuthStore from "@/store/authStore";
 import arabCountries from "@/data/arabCountries.json";
+import API from "@/utils/api";
 
 // Debounce utility function to limit the number of calls to saveToLocalStorage
 const debounce = (func, delay) => {
@@ -45,6 +46,7 @@ const DynamicInput = ({ label, type, value, onChange, errorMsg, onRemove }) => (
 );
 
 export default function CreateDestinationForm() {
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const [formData, setFormData] = useState({
     name: "",
     type: "",
@@ -327,16 +329,7 @@ export default function CreateDestinationForm() {
       // Include the accessToken in the headers
       console.log("Including accessToken in headers:", accessToken); // Debug: Log the token being included in headers
 
-      const response = await axios.post(
-        "https://tajawul-caddcdduayewd2bv.uaenorth-01.azurewebsites.net/api/Destination",
-        formattedData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      const response = await API.post("/Destination", formattedData);
 
       console.log("API Response:", response.data); // Debug: Log the API response
 

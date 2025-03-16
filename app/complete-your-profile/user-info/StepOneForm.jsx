@@ -11,11 +11,9 @@ import { stepOneSchema } from "./actions";
 import Dropdown from "app/components/ui/Dropdown";
 import allCountriesStates from "@/data/allCountriesStates.json";
 import languages from "@/data/languages.json";
-import axios from "axios";
 import API from "@/utils/api";
 import ErrorMessage from "app/components/ui/ErrorMessage";
 import SuccessMessage from "app/components/ui/SuccessMessage";
-import useAuthStore from "@/store/authStore";
 
 // Utility function for debouncing
 const debounce = (func, delay) => {
