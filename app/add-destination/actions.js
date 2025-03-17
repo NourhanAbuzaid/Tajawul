@@ -6,7 +6,6 @@ export const addDestinationSchema = z.object({
     .string()
     .min(10, "Description must be at least 10 characters long")
     .max(500),
-  coverImage: z.string().url("Cover image must be a valid URL"),
   type: z.string().min(2, "Type is required").max(50),
   priceRange: z.enum(["Low", "Mid", "Luxury"], {
     errorMap: () => ({
@@ -50,9 +49,6 @@ export const addDestinationSchema = z.object({
         message: "Established date cannot be in the future.",
       }
     ),
-
-  // Arrays of strings for images
-  images: z.array(z.string().url("Each image must be a valid URL")).optional(),
 
   // Social Media Links (Array of objects)
   socialMediaLinks: z

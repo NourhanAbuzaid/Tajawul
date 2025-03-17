@@ -51,7 +51,6 @@ export default function CreateDestinationForm() {
     name: "",
     type: "",
     description: "",
-    coverImage: "",
     priceRange: "",
     country: "",
     city: "",
@@ -60,7 +59,6 @@ export default function CreateDestinationForm() {
     openTime: "",
     closeTime: "",
     establishedAt: "",
-    images: [],
     socialMediaLinks: [],
     contactInfo: [],
   });
@@ -172,13 +170,6 @@ export default function CreateDestinationForm() {
     }));
   };
 
-  const addImageUrl = () => {
-    setFormData((prev) => ({
-      ...prev,
-      images: [...prev.images, ""],
-    }));
-  };
-
   const handleContactChange = (index, value) => {
     const updatedContacts = [...formData.contactInfo];
     updatedContacts[index].value = value;
@@ -213,19 +204,6 @@ export default function CreateDestinationForm() {
     }
   };
 
-  const handleImageChange = (index, value) => {
-    const updatedImages = [...formData.images];
-    updatedImages[index] = DOMPurify.sanitize(value);
-    setFormData((prev) => ({ ...prev, images: updatedImages }));
-
-    let error = "";
-    if (!/^https?:\/\/[\w\-]+(\.[\w\-]+)+[/#?]?.*$/.test(value)) {
-      error = "Invalid image URL";
-    }
-
-    setErrors((prev) => ({ ...prev, [`image-${index}`]: error }));
-  };
-
   const handleLocationChange = (field, value) => {
     setFormData((prev) => ({
       ...prev,
@@ -247,11 +225,6 @@ export default function CreateDestinationForm() {
     setFormData((prev) => ({ ...prev, socialMediaLinks: updatedLinks }));
   };
 
-  const removeImageUrl = (index) => {
-    const updatedImages = formData.images.filter((_, i) => i !== index);
-    setFormData((prev) => ({ ...prev, images: updatedImages }));
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -266,7 +239,6 @@ export default function CreateDestinationForm() {
         name: formData.name,
         type: formData.type,
         description: formData.description,
-        coverImage: formData.coverImage,
         priceRange: formData.priceRange,
         country: formData.country,
         city: formData.city,
@@ -287,10 +259,6 @@ export default function CreateDestinationForm() {
       // Add optional fields only if they have a value
       if (formData.establishedAt) {
         formattedData.establishedAt = formData.establishedAt;
-      }
-
-      if (formData.images.length > 0) {
-        formattedData.images = formData.images;
       }
 
       if (formData.socialMediaLinks.length > 0) {
@@ -344,14 +312,12 @@ export default function CreateDestinationForm() {
         name: "",
         type: "",
         description: "",
-        coverImage: "",
         country: "",
         city: "",
         openTime: "",
         closeTime: "",
         priceRange: "",
         contactInfo: [],
-        images: [],
         socialMediaLinks: [],
         establishedAt: "",
         locations: [{ longitude: 0, latitude: 0, address: "" }],
@@ -626,45 +592,6 @@ export default function CreateDestinationForm() {
               Remove
             </button>
           </div>
-        ))}
-
-        <h2 className={styles.subheader}>Media</h2>
-        <Divider
-          sx={{
-            height: "1px",
-            width: "100%",
-            bgcolor: "var(--Green-Perfect)",
-            marginBottom: "20px",
-          }}
-        />
-        <Input
-          label="Cover Image URL"
-          id="coverImage"
-          type="text"
-          required
-          value={formData.coverImage}
-          onChange={handleChange}
-          errorMsg={errors.coverImage}
-        />
-        <div className={styles.contactButtons}>
-          <button
-            type="button"
-            onClick={addImageUrl}
-            className={styles.addButton}
-          >
-            + Add Image
-          </button>
-        </div>
-        {formData.images.map((img, index) => (
-          <DynamicInput
-            key={index}
-            label="Image URL"
-            type="url"
-            value={img}
-            onChange={(e) => handleImageChange(index, e.target.value)}
-            errorMsg={errors[`image-${index}`]}
-            onRemove={() => removeImageUrl(index)}
-          />
         ))}
 
         {success && <SuccessMessage message={success} />}
