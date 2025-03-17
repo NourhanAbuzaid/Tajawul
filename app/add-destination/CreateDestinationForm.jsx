@@ -8,7 +8,6 @@ import ErrorMessage from "app/components/ui/ErrorMessage";
 import SuccessMessage from "app/components/ui/SuccessMessage";
 import Divider from "@mui/material/Divider";
 import { useState, useEffect, useCallback } from "react";
-import axios from "axios";
 import { addDestinationSchema, validateOpenCloseTime } from "./actions";
 import DOMPurify from "dompurify";
 import useAuthStore from "@/store/authStore";
