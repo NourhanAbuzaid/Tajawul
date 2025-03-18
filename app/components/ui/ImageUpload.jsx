@@ -3,44 +3,49 @@ import styles from "./ImageUpload.module.css";
 import { useState } from "react";
 import Image from "next/image";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
-import CloseIcon from "@mui/icons-material/Close"; // Import the close icon for the remove button
+import CloseIcon from "@mui/icons-material/Close";
 
 export default function ImageUpload({
   label,
   id,
   required,
-  onUpload, // Changed from onChange to onUpload
+  onUpload,
   description,
   errorMsg,
-  accept = "image/*", // Restrict to image files
+  accept = "image/jpeg, image/jpg, image/png, image/webp", // Restrict to JPG, JPEG, PNG, WEBP
   disabled = false,
 }) {
-  const [filePreview, setFilePreview] = useState(""); // For image preview
+  const [filePreview, setFilePreview] = useState("");
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      // Validate file type
-      if (file.type.startsWith("image/")) {
+      if (
+        file.type === "image/jpeg" ||
+        file.type === "image/jpg" ||
+        file.type === "image/png" ||
+        file.type === "image/webp"
+      ) {
         const reader = new FileReader();
         reader.onload = (e) => {
-          setFilePreview(e.target.result); // Set image preview
-          onUpload({ target: { name: id, value: e.target.result } }); // Pass the file URL to the parent
+          setFilePreview(e.target.result);
+          onUpload({ target: { name: id, value: e.target.result } });
         };
-        reader.readAsDataURL(file); // Convert file to data URL
+        reader.readAsDataURL(file);
       } else {
+        alert("Only JPG, JPEG, PNG, and WEBP files are allowed.");
         setFilePreview("");
-        onUpload({ target: { name: id, value: "" } }); // Clear the value if the file is not an image
+        onUpload({ target: { name: id, value: "" } });
       }
     } else {
       setFilePreview("");
-      onUpload({ target: { name: id, value: "" } }); // Clear the value if no file is selected
+      onUpload({ target: { name: id, value: "" } });
     }
   };
 
   const handleRemoveImage = () => {
-    setFilePreview(""); // Clear the preview
-    onUpload({ target: { name: id, value: "" } }); // Notify the parent that the image is removed
+    setFilePreview("");
+    onUpload({ target: { name: id, value: "" } });
   };
 
   return (
@@ -80,7 +85,6 @@ export default function ImageUpload({
               priority
               className={styles.image}
             />
-            {/* Remove button */}
             <button className={styles.removeButton} onClick={handleRemoveImage}>
               <CloseIcon />
             </button>

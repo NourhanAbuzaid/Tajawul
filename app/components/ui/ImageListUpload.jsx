@@ -14,7 +14,7 @@ export default function ImageListUpload({
   onUpload,
   description,
   errorMsg,
-  accept = "image/*",
+  accept = "image/jpeg, image/jpg, image/png, image/webp", // Restrict to JPG, JPEG, PNG, WEBP
   disabled = false,
 }) {
   const [filePreviews, setFilePreviews] = useState([]);
@@ -24,10 +24,15 @@ export default function ImageListUpload({
   const handleFileChange = (event) => {
     const files = event.target.files;
     if (files && files.length > 0) {
-      const newFiles = Array.from(files).slice(0, 5 - filePreviews.length);
+      const newFiles = Array.from(files).slice(0, 5 - filePreviews.length); // Limit to 5 files
       const newPreviews = [];
       newFiles.forEach((file) => {
-        if (file.type.startsWith("image/")) {
+        if (
+          file.type === "image/jpeg" ||
+          file.type === "image/jpg" ||
+          file.type === "image/png" ||
+          file.type === "image/webp"
+        ) {
           const reader = new FileReader();
           reader.onload = (e) => {
             newPreviews.push(e.target.result);
@@ -39,6 +44,8 @@ export default function ImageListUpload({
             }
           };
           reader.readAsDataURL(file);
+        } else {
+          alert("Only JPG, JPEG, PNG, and WEBP files are allowed.");
         }
       });
     }

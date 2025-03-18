@@ -12,7 +12,7 @@ export default function CoverUpload({
   onUpload,
   description,
   errorMsg,
-  accept = "image/*",
+  accept = "image/jpeg, image/jpg, image/png, image/webp", // Restrict to JPG, JPEG, PNG, WEBP
   disabled = false,
 }) {
   const [filePreview, setFilePreview] = useState("");
@@ -20,7 +20,12 @@ export default function CoverUpload({
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      if (file.type.startsWith("image/")) {
+      if (
+        file.type === "image/jpeg" ||
+        file.type === "image/jpg" ||
+        file.type === "image/png" ||
+        file.type === "image/webp"
+      ) {
         const reader = new FileReader();
         reader.onload = (e) => {
           setFilePreview(e.target.result);
@@ -28,6 +33,7 @@ export default function CoverUpload({
         };
         reader.readAsDataURL(file);
       } else {
+        alert("Only JPG, JPEG, PNG, and WEBP files are allowed.");
         setFilePreview("");
         onUpload({ target: { name: id, value: "" } });
       }
