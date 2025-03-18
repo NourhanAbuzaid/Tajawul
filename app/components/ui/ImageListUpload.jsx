@@ -97,7 +97,7 @@ export default function ImageListUpload({
           multiple
         />
         <label htmlFor={id} className={styles.fileUploadButton}>
-          <AddPhotoAlternateIcon /> Choose File
+          <AddPhotoAlternateIcon /> Upload Images
         </label>
       </div>
 

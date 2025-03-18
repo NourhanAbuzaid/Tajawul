@@ -96,25 +96,15 @@ export default function CreateDestinationForm() {
   useEffect(() => {
     const savedData = localStorage.getItem("createDestinationForm");
     if (savedData) {
-      setFormData((prev) => ({
-        ...JSON.parse(savedData),
-        country: "",
-        city: "",
-        locations: savedData.locations?.length
-          ? savedData.locations
-          : [{ longitude: 0, latitude: 0, address: "" }],
-      }));
+      setFormData(JSON.parse(savedData));
     }
   }, []);
 
   // Save form data to local storage
   const saveToLocalStorage = useCallback(
     debounce((data) => {
-      const { country, city, ...filteredData } = data;
-      localStorage.setItem(
-        "createDestinationForm",
-        JSON.stringify(filteredData)
-      );
+      // Save all fields, including country and city
+      localStorage.setItem("createDestinationForm", JSON.stringify(data));
     }, 500),
     []
   );
@@ -125,20 +115,25 @@ export default function CreateDestinationForm() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    // Sanitize the description field
+    const sanitizedValue =
+      name === "description" ? DOMPurify.sanitize(value) : value;
+
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: sanitizedValue,
       ...(name === "country" ? { city: "" } : {}),
     }));
 
     try {
       if (
-        value ||
+        sanitizedValue ||
         addDestinationSchema.shape[name]?._def?.isOptional !== true
       ) {
         addDestinationSchema
           .pick({ [name]: addDestinationSchema.shape[name] })
-          .parse({ [name]: value });
+          .parse({ [name]: sanitizedValue });
       }
       setErrors((prev) => ({ ...prev, [name]: null }));
     } catch (error) {
@@ -233,11 +228,14 @@ export default function CreateDestinationForm() {
     try {
       validateOpenCloseTime(formData);
 
+      // Sanitize the description before submission
+      const sanitizedDescription = DOMPurify.sanitize(formData.description);
+
       // Create a base object with required fields
       const formattedData = {
         name: formData.name,
         type: formData.type,
-        description: formData.description,
+        description: sanitizedDescription, // Use sanitized description
         priceRange: formData.priceRange,
         country: formData.country,
         city: formData.city,

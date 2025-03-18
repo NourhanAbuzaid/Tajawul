@@ -16,7 +16,16 @@ function UploadImages() {
           className={styles.svgPattern}
         />
         <div className={styles.formFrame}>
-          <p className={styles.title}>Add Destination</p>
+          <h1 className={styles.smallTitle}>Add Images for Your Destination</h1>
+          <div className={styles.noteContainer}>
+            <p className={styles.note}>
+              <strong>Accepted formats:</strong> JPG, JPEG, PNG, WEBP
+            </p>
+            <p className={styles.note}>
+              <strong> Maximum file size:</strong> 2MB
+            </p>
+          </div>
+
           <UploadDestinationImages />
         </div>
       </div>

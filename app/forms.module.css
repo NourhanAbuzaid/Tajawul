@@ -49,10 +49,8 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-
   gap: 28px;
   align-self: stretch;
-  padding-bottom: 16px;
   width: 100%;
 }
 
@@ -317,4 +315,28 @@
 /* Hover effect */
 .checkboxContainer input[type="checkbox"]:hover {
   border-color: var(--Green-Perfect);
+}
+
+/*Upload Destination Images Page*/
+.smallTitle {
+  width: 100%;
+  text-align: left;
+  padding: 0px;
+  margin-bottom: 12px;
+  margin-top: 24px;
+}
+
+.note {
+  width: 100%;
+  text-align: left;
+  padding: 0px;
+  color: var(--Blue-Perfect);
+  font-size: 14px;
+}
+
+.noteContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: 24px;
 }

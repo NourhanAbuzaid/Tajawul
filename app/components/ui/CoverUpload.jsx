@@ -68,7 +68,7 @@ export default function CoverUpload({
           disabled={disabled}
         />
         <label htmlFor={id} className={styles.fileUploadButton}>
-          <AddPhotoAlternateIcon /> Choose File
+          <AddPhotoAlternateIcon /> Upload Cover
         </label>
       </div>
 
