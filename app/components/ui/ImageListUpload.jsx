@@ -4,7 +4,6 @@ import { useState } from "react";
 import Image from "next/image";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import CloseIcon from "@mui/icons-material/Close";
-import { Modal, IconButton } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
@@ -19,7 +18,7 @@ export default function ImageListUpload({
   disabled = false,
 }) {
   const [filePreviews, setFilePreviews] = useState([]);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [popupOpen, setPopupOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   const handleFileChange = (event) => {
@@ -53,11 +52,11 @@ export default function ImageListUpload({
 
   const handleImageClick = (index) => {
     setSelectedImageIndex(index);
-    setModalOpen(true);
+    setPopupOpen(true);
   };
 
-  const handleCloseModal = () => {
-    setModalOpen(false);
+  const handleClosePopup = () => {
+    setPopupOpen(false);
   };
 
   const handleNextImage = () => {
@@ -112,7 +111,7 @@ export default function ImageListUpload({
               className={styles.imageListImage}
             />
             <button
-              className={styles.removeButton}
+              className={styles.listRemoveButton}
               onClick={(e) => {
                 e.stopPropagation();
                 handleRemoveImage(index);
@@ -124,36 +123,39 @@ export default function ImageListUpload({
         ))}
       </div>
 
-      {/* Modal for full-size image */}
-      <Modal open={modalOpen} onClose={handleCloseModal}>
-        <div className={styles.modalContainer}>
-          <IconButton
-            className={styles.modalCloseButton}
-            onClick={handleCloseModal}
-          >
-            <CloseIcon />
-          </IconButton>
-          <IconButton
-            className={styles.modalArrowLeft}
-            onClick={handlePreviousImage}
-          >
-            <ArrowBackIosIcon />
-          </IconButton>
-          <Image
-            src={filePreviews[selectedImageIndex]}
-            alt={`Full Preview ${selectedImageIndex + 1}`}
-            width={600}
-            height={400}
-            style={{ objectFit: "contain" }}
-          />
-          <IconButton
-            className={styles.modalArrowRight}
-            onClick={handleNextImage}
-          >
-            <ArrowForwardIosIcon />
-          </IconButton>
+      {/* Custom Popup for full-size image */}
+      {popupOpen && (
+        <div className={styles.popupOverlay}>
+          <div className={styles.popupContainer}>
+            <button
+              className={styles.popupCloseButton}
+              onClick={handleClosePopup}
+            >
+              <CloseIcon />
+            </button>
+            <button
+              className={styles.popupArrowLeft}
+              onClick={handlePreviousImage}
+            >
+              <ArrowForwardIosIcon sx={{ fontSize: "18px" }} />
+            </button>
+            <Image
+              src={filePreviews[selectedImageIndex]}
+              alt={`Full Preview ${selectedImageIndex + 1}`}
+              width={800}
+              height={500}
+              style={{ objectFit: "cover" }}
+              className={styles.popupImage}
+            />
+            <button
+              className={styles.popupArrowRight}
+              onClick={handleNextImage}
+            >
+              <ArrowForwardIosIcon sx={{ fontSize: "18px" }} />
+            </button>
+          </div>
         </div>
-      </Modal>
+      )}
 
       {errorMsg && <div className={styles.fileUploadError}>{errorMsg}</div>}
     </div>

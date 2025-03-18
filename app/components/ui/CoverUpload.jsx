@@ -79,7 +79,10 @@ export default function CoverUpload({
               priority
               className={styles.coverImage}
             />
-            <button className={styles.removeButton} onClick={handleRemoveImage}>
+            <button
+              className={styles.coverRemoveButton}
+              onClick={handleRemoveImage}
+            >
               <CloseIcon />
             </button>
           </div>
