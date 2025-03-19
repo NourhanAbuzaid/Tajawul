@@ -6,6 +6,7 @@ import Rating from "./Rating";
 import Tag from "./Tag";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import PlaceIcon from "@mui/icons-material/Place";
+import Image from "next/image"; // Import the Next.js Image component
 
 const DestinationCard = ({
   image,
@@ -24,7 +25,13 @@ const DestinationCard = ({
   return (
     <div className={styles.card}>
       <div className={styles.imageWrapper}>
-        <img src={image} alt={name} className={styles.image} />
+        <Image
+          src={image}
+          alt={name}
+          className={styles.image}
+          width={290} // Set the width of the image
+          height={430} // Set the height of the image
+        />
         <button className={styles.wishlistButton} onClick={handleWishlist}>
           <FavoriteBorderIcon sx={{ color: "var(--Neutrals-Background)" }} />
         </button>

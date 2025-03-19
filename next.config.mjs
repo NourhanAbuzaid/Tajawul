@@ -1,7 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["media.istockphoto.com", "images.app.goo.gl"], // Add any other image sources here
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "tajawulstorage.blob.core.windows.net",
+        port: "",
+        pathname: "/**",
+      },
+    ],
   },
 };
 
