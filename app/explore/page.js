@@ -6,9 +6,12 @@ import styles from "@/Explore.module.css";
 export default async function ExplorePage() {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   try {
-    const response = await axios.get(`${baseUrl}/Destination`, {
-      next: { revalidate: 120 },
-    });
+    const response = await axios.get(
+      `${baseUrl}/Destination?PageNumber=1&PageSize=50`,
+      {
+        next: { revalidate: 120 },
+      }
+    );
 
     const destinations = response.data.destinations || [];
 

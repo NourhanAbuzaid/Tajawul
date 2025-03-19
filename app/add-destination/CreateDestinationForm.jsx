@@ -13,6 +13,7 @@ import DOMPurify from "dompurify";
 import useAuthStore from "@/store/authStore";
 import arabCountries from "@/data/arabCountries.json";
 import API from "@/utils/api";
+import { useRouter } from "next/navigation"; // Import useRouter for redirection
 
 // Debounce utility function to limit the number of calls to saveToLocalStorage
 const debounce = (func, delay) => {
@@ -68,6 +69,7 @@ export default function CreateDestinationForm() {
   const [error, setError] = useState("");
   const [cities, setCities] = useState([]);
   const [cityClicked, setCityClicked] = useState(false);
+  const router = useRouter(); // Initialize useRouter for redirection
 
   const arabCountriesOptions = Object.keys(arabCountries).map((country) => ({
     value: country,
@@ -303,6 +305,13 @@ export default function CreateDestinationForm() {
       console.log("API Response:", response.data); // Debug: Log the API response
 
       setSuccess(response.data.message || "Destination created successfully!");
+
+      // Store the destination ID in local storage
+      const destinationId = response.data.destination.destinationId; // Correctly access the destinationId
+      localStorage.setItem("destinationId", destinationId);
+
+      // Redirect to the images-upload page
+      router.push("/add-destination/images-upload");
 
       // Reset form fields
       setFormData({

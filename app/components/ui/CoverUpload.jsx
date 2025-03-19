@@ -11,15 +11,24 @@ export default function CoverUpload({
   required,
   onUpload,
   description,
-  errorMsg,
   accept = "image/jpeg, image/jpg, image/png, image/webp", // Restrict to JPG, JPEG, PNG, WEBP
   disabled = false,
 }) {
   const [filePreview, setFilePreview] = useState("");
+  const [fileSizeError, setFileSizeError] = useState("");
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        setFileSizeError("Please choose an image that doesn't exceed 2 MB.");
+        setFilePreview("");
+        onUpload({ target: { files: [] } });
+        return;
+      } else {
+        setFileSizeError(""); // Clear the error if the file is valid
+      }
+
       if (
         file.type === "image/jpeg" ||
         file.type === "image/jpg" ||
@@ -28,24 +37,26 @@ export default function CoverUpload({
       ) {
         const reader = new FileReader();
         reader.onload = (e) => {
-          setFilePreview(e.target.result);
-          onUpload({ target: { name: id, value: e.target.result } });
+          setFilePreview(e.target.result); // Set the preview image
         };
         reader.readAsDataURL(file);
+
+        // Pass the file object to the onUpload function
+        onUpload(event); // Pass the entire event object
       } else {
         alert("Only JPG, JPEG, PNG, and WEBP files are allowed.");
         setFilePreview("");
-        onUpload({ target: { name: id, value: "" } });
+        onUpload({ target: { files: [] } }); // Pass an empty files array
       }
     } else {
       setFilePreview("");
-      onUpload({ target: { name: id, value: "" } });
+      onUpload({ target: { files: [] } }); // Pass an empty files array
     }
   };
 
   const handleRemoveImage = () => {
     setFilePreview("");
-    onUpload({ target: { name: id, value: "" } });
+    onUpload({ target: { files: [] } }); // Pass an empty files array
   };
 
   return (
@@ -95,7 +106,9 @@ export default function CoverUpload({
         )}
       </div>
 
-      {errorMsg && <div className={styles.fileUploadError}>{errorMsg}</div>}
+      {fileSizeError && (
+        <div className={styles.fileUploadError}>{fileSizeError}</div>
+      )}
     </div>
   );
 }

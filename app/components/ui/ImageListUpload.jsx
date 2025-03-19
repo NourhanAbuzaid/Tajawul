@@ -4,7 +4,6 @@ import { useState } from "react";
 import Image from "next/image";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import CloseIcon from "@mui/icons-material/Close";
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 export default function ImageListUpload({
@@ -13,20 +12,28 @@ export default function ImageListUpload({
   required,
   onUpload,
   description,
-  errorMsg,
   accept = "image/jpeg, image/jpg, image/png, image/webp", // Restrict to JPG, JPEG, PNG, WEBP
   disabled = false,
 }) {
   const [filePreviews, setFilePreviews] = useState([]);
+  const [files, setFiles] = useState([]); // Store file objects
   const [popupOpen, setPopupOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [fileSizeError, setFileSizeError] = useState("");
 
   const handleFileChange = (event) => {
     const files = event.target.files;
     if (files && files.length > 0) {
-      const newFiles = Array.from(files).slice(0, 5 - filePreviews.length); // Limit to 5 files
+      const newFiles = Array.from(files).slice(0, 5 - filePreviews.length);
       const newPreviews = [];
       newFiles.forEach((file) => {
+        if (file.size > 2 * 1024 * 1024) {
+          setFileSizeError("Please choose an image that doesn't exceed 2 MB.");
+          return;
+        } else {
+          setFileSizeError(""); // Clear the error if the file is valid
+        }
+
         if (
           file.type === "image/jpeg" ||
           file.type === "image/jpg" ||
@@ -38,9 +45,8 @@ export default function ImageListUpload({
             newPreviews.push(e.target.result);
             if (newPreviews.length === newFiles.length) {
               setFilePreviews([...filePreviews, ...newPreviews]);
-              onUpload({
-                target: { name: id, value: [...filePreviews, ...newPreviews] },
-              });
+              setFiles((prevFiles) => [...prevFiles, ...newFiles]); // Store file objects
+              onUpload(event); // Pass the event object with files
             }
           };
           reader.readAsDataURL(file);
@@ -53,8 +59,10 @@ export default function ImageListUpload({
 
   const handleRemoveImage = (index) => {
     const newPreviews = filePreviews.filter((_, i) => i !== index);
+    const newFiles = files.filter((_, i) => i !== index);
     setFilePreviews(newPreviews);
-    onUpload({ target: { name: id, value: newPreviews } });
+    setFiles(newFiles);
+    onUpload({ target: { files: newFiles } }); // Pass the updated files array
   };
 
   const handleImageClick = (index) => {
@@ -164,7 +172,9 @@ export default function ImageListUpload({
         </div>
       )}
 
-      {errorMsg && <div className={styles.fileUploadError}>{errorMsg}</div>}
+      {fileSizeError && (
+        <div className={styles.fileUploadError}>{fileSizeError}</div>
+      )}
     </div>
   );
 }
