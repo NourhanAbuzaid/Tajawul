@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import SuccessMessage from "@/components/ui/SuccessMessage";
+import Image from "next/image";
 
 export default function UploadDestinationImages() {
   const [destinationId, setDestinationId] = useState(null);
@@ -16,10 +17,10 @@ export default function UploadDestinationImages() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    // Retrieve the destination ID from local storage
     const storedDestinationId = localStorage.getItem("destinationId");
     if (storedDestinationId) {
       setDestinationId(storedDestinationId);
@@ -46,7 +47,7 @@ export default function UploadDestinationImages() {
   };
 
   const handleSubmit = async () => {
-    console.log("handleSubmit triggered"); // Debugging
+    console.log("handleSubmit triggered");
     if (!destinationId) {
       setError("Destination ID is missing. Please try again.");
       return;
@@ -58,9 +59,8 @@ export default function UploadDestinationImages() {
 
     try {
       let coverSuccess = false;
-      let imagesSuccess = true; // Assume images upload is successful if no images are uploaded
+      let imagesSuccess = true;
 
-      // Upload Cover Image
       if (coverImage) {
         const coverFormData = new FormData();
         coverFormData.append("ProfileImage", coverImage);
@@ -74,12 +74,10 @@ export default function UploadDestinationImages() {
         console.log("Cover image upload response:", coverResponse);
         if (coverResponse.status === 200) coverSuccess = true;
       } else {
-        // If no cover image is uploaded, consider it a failure
         setError("Cover image is required.");
         return;
       }
 
-      // Upload Destination Images (optional)
       if (destinationImages.length > 0) {
         const imagesFormData = new FormData();
         destinationImages.forEach((file) => {
@@ -96,9 +94,9 @@ export default function UploadDestinationImages() {
         if (imagesResponse.status === 200) imagesSuccess = true;
       }
 
-      // Set success or error message
       if (coverSuccess && imagesSuccess) {
         setSuccess("Images uploaded successfully!");
+        setShowPopup(true);
       } else if (!coverSuccess) {
         setError("Cover image upload failed.");
       } else if (!imagesSuccess) {
@@ -109,6 +107,13 @@ export default function UploadDestinationImages() {
       setError(err.response?.data?.message || "Failed to upload images.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleGoToDestination = () => {
+    if (destinationId) {
+      router.push(`/explore/${destinationId}`);
+      localStorage.removeItem("destinationId");
     }
   };
 
@@ -142,6 +147,38 @@ export default function UploadDestinationImages() {
           {loading ? "Uploading..." : "Submit Images"}
         </button>
       </div>
+
+      {showPopup && (
+        <div className={styles.popupOverlay}>
+          <div className={styles.popupContent}>
+            <Image
+              src="/added-destination.svg"
+              alt="Destination added illustration"
+              width={250}
+              height={250}
+              priority
+            />
+            <button
+              className={styles.closeButton}
+              onClick={() => setShowPopup(false)}
+            >
+              ✕
+            </button>
+
+            <h2>Destination Published</h2>
+            <p>
+              Your destination is now published and live for other travelers to
+              explore!
+            </p>
+            <button
+              className={styles.submitButton}
+              onClick={handleGoToDestination}
+            >
+              Go to Destination Page
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
