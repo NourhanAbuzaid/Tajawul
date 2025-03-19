@@ -26,7 +26,7 @@ export default async function DestinationDetails({ destinationId }) {
       `${baseUrl}/Destination?DestinationId=${destinationId}`
     );
 
-    const destination = data;
+    destination = data.destinations[0]; // Assign the fetched data to the existing `destination` variable
 
     if (!destination) throw new Error("Destination not found");
 
@@ -73,13 +73,13 @@ export default async function DestinationDetails({ destinationId }) {
               <span className={styles.separator}>&gt;</span>
               <span>city</span>
               <span className={styles.separator}>&gt;</span>
-              <span>{destination.name}</span>
+              <span>{destination?.name}</span>
             </p>
           </div>
           <div className={styles.buttomContainer}>
             <div className={styles.buttomLeftContainer}>
               {/* Is Verified */}
-              {destination.isVerified && (
+              {destination?.isVerified && (
                 <div className={styles.verified}>
                   <VerifiedIcon
                     sx={{
@@ -91,12 +91,12 @@ export default async function DestinationDetails({ destinationId }) {
                 </div>
               )}
               {/* Destination Name */}
-              <h1 className={styles.destinationName}>{destination.name}</h1>
+              <h1 className={styles.destinationName}>{destination?.name}</h1>
               {/* Rating and Reviews Count */}
               <div className={styles.ratingContainer}>
-                <Rating average={destination.averageRating} />
+                <Rating average={destination?.averageRating} />
                 <p className={styles.reviewsCount}>
-                  {destination.reviewsCount} Reviews
+                  {destination?.reviewsCount} Reviews
                 </p>
               </div>
             </div>
@@ -144,7 +144,7 @@ export default async function DestinationDetails({ destinationId }) {
             <Tag text="Nature & Adventure" color="orange" />
           </div>
           <div id="images" className={`${styles.section} ${styles.images}`}>
-            <ImageList images={destination.images} />
+            <ImageList images={destination?.images} />
           </div>
           <div id="posts" className={styles.section}>
             <h2>Posts</h2>
@@ -157,8 +157,9 @@ export default async function DestinationDetails({ destinationId }) {
           <div id="about" className={`${styles.section} ${styles.about}`}>
             {/* Open/Close Time */}
             <OpenClose
-              openTime={destination.openTime}
-              closeTime={destination.closeTime}
+              isOpen24Hours={destination?.isOpen24Hours}
+              openTime={destination?.openTime}
+              closeTime={destination?.closeTime}
             />
             <Divider
               sx={{
@@ -183,8 +184,8 @@ export default async function DestinationDetails({ destinationId }) {
             {/* About */}
             <h2>About</h2>
             <div>
-              <p className={styles.type}>{destination.type}</p>
-              <p className={styles.description}>{destination.description}</p>
+              <p className={styles.type}>{destination?.type}</p>
+              <p className={styles.description}>{destination?.description}</p>
             </div>
 
             <Divider
@@ -196,7 +197,7 @@ export default async function DestinationDetails({ destinationId }) {
             />
             <span>
               <strong className={styles.important}>Established At:</strong>{" "}
-              {destination.establishedAt.slice(0, 10)}
+              {destination?.establishedAt}
             </span>
           </div>
           <div
@@ -206,12 +207,12 @@ export default async function DestinationDetails({ destinationId }) {
             <h2>Contributers</h2>
             <div className={styles.creator}>
               <Avatar
-                alt={destination.creator[1]}
-                src={destination.creator[2]}
+                alt={destination?.creator[1]}
+                src={destination?.creator[2]}
                 sx={{ width: 56, height: 56 }}
               />
               <span className={styles.important}>Created By:</span>
-              <span>{destination.creator[1]}</span>
+              <span>{destination?.creator[1]}</span>
             </div>
             <Divider
               sx={{
@@ -225,7 +226,7 @@ export default async function DestinationDetails({ destinationId }) {
           <div id="location" className={`${styles.section} ${styles.location}`}>
             <h2>Location</h2>
             <p>
-              {destination.locations?.[0]?.address || "Location not available"}
+              {destination?.locations?.[0]?.address || "Location not available"}
             </p>
           </div>
 
