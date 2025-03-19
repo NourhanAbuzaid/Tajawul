@@ -24,14 +24,15 @@ export default function ImageListUpload({
   const handleFileChange = (event) => {
     const files = event.target.files;
     if (files && files.length > 0) {
-      const newFiles = Array.from(files).slice(0, 5 - filePreviews.length);
+      const newFiles = Array.from(files).slice(0, 5 - filePreviews.length); // Limit to 5 files
       const newPreviews = [];
+      const validFiles = [];
+      let hasInvalidFile = false; // Track if any file exceeds 2 MB
+
       newFiles.forEach((file) => {
         if (file.size > 2 * 1024 * 1024) {
-          setFileSizeError("Please choose an image that doesn't exceed 2 MB.");
-          return;
-        } else {
-          setFileSizeError(""); // Clear the error if the file is valid
+          hasInvalidFile = true; // Mark that at least one file is invalid
+          return; // Skip this file
         }
 
         if (
@@ -43,10 +44,13 @@ export default function ImageListUpload({
           const reader = new FileReader();
           reader.onload = (e) => {
             newPreviews.push(e.target.result);
-            if (newPreviews.length === newFiles.length) {
+            validFiles.push(file); // Add valid file to the list
+
+            // If all files are processed, update state and call onUpload
+            if (newPreviews.length === validFiles.length) {
               setFilePreviews([...filePreviews, ...newPreviews]);
-              setFiles((prevFiles) => [...prevFiles, ...newFiles]); // Store file objects
-              onUpload(event); // Pass the event object with files
+              setFiles((prevFiles) => [...prevFiles, ...validFiles]); // Store valid file objects
+              onUpload({ target: { files: validFiles } }); // Pass the valid files to onUpload
             }
           };
           reader.readAsDataURL(file);
@@ -54,6 +58,15 @@ export default function ImageListUpload({
           alert("Only JPG, JPEG, PNG, and WEBP files are allowed.");
         }
       });
+
+      // Show error message if any file exceeds 2 MB
+      if (hasInvalidFile) {
+        setFileSizeError(
+          "One or more images exceed 2 MB and were not uploaded."
+        );
+      } else {
+        setFileSizeError(""); // Clear the error if all files are valid
+      }
     }
   };
 
@@ -172,6 +185,7 @@ export default function ImageListUpload({
         </div>
       )}
 
+      {/* Display file size error */}
       {fileSizeError && (
         <div className={styles.fileUploadError}>{fileSizeError}</div>
       )}
