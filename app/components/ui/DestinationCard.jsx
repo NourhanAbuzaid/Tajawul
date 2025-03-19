@@ -1,4 +1,4 @@
-"use client"; // ✅ This component is already a Client Component
+"use client";
 
 import React, { useState } from "react";
 import styles from "./DestinationCard.module.css";
@@ -18,7 +18,7 @@ const DestinationCard = ({
   ratingCount,
   priceRange,
 }) => {
-  const [imageSrc, setImageSrc] = useState(image); // State to handle fallback image
+  const [imageSrc, setImageSrc] = useState(image || "/fallback.jpg"); // Fallback image if image is empty
   const fallbackImage = "/fallback.jpg"; // Path to your fallback image
 
   const handleWishlist = () => {
@@ -33,21 +33,23 @@ const DestinationCard = ({
   return (
     <div className={styles.card}>
       <div className={styles.imageWrapper}>
-        <Image
-          src={imageSrc}
-          alt={name}
-          className={styles.image}
-          width={290}
-          height={430}
-          onLoad={(event) => {
-            const img = event.currentTarget;
-            if (img.naturalWidth === 0) {
-              // If the image fails to load, set the fallback image
-              handleImageError();
-            }
-          }}
-          onError={handleImageError} // Fallback for additional error handling
-        />
+        {imageSrc && (
+          <Image
+            src={imageSrc}
+            alt={name}
+            className={styles.image}
+            width={290}
+            height={430}
+            onLoad={(event) => {
+              const img = event.currentTarget;
+              if (img.naturalWidth === 0) {
+                // If the image fails to load, set the fallback image
+                handleImageError();
+              }
+            }}
+            onError={handleImageError} // Fallback for additional error handling
+          />
+        )}
         <button className={styles.wishlistButton} onClick={handleWishlist}>
           <FavoriteBorderIcon sx={{ color: "var(--Neutrals-Background)" }} />
         </button>

@@ -25,7 +25,7 @@ export default async function ExplorePage() {
             href={`/explore/${destination.destinationId}`}
           >
             <DestinationCard
-              image={destination.coverImage}
+              image={destination.coverImage || "/fallback.jpg"} // Fallback image if coverImage is empty
               name={destination.name}
               type={destination.type}
               location={`${destination.city}, ${destination.country}`}
