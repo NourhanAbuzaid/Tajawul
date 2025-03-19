@@ -1,12 +1,12 @@
-"use client"; // ✅ Now this component can handle events
+"use client"; // ✅ This component is already a Client Component
 
-import React from "react";
+import React, { useState } from "react";
 import styles from "./DestinationCard.module.css";
 import Rating from "./Rating";
 import Tag from "./Tag";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import PlaceIcon from "@mui/icons-material/Place";
-import Image from "next/image"; // Import the Next.js Image component
+import Image from "next/image";
 
 const DestinationCard = ({
   image,
@@ -18,19 +18,35 @@ const DestinationCard = ({
   ratingCount,
   priceRange,
 }) => {
+  const [imageSrc, setImageSrc] = useState(image); // State to handle fallback image
+  const fallbackImage = "/fallback.jpg"; // Path to your fallback image
+
   const handleWishlist = () => {
     alert(`Added ${name} to wishlist!`);
+  };
+
+  const handleImageError = () => {
+    // If the image fails to load, set the fallback image
+    setImageSrc(fallbackImage);
   };
 
   return (
     <div className={styles.card}>
       <div className={styles.imageWrapper}>
         <Image
-          src={image}
+          src={imageSrc}
           alt={name}
           className={styles.image}
-          width={290} // Set the width of the image
-          height={430} // Set the height of the image
+          width={290}
+          height={430}
+          onLoad={(event) => {
+            const img = event.currentTarget;
+            if (img.naturalWidth === 0) {
+              // If the image fails to load, set the fallback image
+              handleImageError();
+            }
+          }}
+          onError={handleImageError} // Fallback for additional error handling
         />
         <button className={styles.wishlistButton} onClick={handleWishlist}>
           <FavoriteBorderIcon sx={{ color: "var(--Neutrals-Background)" }} />
