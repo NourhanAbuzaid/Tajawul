@@ -69,9 +69,9 @@ export default async function DestinationDetails({ destinationId }) {
             <p>
               <span>All</span>
               <span className={styles.separator}>&gt;</span>
-              <span>country</span>
+              <span>{destination?.country}</span>
               <span className={styles.separator}>&gt;</span>
-              <span>city</span>
+              <span>{destination?.city}</span>
               <span className={styles.separator}>&gt;</span>
               <span>{destination?.name}</span>
             </p>
@@ -170,9 +170,9 @@ export default async function DestinationDetails({ destinationId }) {
             />
             {/* Destination Stats */}
             <div className={styles.statsContainer}>
-              <Stats type="Followers" count={1200} />
-              <Stats type="Visitors" count={3500} />
-              <Stats type="Events" count={15} />
+              <Stats type="Followers" count={destination?.followersCount} />
+              <Stats type="Visitors" count={destination?.visitorsCount} />
+              <Stats type="Events" count={destination?.eventsCount} />
             </div>
             <Divider
               sx={{
@@ -188,17 +188,19 @@ export default async function DestinationDetails({ destinationId }) {
               <p className={styles.description}>{destination?.description}</p>
             </div>
 
-            <Divider
-              sx={{
-                height: "1px",
-                width: "100%",
-                bgcolor: "var(--Neutrals-Light-Outline)",
-              }}
-            />
-            <span>
-              <strong className={styles.important}>Established At:</strong>{" "}
-              {destination?.establishedAt}
-            </span>
+            {destination?.establishedAt && (
+              <span>
+                <Divider
+                  sx={{
+                    height: "1px",
+                    width: "100%",
+                    bgcolor: "var(--Neutrals-Light-Outline)",
+                  }}
+                />
+                <strong className={styles.important}>Established At:</strong>{" "}
+                {destination.establishedAt}
+              </span>
+            )}
           </div>
           <div
             id="contributers"
