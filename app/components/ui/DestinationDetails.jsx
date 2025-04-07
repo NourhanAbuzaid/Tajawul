@@ -135,8 +135,21 @@ export default async function DestinationDetails({ destinationId }) {
       <div className={styles.mainContent}>
         {/* Left Column */}
         <div className={styles.leftColumn}>
-          <div id="tags" className={`${styles.section} ${styles.tags}`}>
-            <PriceRange priceRange={destination?.priceRange} />
+          <div
+            id="tags"
+            className={`${styles.section} ${styles.tagsContainer}`}
+          >
+            <div className={styles.headerRow}>
+              <div className={styles.tagsWrapper}>
+                <PriceRange priceRange={destination?.priceRange} />
+                <PriceRange priceRange={destination?.priceRange} />
+                <PriceRange priceRange={destination?.priceRange} />
+                <PriceRange priceRange={destination?.priceRange} />
+              </div>
+              <div className={styles.editButtonContainer}>
+                <button className={styles.editButton}>Add Tags</button>
+              </div>
+            </div>
           </div>
           <div id="images" className={`${styles.section} ${styles.images}`}>
             <ImageList images={destination?.images} />

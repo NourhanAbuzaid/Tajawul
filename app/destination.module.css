@@ -222,13 +222,6 @@
   text-align: left;
 }
 
-.tags {
-  display: flex;
-  gap: 8px;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
-
 .about {
   display: flex;
   gap: 24px;
@@ -298,6 +291,50 @@
 .images {
   border: none;
   padding: 0px;
+}
+
+.tagsContainer {
+  gap: 12px; /* Vertical gap between header row and any content below */
+}
+
+.headerRow {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  gap: 8px; /* Horizontal gap between tags and button */
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.tagsWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px; /* Gap between individual price tags */
+  flex-grow: 1;
+  min-width: 0; /* Allows wrapping to work properly */
+  margin-bottom: 8px; /* Space between tags and button */
+}
+
+.editButtonContainer {
+  flex-shrink: 0; /* Prevents button from shrinking */
+  margin-left: auto; /* Pushes button to the right */
+}
+
+.editButton {
+  display: flex;
+  height: 32px;
+  padding: 5px 24px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 8px;
+  background: var(--Neutrals-Black-Text, #221a14);
+  color: var(--Neutrals-Background, #fffbf4);
+  border: none;
+  font-family: "DM Sans";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
 }
 
 /*Mobile Responsive*/
