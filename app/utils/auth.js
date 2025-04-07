@@ -83,6 +83,7 @@ export async function logout() {
         } catch (refreshError) {
           console.error("Refresh token also expired, logging out...");
           clearTokens();
+          window.location.href = "/login"; // Redirect to login page
           return;
         }
       } else {
