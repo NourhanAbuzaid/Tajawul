@@ -11,8 +11,8 @@ import Rating from "@/components/ui/Rating";
 import OpenClose from "@/components/ui/OpenClose";
 import Stats from "@/components/ui/Stats";
 import ImageList from "@/components/ui/ImageList";
-import Tag from "@/components/ui/Tag";
 import styles from "@/destination.module.css";
+import PriceRange from "./tags/PriceRange";
 
 export default async function DestinationDetails({ destinationId }) {
   await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -136,12 +136,7 @@ export default async function DestinationDetails({ destinationId }) {
         {/* Left Column */}
         <div className={styles.leftColumn}>
           <div id="tags" className={`${styles.section} ${styles.tags}`}>
-            <Tag text="$$ Mid-range" color="green" />
-            <Tag text="Seasonal Tourism" color="blue" />
-            <Tag text="Nature & Adventure" color="orange" />
-            <Tag text="$$ Mid-range" color="green" />
-            <Tag text="Seasonal Tourism" color="blue" />
-            <Tag text="Nature & Adventure" color="orange" />
+            <PriceRange priceRange={destination?.priceRange} />
           </div>
           <div id="images" className={`${styles.section} ${styles.images}`}>
             <ImageList images={destination?.images} />

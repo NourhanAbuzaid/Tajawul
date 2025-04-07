@@ -53,6 +53,19 @@
 
   --Success-Text: #0d5f07;
   --Success-Background: #d2fbd0;
+
+  /*Tags Colors*/
+  --Low-Text: #b5d0a3;
+  --Low-Background: #0a664d;
+  --Low-Stroke: #198d6e;
+
+  --Mid-Text: #ffd89a;
+  --Mid-Background: #b0630b;
+  --Mid-Stroke: #ce8531;
+
+  --Luxury-Text: linear-gradient(-93deg, #ffe597 -8.59%, #b1900d 124.74%);
+  --Luxury-Background: #353535;
+  --Luxury-Stroke: #4f4f4f;
 }
 
 html,
