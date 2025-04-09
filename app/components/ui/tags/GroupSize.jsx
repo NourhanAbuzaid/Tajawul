@@ -5,11 +5,24 @@ import FamilyRestroomIcon from "@mui/icons-material/FamilyRestroom";
 import GroupIcon from "@mui/icons-material/Group";
 import GroupsIcon from "@mui/icons-material/Groups";
 
-const GroupSize = ({ groupSize }) => {
-  if (!groupSize) return null;
+const GroupSize = ({ groupSizes = [] }) => {
+  // Return null if groupSizes is null, undefined, or empty array
+  if (!groupSizes || !Array.isArray(groupSizes)) return null;
 
-  const getGroupSizeDetails = () => {
-    switch (groupSize.toLowerCase()) {
+  // Filter out any null/undefined values and empty strings
+  const validGroupSizes = groupSizes.filter(
+    (size) => size != null && size.trim() !== ""
+  );
+
+  // Return null if there are no valid group sizes
+  if (validGroupSizes.length === 0) return null;
+
+  const getGroupSizeDetails = (size) => {
+    if (!size) return null;
+
+    const lowerSize = size.toLowerCase();
+
+    switch (lowerSize) {
       case "solo":
         return {
           text: "Solo",
@@ -31,6 +44,7 @@ const GroupSize = ({ groupSize }) => {
           icon: <GroupIcon fontSize="small" />,
         };
       case "big-group":
+      case "big group":
         return {
           text: "Big Group",
           icon: <GroupsIcon fontSize="small" />,
@@ -40,17 +54,21 @@ const GroupSize = ({ groupSize }) => {
     }
   };
 
-  const details = getGroupSizeDetails();
-  if (!details) return null;
-
   return (
     <div className={styles.groupSizeContainer}>
-      <span className={styles.tag}>
-        <span className={styles.iconTextWrapper}>
-          {details.icon}
-          {details.text}
-        </span>
-      </span>
+      {validGroupSizes.map((size, index) => {
+        const details = getGroupSizeDetails(size);
+        if (!details) return null;
+
+        return (
+          <span key={index} className={styles.tag}>
+            <span className={styles.iconTextWrapper}>
+              {details.icon}
+              {details.text}
+            </span>
+          </span>
+        );
+      })}
     </div>
   );
 };
