@@ -25,7 +25,16 @@
   margin-top: 20px;
 }
 
+.iconContainer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .optionButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   background-color: var(--Neutrals-Background);
   border: 1px solid var(--Neutrals-Light-Outline);
   border-radius: 24px;

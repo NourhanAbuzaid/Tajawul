@@ -14,8 +14,8 @@ export default function TagQuestion({
 
   const handleTagClick = (value) => {
     const newSelectedTags = selectedTags.includes(value)
-      ? selectedTags.filter((v) => v !== value) // Deselect if already selected
-      : [...selectedTags, value]; // Select if not already selected
+      ? selectedTags.filter((v) => v !== value)
+      : [...selectedTags, value];
 
     setSelectedTags(newSelectedTags);
     onChange({ target: { name: question, value: newSelectedTags } });
@@ -23,12 +23,10 @@ export default function TagQuestion({
 
   return (
     <div className={styles.questionContainer}>
-      {/* Question Label */}
       <label className={styles.question}>
         {question} {required && <span className={styles.requiredMark}>*</span>}
       </label>
 
-      {/* Tags Container */}
       <div className={styles.optionsContainer}>
         {options.map((option) => (
           <button
@@ -39,7 +37,10 @@ export default function TagQuestion({
             onClick={() => !disabled && handleTagClick(option.value)}
             disabled={disabled}
           >
-            {option.label}
+            <span className={styles.iconContainer}>
+              {option.icon && option.icon}
+              {option.label}
+            </span>
           </button>
         ))}
       </div>
