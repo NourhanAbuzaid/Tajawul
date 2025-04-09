@@ -155,28 +155,30 @@ export default async function DestinationDetails({ destinationId }) {
                   mb: "8px",
                 }}
               />
-              <div className={styles.tagsWrapper}>
-                {/* Tags (Style) */}
-                <Tag
-                  options={[
-                    "adventure",
-                    "beach",
-                    "mountains",
-                    "city",
-                    "cultural",
-                  ]}
-                />
-                {/* Activities */}
-                <Tag
-                  options={[
-                    "sports",
-                    "fine dining",
-                    "local bars",
-                    "natural parks",
-                    "cultural sites",
-                  ]}
-                />
-              </div>
+              {/* Updated Tags Section */}
+              {(() => {
+                const styleTags = [];
+                const activityTags = [];
+
+                const hasStyleTags = styleTags && styleTags.length > 0;
+                const hasActivityTags = activityTags && activityTags.length > 0;
+                const hasContent = hasStyleTags || hasActivityTags;
+
+                return (
+                  <>
+                    {hasContent ? (
+                      <div className={styles.tagsWrapper}>
+                        <Tag options={styleTags} />
+                        <Tag options={activityTags} />
+                      </div>
+                    ) : (
+                      <div className={styles.noTagsMessage}>
+                        No Tags or Activities are added, yet.
+                      </div>
+                    )}
+                  </>
+                );
+              })()}
               <div className={styles.editButtonContainer}>
                 <button className={styles.editButton}>
                   <EditIcon sx={{ fontSize: 22 }} /> Edit Tags

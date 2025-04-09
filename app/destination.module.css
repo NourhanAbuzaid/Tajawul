@@ -343,6 +343,14 @@
   background: var(--Neutrals-Medium-Outline);
 }
 
+.noTagsMessage {
+  color: var(--Neutrals-Medium-Text);
+  font-style: italic;
+  padding: 16px;
+  text-align: center;
+  width: 100%;
+}
+
 /*Mobile Responsive*/
 @media (max-width: 768px) {
   .saveButton {
