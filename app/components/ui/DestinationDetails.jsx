@@ -13,6 +13,7 @@ import Stats from "@/components/ui/Stats";
 import ImageList from "@/components/ui/ImageList";
 import styles from "@/destination.module.css";
 import PriceRange from "./tags/PriceRange";
+import EditIcon from "@mui/icons-material/Edit";
 
 export default async function DestinationDetails({ destinationId }) {
   await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -142,12 +143,11 @@ export default async function DestinationDetails({ destinationId }) {
             <div className={styles.headerRow}>
               <div className={styles.tagsWrapper}>
                 <PriceRange priceRange={destination?.priceRange} />
-                <PriceRange priceRange={destination?.priceRange} />
-                <PriceRange priceRange={destination?.priceRange} />
-                <PriceRange priceRange={destination?.priceRange} />
               </div>
               <div className={styles.editButtonContainer}>
-                <button className={styles.editButton}>Add Tags</button>
+                <button className={styles.editButton}>
+                  <EditIcon sx={{ fontSize: 22 }} /> Edit Tags
+                </button>
               </div>
             </div>
           </div>

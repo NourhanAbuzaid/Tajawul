@@ -323,10 +323,10 @@
 .editButton {
   display: flex;
   height: 32px;
-  padding: 5px 24px;
+  padding: 4px 20px;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   border-radius: 8px;
   background: var(--Neutrals-Black-Text, #221a14);
   color: var(--Neutrals-Background, #fffbf4);
@@ -335,6 +335,12 @@
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+.editButton:hover {
+  background: var(--Neutrals-Medium-Outline);
 }
 
 /*Mobile Responsive*/
