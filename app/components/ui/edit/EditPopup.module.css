@@ -14,7 +14,7 @@
 .popupContent {
   position: relative;
   background: var(--Neutrals-Background);
-  padding: 48px 56px;
+  padding: 32px 56px;
   width: 550px;
   max-width: 90%;
   border-radius: 12px;
@@ -27,12 +27,13 @@
   font-size: 28px;
   color: var(--Neutrals-Black-Text, #221a14);
   margin-bottom: 8px;
+  margin-top: 28px;
   text-align: center;
 }
 
 .popupContent p {
   font-size: 16px;
-  color: var(--Neutrals-Dark-Outline, #2d2d2d);
+  color: var(--Neutrals-Medium-Outline);
   margin-bottom: 24px;
 }
 
@@ -67,28 +68,30 @@
 
 .submitButton {
   display: flex;
-  height: 46px;
-  padding: 16px 20px;
+  height: 40px; /* Reduced from 46px */
+  padding: 12px 16px; /* Reduced from 16px 20px */
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 8px; /* Reduced from 10px */
   align-self: stretch;
-  border-radius: 12px;
+  border-radius: 10px; /* Slightly smaller radius */
   background: linear-gradient(268deg, #253f3b 23.52%, #5c9c92 136.03%);
   color: var(--Neutrals-Background, #fffbf4);
   font-family: Merriweather;
-  font-size: 16px;
+  font-size: 16px; /* Reduced from 16px */
   font-style: normal;
-  font-weight: 700;
-  line-height: 120%; /* 19.2px */
-  letter-spacing: 0.32px;
+  font-weight: 600;
+  line-height: 120%;
+  letter-spacing: 0.5px;
   width: 100%;
   border: none;
-  margin-top: 12px;
+  margin-top: 32px; /* Reduced from 32px */
+  margin-bottom: 8px;
   cursor: pointer;
   position: relative;
   overflow: hidden;
   z-index: 1;
+  transition: all 0.2s ease; /* Added for smooth transitions */
 }
 
 .submitButton::before {
