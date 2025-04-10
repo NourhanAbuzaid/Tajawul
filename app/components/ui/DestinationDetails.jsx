@@ -1,6 +1,7 @@
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
+import API from "@/utils/api";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
@@ -22,18 +23,57 @@ export default async function DestinationDetails({ destinationId }) {
 
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-  let destination = null; // ✅ Ensure destination is defined
+  let destination = null;
+  let groupSizes = []; // Initialize groupSizes as an empty array
+  let activities = [];
+  let tags = [];
 
   try {
-    const { data } = await axios.get(
+    const { data: destinationData } = await axios.get(
       `${baseUrl}/Destination?DestinationId=${destinationId}`
     );
 
-    destination = data.destinations[0]; // Assign the fetched data to the existing `destination` variable
+    // First, log the raw attributes response to verify structure
+    const { data: attributesData } = await API.get(
+      `${baseUrl}/Destination?DestinationId=${destinationId}/attributes`
+    );
+    console.log("Raw attributes response:", attributesData);
+
+    destination = destinationData.destinations[0];
+
+    // Safely extract names with more detailed error handling
+    groupSizes = [];
+    activities = [];
+    tags = [];
+
+    if (attributesData.groupSizes?.data) {
+      groupSizes = attributesData.groupSizes.data.map((item) => item.group);
+    } else {
+      console.warn("No groupSizes data found in response");
+    }
+
+    if (attributesData.activities?.data) {
+      activities = attributesData.activities.data.map((item) => item.name);
+    } else {
+      console.warn("No activities data found in response");
+    }
+
+    if (attributesData.tags?.data) {
+      tags = attributesData.tags.data.map((item) => item.name);
+    } else {
+      console.warn("No tags data found in response");
+    }
 
     if (!destination) throw new Error("Destination not found");
 
-    console.log("Destination Details:", destination);
+    console.log("Processed Destination Details:", {
+      destination,
+      attributes: {
+        groupSizes,
+        activities,
+        tags,
+      },
+    });
   } catch (error) {
     console.error("Failed to fetch destination details:", error);
   }
@@ -145,7 +185,7 @@ export default async function DestinationDetails({ destinationId }) {
             <div className={styles.headerRow}>
               <div className={styles.tagsWrapper}>
                 <PriceRange priceRange={destination?.priceRange} />
-                <GroupSize groupSizes={["solo", "couple", "family"]} />
+                <GroupSize groupSizes={groupSizes?.data || []} />
               </div>
               <Divider
                 sx={{
@@ -157,19 +197,29 @@ export default async function DestinationDetails({ destinationId }) {
               />
               {/* Updated Tags Section */}
               {(() => {
-                const styleTags = [];
-                const activityTags = [];
+                const styleTags = tags?.data || [];
+                const activityTags = activities?.data || [];
 
-                const hasStyleTags = styleTags && styleTags.length > 0;
-                const hasActivityTags = activityTags && activityTags.length > 0;
+                const hasStyleTags = styleTags.length > 0;
+                const hasActivityTags = activityTags.length > 0;
                 const hasContent = hasStyleTags || hasActivityTags;
 
                 return (
                   <>
                     {hasContent ? (
                       <div className={styles.tagsWrapper}>
-                        <Tag options={styleTags} />
-                        <Tag options={activityTags} />
+                        <Tag
+                          options={styleTags.map((tag) => ({
+                            value: tag,
+                            label: tag,
+                          }))}
+                        />
+                        <Tag
+                          options={activityTags.map((activity) => ({
+                            value: activity,
+                            label: activity,
+                          }))}
+                        />
                       </div>
                     ) : (
                       <div className={styles.noTagsMessage}>
