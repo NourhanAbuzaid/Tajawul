@@ -125,6 +125,7 @@ export default function EditTags({ destinationId }) {
                     options={tagsOptions}
                     selectedValues={tags}
                     onChange={handleTagsChange}
+                    size="small"
                   />
                 </>
               ) : (
@@ -141,12 +142,14 @@ export default function EditTags({ destinationId }) {
                     options={groupSizeOptions}
                     selectedValues={groupSize}
                     onChange={handleGroupSizeChange}
+                    size="small"
                   />
                   <TagQuestion
                     question="Activities"
                     options={activitiesOptions}
                     selectedValues={activities}
                     onChange={handleActivitiesChange}
+                    size="small"
                   />
                 </>
               )}

@@ -9,6 +9,7 @@ export default function TagQuestion({
   onChange,
   required = false,
   disabled = false,
+  size = "default", // 'default' or 'small'
 }) {
   const [selectedTags, setSelectedTags] = useState(selectedValues);
 
@@ -22,7 +23,7 @@ export default function TagQuestion({
   };
 
   return (
-    <div className={styles.questionContainer}>
+    <div className={`${styles.questionContainer} ${styles[size]}`}>
       <label className={styles.question}>
         {question} {required && <span className={styles.requiredMark}>*</span>}
       </label>
