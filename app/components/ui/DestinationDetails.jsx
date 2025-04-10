@@ -13,7 +13,7 @@ import Stats from "@/components/ui/Stats";
 import ImageList from "@/components/ui/ImageList";
 import styles from "@/destination.module.css";
 import PriceRange from "./tags/PriceRange";
-import EditIcon from "@mui/icons-material/Edit";
+import EditTags from "@/components/ui/edit/EditTags";
 import GroupSize from "./tags/GroupSize";
 import Tag from "./tags/Tag";
 
@@ -180,9 +180,7 @@ export default async function DestinationDetails({ destinationId }) {
                 );
               })()}
               <div className={styles.editButtonContainer}>
-                <button className={styles.editButton}>
-                  <EditIcon sx={{ fontSize: 22 }} /> Edit Tags
-                </button>
+                <EditTags destinationId={destinationId} />
               </div>
             </div>
           </div>

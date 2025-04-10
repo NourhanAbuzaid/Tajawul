@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import styles from "./DestinationCard.module.css";
 import Rating from "./Rating";
-import Tag from "./Tag";
+import PriceRange from "./tags/PriceRange";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import PlaceIcon from "@mui/icons-material/Place";
 import Image from "next/image";
@@ -69,7 +69,7 @@ const DestinationCard = ({
           </div>
         </div>
         <div className={styles.bottom}>
-          <Tag text={priceRange} color="green" />
+          <PriceRange priceRange={priceRange} />
         </div>
       </div>
     </div>
