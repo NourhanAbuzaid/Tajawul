@@ -1,14 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "./EditPopup.module.css";
-import TagQuestion from "../TagQuestion";
+import EditableTagQuestion from "../EditableTagQuestion";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import SuccessMessage from "@/components/ui/SuccessMessage";
 import API from "@/utils/api";
+import axios from "axios";
 import EditIcon from "@mui/icons-material/Edit";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-// Import the icons from MUI
 import PersonIcon from "@mui/icons-material/Person";
 import WcIcon from "@mui/icons-material/Wc";
 import FamilyRestroomIcon from "@mui/icons-material/FamilyRestroom";
@@ -17,15 +17,47 @@ import GroupsIcon from "@mui/icons-material/Groups";
 
 export default function EditTags({ destinationId }) {
   const [showPopup, setShowPopup] = useState(false);
-  const [currentStep, setCurrentStep] = useState(1); // 1 for Tags, 2 for Group Size & Activities
+  const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [fetchingData, setFetchingData] = useState(false); // New state for GET request loading
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [groupSize, setGroupSize] = useState([]);
   const [tags, setTags] = useState([]);
   const [activities, setActivities] = useState([]);
+  const [deletedGroupSizes, setDeletedGroupSizes] = useState([]);
+  const [deletedTags, setDeletedTags] = useState([]);
+  const [deletedActivities, setDeletedActivities] = useState([]);
 
-  // Updated group size options with icons
+  const handleOpenPopup = async () => {
+    setFetchingData(true);
+    setError("");
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+      const response = await axios.get(
+        `${baseUrl}/Destination/${destinationId}/attributes`
+      );
+      const data = response.data;
+
+      setGroupSize(data.groupSizes?.data?.map((item) => item.group) || []);
+      setTags(data.tags?.data?.map((item) => item.name) || []);
+      setActivities(data.activities?.data?.map((item) => item.name) || []);
+
+      // Reset deleted items when fetching new data
+      setDeletedGroupSizes([]);
+      setDeletedTags([]);
+      setDeletedActivities([]);
+
+      // Only show popup after data is fetched
+      setShowPopup(true);
+    } catch (err) {
+      console.error("Failed to fetch attributes:", err);
+      setError("Failed to fetch existing tags. Please try again.");
+    } finally {
+      setFetchingData(false);
+    }
+  };
+
   const groupSizeOptions = [
     {
       label: "Solo",
@@ -78,12 +110,24 @@ export default function EditTags({ destinationId }) {
     setGroupSize(e.target.value);
   };
 
+  const handleGroupSizeDelete = (e) => {
+    setDeletedGroupSizes(e.target.value);
+  };
+
   const handleTagsChange = (e) => {
     setTags(e.target.value);
   };
 
+  const handleTagsDelete = (e) => {
+    setDeletedTags(e.target.value);
+  };
+
   const handleActivitiesChange = (e) => {
     setActivities(e.target.value);
+  };
+
+  const handleActivitiesDelete = (e) => {
+    setDeletedActivities(e.target.value);
   };
 
   const handleNext = () => {
@@ -100,20 +144,34 @@ export default function EditTags({ destinationId }) {
     setSuccess("");
 
     try {
-      const response = await API.put(`/Destination/${destinationId}/tags`, {
-        groupSize,
-        tags,
-        activities,
+      // First delete removed attributes
+      if (
+        deletedGroupSizes.length > 0 ||
+        deletedTags.length > 0 ||
+        deletedActivities.length > 0
+      ) {
+        await API.delete(`/Destination/${destinationId}/attributes`, {
+          data: {
+            groupSizes: deletedGroupSizes,
+            tags: deletedTags,
+            activities: deletedActivities,
+          },
+        });
+      }
+
+      // Then add/update remaining attributes
+      await API.post(`/Destination/${destinationId}/attributes`, {
+        groupSizes: groupSize,
+        tags: tags,
+        activities: activities,
       });
 
-      if (response.status === 200) {
-        setSuccess("Tags updated successfully!");
-        setTimeout(() => {
-          setShowPopup(false);
-          setSuccess("");
-          setCurrentStep(1); // Reset to first step when closing
-        }, 2000);
-      }
+      setSuccess("Tags updated successfully!");
+      setTimeout(() => {
+        setShowPopup(false);
+        setSuccess("");
+        setCurrentStep(1);
+      }, 2000);
     } catch (err) {
       console.error("Failed to update tags:", err);
       setError(err.response?.data?.message || "Failed to update tags.");
@@ -124,8 +182,18 @@ export default function EditTags({ destinationId }) {
 
   return (
     <>
-      <button className={styles.editButton} onClick={() => setShowPopup(true)}>
-        <EditIcon sx={{ fontSize: 22 }} /> Edit Tags
+      <button
+        className={styles.editButton}
+        onClick={handleOpenPopup}
+        disabled={fetchingData}
+      >
+        {fetchingData ? (
+          "Loading..."
+        ) : (
+          <>
+            <EditIcon sx={{ fontSize: 22 }} /> Edit Tags
+          </>
+        )}
       </button>
 
       {showPopup && (
@@ -135,7 +203,7 @@ export default function EditTags({ destinationId }) {
               className={styles.closeButton}
               onClick={() => {
                 setShowPopup(false);
-                setCurrentStep(1); // Reset to first step when closing
+                setCurrentStep(1);
               }}
             >
               ✕
@@ -147,11 +215,12 @@ export default function EditTags({ destinationId }) {
             <div className={styles.formContainer}>
               {currentStep === 1 ? (
                 <>
-                  <TagQuestion
+                  <EditableTagQuestion
                     question="Tags"
                     options={tagsOptions}
                     selectedValues={tags}
                     onChange={handleTagsChange}
+                    onDelete={handleTagsDelete}
                     size="small"
                   />
                 </>
@@ -164,18 +233,20 @@ export default function EditTags({ destinationId }) {
                   >
                     <ArrowBackIcon sx={{ fontSize: 18 }} /> Back
                   </button>
-                  <TagQuestion
+                  <EditableTagQuestion
                     question="Group Size"
                     options={groupSizeOptions}
                     selectedValues={groupSize}
                     onChange={handleGroupSizeChange}
+                    onDelete={handleGroupSizeDelete}
                     size="small"
                   />
-                  <TagQuestion
+                  <EditableTagQuestion
                     question="Activities"
                     options={activitiesOptions}
                     selectedValues={activities}
                     onChange={handleActivitiesChange}
+                    onDelete={handleActivitiesDelete}
                     size="small"
                   />
                 </>
