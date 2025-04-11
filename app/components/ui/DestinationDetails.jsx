@@ -1,7 +1,6 @@
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
-import API from "@/utils/api";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
@@ -33,36 +32,19 @@ export default async function DestinationDetails({ destinationId }) {
       `${baseUrl}/Destination?DestinationId=${destinationId}`
     );
 
-    // First, log the raw attributes response to verify structure
-    const { data: attributesData } = await API.get(
-      `${baseUrl}/Destination?DestinationId=${destinationId}/attributes`
+    const { data: attributesData } = await axios.get(
+      `${baseUrl}/Destination/${destinationId}/attributes`
     );
     console.log("Raw attributes response:", attributesData);
 
     destination = destinationData.destinations[0];
 
-    // Safely extract names with more detailed error handling
-    groupSizes = [];
-    activities = [];
-    tags = [];
-
-    if (attributesData.groupSizes?.data) {
-      groupSizes = attributesData.groupSizes.data.map((item) => item.group);
-    } else {
-      console.warn("No groupSizes data found in response");
-    }
-
-    if (attributesData.activities?.data) {
-      activities = attributesData.activities.data.map((item) => item.name);
-    } else {
-      console.warn("No activities data found in response");
-    }
-
-    if (attributesData.tags?.data) {
-      tags = attributesData.tags.data.map((item) => item.name);
-    } else {
-      console.warn("No tags data found in response");
-    }
+    // Extract just the names from each attribute
+    groupSizes =
+      attributesData.groupSizes?.data?.map((item) => item.group) || [];
+    activities =
+      attributesData.activities?.data?.map((item) => item.name) || [];
+    tags = attributesData.tags?.data?.map((item) => item.name) || [];
 
     if (!destination) throw new Error("Destination not found");
 
@@ -185,7 +167,8 @@ export default async function DestinationDetails({ destinationId }) {
             <div className={styles.headerRow}>
               <div className={styles.tagsWrapper}>
                 <PriceRange priceRange={destination?.priceRange} />
-                <GroupSize groupSizes={groupSizes?.data || []} />
+                <GroupSize groupSizes={groupSizes} />
+                {/* Pass the array directly */}
               </div>
               <Divider
                 sx={{
@@ -197,29 +180,16 @@ export default async function DestinationDetails({ destinationId }) {
               />
               {/* Updated Tags Section */}
               {(() => {
-                const styleTags = tags?.data || [];
-                const activityTags = activities?.data || [];
-
-                const hasStyleTags = styleTags.length > 0;
-                const hasActivityTags = activityTags.length > 0;
-                const hasContent = hasStyleTags || hasActivityTags;
+                const hasTags = tags.length > 0;
+                const hasActivities = activities.length > 0;
+                const hasContent = hasTags || hasActivities;
 
                 return (
                   <>
                     {hasContent ? (
                       <div className={styles.tagsWrapper}>
-                        <Tag
-                          options={styleTags.map((tag) => ({
-                            value: tag,
-                            label: tag,
-                          }))}
-                        />
-                        <Tag
-                          options={activityTags.map((activity) => ({
-                            value: activity,
-                            label: activity,
-                          }))}
-                        />
+                        <Tag options={tags} />
+                        <Tag options={activities} />
                       </div>
                     ) : (
                       <div className={styles.noTagsMessage}>
