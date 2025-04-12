@@ -9,7 +9,7 @@ export const groupSizeIcons = {
   couple: <WcIcon sx={{ fontSize: 18 }} />,
   family: <FamilyRestroomIcon sx={{ fontSize: 18 }} />,
   group: <GroupIcon sx={{ fontSize: 18 }} />,
-  "large-group": <GroupsIcon sx={{ fontSize: 18 }} />,
+  "big-group": <GroupsIcon sx={{ fontSize: 18 }} />,
 };
 
 // You can add more mappings for other tag types if needed
