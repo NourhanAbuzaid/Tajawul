@@ -27,14 +27,14 @@
   font-size: 28px;
   color: var(--Neutrals-Black-Text, #221a14);
   margin-bottom: 8px;
-  margin-top: 28px;
+  margin-top: 24px;
   text-align: center;
 }
 
 .popupContent p {
   font-size: 16px;
   color: var(--Neutrals-Medium-Outline);
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .closeButton {
@@ -149,7 +149,7 @@
   font-weight: 500;
   cursor: pointer;
   padding: 8px 0;
-  margin-bottom: 12px;
+  margin-bottom: 4px;
   transition: color 0.2s ease;
 }
 
