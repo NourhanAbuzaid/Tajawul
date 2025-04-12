@@ -32,7 +32,7 @@
 }
 
 .questionContainer.small .question {
-  font-size: 16px;
+  font-size: 20px;
   margin-bottom: 12px;
 }
 
@@ -156,4 +156,19 @@
   background-color: var(--Green-Very-Bright);
   color: var(--Green-Dark);
   border: 1px solid var(--Green-Hover);
+}
+
+.selectedSection {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.unselectedSection {
+  width: 100%;
+  margin-top: 8px;
+}
+
+/* Make the divider match the component's style */
+.divider {
+  border-color: var(--Neutrals-Light-Outline);
 }
