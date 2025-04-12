@@ -9,11 +9,7 @@ import API from "@/utils/api";
 import axios from "axios";
 import EditIcon from "@mui/icons-material/Edit";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import PersonIcon from "@mui/icons-material/Person";
-import WcIcon from "@mui/icons-material/Wc";
-import FamilyRestroomIcon from "@mui/icons-material/FamilyRestroom";
-import GroupIcon from "@mui/icons-material/Group";
-import GroupsIcon from "@mui/icons-material/Groups";
+import { groupSizeIcons } from "@/utils/tagIconsMapping";
 
 export default function EditTags({ destinationId }) {
   const [showPopup, setShowPopup] = useState(false);
@@ -59,30 +55,14 @@ export default function EditTags({ destinationId }) {
   };
 
   const groupSizeOptions = [
+    { label: "Solo", value: "solo", icon: groupSizeIcons.solo },
+    { label: "Couple", value: "couple", icon: groupSizeIcons.couple },
+    { label: "Family", value: "family", icon: groupSizeIcons.family },
+    { label: "Group", value: "group", icon: groupSizeIcons.group },
     {
-      label: "Solo",
-      value: "solo",
-      icon: <PersonIcon sx={{ fontSize: 18 }} />,
-    },
-    {
-      label: "Couple",
-      value: "couple",
-      icon: <WcIcon sx={{ fontSize: 18 }} />,
-    },
-    {
-      label: "Family",
-      value: "family",
-      icon: <FamilyRestroomIcon sx={{ fontSize: 18 }} />,
-    },
-    {
-      label: "Group",
-      value: "group",
-      icon: <GroupIcon sx={{ fontSize: 18 }} />,
-    },
-    {
-      label: "Large Group",
-      value: "large-group",
-      icon: <GroupsIcon sx={{ fontSize: 18 }} />,
+      label: "Big Group",
+      value: "big-group",
+      icon: groupSizeIcons["big-group"],
     },
   ];
 

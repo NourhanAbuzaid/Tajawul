@@ -1,10 +1,6 @@
 import React, { useState } from "react";
 import TagQuestion from "@/components/ui/TagQuestion";
-import PersonIcon from "@mui/icons-material/Person"; // Solo
-import WcIcon from "@mui/icons-material/Wc"; // Couple
-import FamilyRestroomIcon from "@mui/icons-material/FamilyRestroom"; // Family
-import GroupIcon from "@mui/icons-material/Group"; // Group
-import GroupsIcon from "@mui/icons-material/Groups"; // Big Group
+import { groupSizeIcons } from "@/utils/tagIconsMapping";
 
 const durationOptions = [
   { label: "Day", value: "day" },
@@ -22,18 +18,14 @@ const budgetOptions = [
 ];
 
 const groupSizeOptions = [
-  { label: "Solo", value: "solo", icon: <PersonIcon fontSize="small" /> },
-  { label: "Couple", value: "couple", icon: <WcIcon fontSize="small" /> },
-  {
-    label: "Family",
-    value: "family",
-    icon: <FamilyRestroomIcon fontSize="small" />,
-  },
-  { label: "Group", value: "group", icon: <GroupIcon fontSize="small" /> },
+  { label: "Solo", value: "solo", icon: groupSizeIcons.solo },
+  { label: "Couple", value: "couple", icon: groupSizeIcons.couple },
+  { label: "Family", value: "family", icon: groupSizeIcons.family },
+  { label: "Group", value: "group", icon: groupSizeIcons.group },
   {
     label: "Big Group",
     value: "big-group",
-    icon: <GroupsIcon fontSize="small" />,
+    icon: groupSizeIcons["big-group"],
   },
 ];
 
