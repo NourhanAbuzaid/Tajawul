@@ -21,7 +21,7 @@ export default async function ExplorePage() {
           <h1>Explore Destinations</h1>
         </div>
         <div className={styles.filterSection}>
-          <div className={styles.categoriesSection}></div>
+          <div className={styles.typesSection}></div>
           <button className={styles.filterButton}>Filter</button>
           <button className={styles.sortSection}>Sort by:</button>
         </div>

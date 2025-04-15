@@ -34,7 +34,7 @@
   gap: 18px;
 }
 
-.categoriesSection {
+.typesSection {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
