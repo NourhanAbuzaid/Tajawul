@@ -1,4 +1,3 @@
-// typeIconsMapping.js
 import {
   Hotel,
   Cottage,
@@ -16,7 +15,7 @@ import {
   Mosque,
   Church,
   Store,
-  Village,
+  HolidayVillage,
   ShoppingCart,
   LocalMovies,
   TheaterComedy,
@@ -41,7 +40,6 @@ import {
   BakeryDining,
   Yard,
   ParkOutlined,
-  Animals,
   EmojiNature,
   Public,
   SportsBaseball,
@@ -49,13 +47,13 @@ import {
   DirectionsBus,
   Flight,
   Train,
-  Bridge,
   AccountTree,
   Landscape,
   Apartment,
   Castle,
   AccountBalance,
   Storefront,
+  Pets,
 } from "@mui/icons-material";
 
 const typeIconsMapping = {
@@ -79,7 +77,7 @@ const typeIconsMapping = {
   Church: Church,
   Temple: TempleBuddhist,
   Market: Store,
-  Village: Village,
+  Village: HolidayVillage,
   Mall: ShoppingCart,
   Cinema: LocalMovies,
   Theater: TheaterComedy,
@@ -105,7 +103,7 @@ const typeIconsMapping = {
   Bakery: BakeryDining,
   Farm: Yard,
   Garden: Park,
-  Zoo: Animals,
+  Zoo: Pets,
   Aquarium: EmojiNature,
   Observatory: Public,
   Stadium: SportsBaseball,
@@ -113,7 +111,7 @@ const typeIconsMapping = {
   Port: DirectionsBus,
   Airport: Flight,
   Station: Train,
-  Bridge: Bridge,
+  Bridge: AccountTree,
   Monument: Landscape,
   Tower: AccountBalance,
   Square: Landscape,
