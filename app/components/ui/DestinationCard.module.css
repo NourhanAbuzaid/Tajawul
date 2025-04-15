@@ -1,18 +1,15 @@
 .card {
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--Neutrals-Light-Outline);
-  border-radius: 24px;
   overflow: hidden;
-  box-shadow: 0px 4px 10px 0px rgba(34, 26, 20, 0.15);
-  width: 290px;
-  height: 430px;
+  width: 280px;
+  height: 370px;
 }
 
 .imageWrapper {
   position: relative;
   width: 100%;
-  height: 1000px;
+  height: 100%;
   overflow: hidden;
   display: flex;
   justify-content: center;
@@ -22,7 +19,18 @@
 .image {
   width: 100%;
   height: 100%;
+  border-radius: 24px;
   object-fit: cover; /* Ensure the image covers the area without stretching */
+}
+
+.topContainer {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  position: absolute;
+  padding: 12px;
+  top: 0;
 }
 
 .wishlistButton {
@@ -30,42 +38,40 @@
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: 8px;
-  right: 8px;
-  background: rgba(34, 26, 20, 0.6);
-  backdrop-filter: blur(4px);
+  top: 12px;
+  right: 12px;
+  background: transparent;
   border: none;
-  border-radius: 50%;
-  padding: 8px;
   cursor: pointer;
 }
 
 .locationTag {
   position: absolute;
-  height: 32px;
-  bottom: 8px;
-  left: 8px;
-  border-radius: 8px;
+  bottom: 12px;
+  left: 12px;
+  border-radius: 16px;
   background: rgba(34, 26, 20, 0.6);
   backdrop-filter: blur(4px);
   padding: 6px 16px 6px 8px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   color: var(--Neutrals-Background, #fffbf4);
   text-align: right;
   font-family: "DM Sans";
-  font-size: 16px;
+  font-size: 14px;
   font-style: normal;
   font-weight: 400;
 }
 
 .content {
-  padding: 16px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 100%;
+  padding-top: 12px;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-bottom: 0px;
 }
 
 .top {
@@ -109,7 +115,7 @@
 .rating {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 
 .rating span {

@@ -50,11 +50,15 @@ const DestinationCard = ({
             onError={handleImageError} // Fallback for additional error handling
           />
         )}
-        <button className={styles.wishlistButton} onClick={handleWishlist}>
-          <FavoriteBorderIcon sx={{ color: "var(--Neutrals-Background)" }} />
-        </button>
+        <div className={styles.topContainer}>
+          <PriceRange priceRange={priceRange} />
+          <button className={styles.wishlistButton} onClick={handleWishlist}>
+            <FavoriteBorderIcon sx={{ color: "var(--Neutrals-Background)" }} />
+          </button>
+        </div>
+
         <div className={styles.locationTag}>
-          <PlaceIcon style={{ fontSize: "20px" }} /> <p>{location}</p>
+          <PlaceIcon style={{ fontSize: "18px" }} /> <p>{location}</p>
         </div>
       </div>
       <div className={styles.content}>
@@ -67,9 +71,6 @@ const DestinationCard = ({
           <div className={styles.rating}>
             <Rating average={rating} /> <span>{ratingCount}</span>
           </div>
-        </div>
-        <div className={styles.bottom}>
-          <PriceRange priceRange={priceRange} />
         </div>
       </div>
     </div>

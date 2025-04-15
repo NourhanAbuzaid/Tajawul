@@ -21,28 +21,28 @@
 
 /* Low */
 .low {
-  color: var(--Low-Text);
-  border: 1px solid var(--Low-Stroke);
-  background: var(--Low-Background);
+  color: var(--Low-Text) !important;
+  border: 1px solid var(--Low-Stroke) !important;
+  background: var(--Low-Background) !important;
 }
 
 /* Mid-Range */
 .mid {
-  color: var(--Mid-Text);
-  border: 1px solid var(--Mid-Stroke);
-  background: var(--Mid-Background);
+  color: var(--Mid-Text) !important;
+  border: 1px solid var(--Mid-Stroke) !important;
+  background: var(--Mid-Background) !important;
 }
 
 /* Luxury */
 .luxury {
-  color: var(--Luxury-Text, #ffe597);
-  border: 1px solid var(--Luxury-Stroke);
-  background: var(--Luxury-Background);
+  color: var(--Luxury-Text, #ffe597) !important;
+  border: 1px solid var(--Luxury-Stroke) !important;
+  background: var(--Luxury-Background) !important;
 }
 
 /* Fallback for gradient text (if needed) */
 .luxury span {
-  background: var(--Luxury-Text);
+  background: var(--Luxury-Text) !important;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
