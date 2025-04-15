@@ -1,11 +1,33 @@
-.destinationContainer {
+.exploreContainer {
   width: 100vw;
+  margin-top: 60px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.searchSection {
+  display: flex;
+  width: 100%;
+  text-align: left;
+  padding: 0 2%;
+  height: 120px;
+  align-items: center;
+}
+
+.searchSection h1 {
+  font-size: 48px;
+}
+
+.destinationContainer {
+  width: 100%;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  margin-top: 120px;
   padding: 0 2%;
-  gap: 24px;
+  gap: 18px;
 }
