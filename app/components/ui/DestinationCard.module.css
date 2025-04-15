@@ -2,9 +2,10 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  width: 280px;
-  height: 370px;
+  width: 260px;
+  height: 350px;
   margin-bottom: 16px;
+  transition: all 0.4s ease-in;
 }
 
 .imageWrapper {
@@ -131,4 +132,32 @@
 .priceRange {
   font-size: 14px;
   color: var(--Neutrals-Black-Text, #221a14);
+}
+
+@media (max-width: 1456px) {
+  .card {
+    width: 300px;
+    height: 390px;
+  }
+}
+
+@media (max-width: 1380px) {
+  .card {
+    width: 320px;
+    height: 410px;
+  }
+}
+
+@media (max-width: 1060px) {
+  .card {
+    width: 380px;
+    height: 470px;
+  }
+}
+
+@media (max-width: 828px) {
+  .card {
+    width: 320px;
+    height: 410px;
+  }
 }
