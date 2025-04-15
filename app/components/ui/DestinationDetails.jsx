@@ -127,15 +127,11 @@ export default async function DestinationDetails({ destinationId }) {
             </div>
             <div className={styles.buttomRightContainer}>
               <button className={styles.saveButton}>
-                <FavoriteBorderIcon
-                  sx={{ color: "var(--Neutrals-Black-Text)" }}
-                />
-                Save
+                <FavoriteBorderIcon />
+                Add To Wishlist
               </button>
               <button className={styles.saveButton}>
-                <PersonAddAlt1Icon
-                  sx={{ color: "var(--Neutrals-Black-Text)" }}
-                />
+                <PersonAddAlt1Icon />
                 Follow
               </button>
             </div>
