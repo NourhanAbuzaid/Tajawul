@@ -20,6 +20,11 @@ export default async function ExplorePage() {
         <div className={styles.searchSection}>
           <h1>Explore Destinations</h1>
         </div>
+        <div className={styles.filterSection}>
+          <div className={styles.categoriesSection}></div>
+          <button className={styles.filterButton}>Filter</button>
+          <button className={styles.sortSection}>Sort by:</button>
+        </div>
         <div className={styles.destinationContainer}>
           {destinations.length === 0 && <p>No destinations found.</p>}
 

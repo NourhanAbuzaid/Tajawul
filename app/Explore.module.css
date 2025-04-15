@@ -21,6 +21,27 @@
   font-size: 48px;
 }
 
+.filterSection {
+  display: flex;
+  width: 100%;
+  height: 80px;
+  align-items: center;
+  background-color: var(--Neutrals-Light-Outline);
+  margin-bottom: 18px;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 0 5%;
+  gap: 18px;
+}
+
+.categoriesSection {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: aqua;
+  width: 100%;
+}
+
 .destinationContainer {
   width: 100%;
   display: flex;
