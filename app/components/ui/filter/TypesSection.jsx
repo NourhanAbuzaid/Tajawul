@@ -30,6 +30,7 @@ export default function TypesSection() {
         onClick={() => scroll(-200)}
         sx={{
           border: "1px solid var(--Neutrals-Light-Outline)",
+          transition: "all 0.2s ease",
           padding: "4px",
           "&:hover": {
             borderColor: "var(--Neutrals-Black-Text)",
@@ -70,6 +71,7 @@ export default function TypesSection() {
         onClick={() => scroll(200)}
         sx={{
           border: "1px solid var(--Neutrals-Light-Outline)",
+          transition: "all 0.2s ease",
           padding: "4px",
           "&:hover": {
             borderColor: "var(--Neutrals-Black-Text)",

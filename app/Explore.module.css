@@ -15,6 +15,7 @@
   padding: 0 5%;
   height: 120px;
   align-items: center;
+  border-bottom: 1px solid var(--Neutrals-Light-Outline);
 }
 
 .searchSection h1 {
@@ -41,11 +42,23 @@
 
 .filterButton,
 .sortSection {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   padding: 8px 16px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background: white;
+  border: none;
+  border-radius: 8px;
   cursor: pointer;
+  font-family: "DM Sans";
+  font-weight: 500;
+  color: var(--Neutrals-Background);
+  background-color: var(--Neutrals-Black-Text);
+  transition: all 0.3s ease-in-out;
+}
+
+.filterButton:hover,
+.sortSection:hover {
+  background-color: var(--Neutrals-Medium-Outline);
 }
 
 .destinationContainer {

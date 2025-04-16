@@ -1,8 +1,8 @@
-// app/explore/page.js
 import Link from "next/link";
 import axios from "axios";
 import DestinationCard from "@/components/ui/DestinationCard";
 import TypesSection from "@/components/ui/filter/TypesSection";
+import TuneIcon from "@mui/icons-material/Tune";
 import styles from "@/Explore.module.css";
 
 export default async function ExplorePage() {
@@ -26,7 +26,9 @@ export default async function ExplorePage() {
           <div className={styles.typesSection}>
             <TypesSection />
           </div>
-          <button className={styles.filterButton}>Filter</button>
+          <button className={styles.filterButton}>
+            <TuneIcon sx={{ fontSize: "18px" }} /> Filter
+          </button>
           <button className={styles.sortSection}>Sort by:</button>
         </div>
         <div className={styles.destinationContainer}>

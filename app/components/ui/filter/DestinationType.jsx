@@ -23,9 +23,11 @@ export default function DestinationType({ type, isActive, onClick }) {
           : "var(--Neutrals-Medium-Outline)",
         fontFamily: '"DM Sans", sans-serif',
         borderBottom: isActive ? "2px solid var(--Green-Hover)" : "none",
+        transition: "all 0.2s ease",
         "&:hover": {
           color: "var(--Neutrals-Black-Text)",
           borderBottom: "1px solid var(--Neutrals-Black-Text)",
+          backgroundColor: "var(--Neutrals-Background)",
           "& span": {
             fontWeight: "700",
           },
