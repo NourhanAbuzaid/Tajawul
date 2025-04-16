@@ -26,8 +26,20 @@ export default function TypesSection() {
 
   return (
     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-      <IconButton onClick={() => scroll(-200)}>
-        <ChevronLeftIcon />
+      <IconButton
+        onClick={() => scroll(-200)}
+        sx={{
+          border: "1px solid var(--Neutrals-Light-Outline)",
+          padding: "4px",
+          "&:hover": {
+            borderColor: "var(--Neutrals-Black-Text)",
+          },
+          "& .MuiSvgIcon-root": {
+            fontSize: "1.2rem",
+          },
+        }}
+      >
+        <ChevronLeftIcon sx={{ color: "var(--Neutrals-Black-Text)" }} />
       </IconButton>
 
       <Box
@@ -54,8 +66,20 @@ export default function TypesSection() {
         ))}
       </Box>
 
-      <IconButton onClick={() => scroll(200)}>
-        <ChevronRightIcon />
+      <IconButton
+        onClick={() => scroll(200)}
+        sx={{
+          border: "1px solid var(--Neutrals-Light-Outline)",
+          padding: "4px",
+          "&:hover": {
+            borderColor: "var(--Neutrals-Black-Text)",
+          },
+          "& .MuiSvgIcon-root": {
+            fontSize: "1.2rem",
+          },
+        }}
+      >
+        <ChevronRightIcon sx={{ color: "var(--Neutrals-Black-Text)" }} />
       </IconButton>
     </Box>
   );

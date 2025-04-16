@@ -26,7 +26,6 @@
   width: 100%;
   height: 80px;
   align-items: center;
-  background-color: var(--Neutrals-Light-Outline);
   margin-bottom: 18px;
   flex-direction: row;
   justify-content: space-between;
@@ -35,11 +34,18 @@
 }
 
 .typesSection {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  background-color: aqua;
-  width: 100%;
+  flex: 1;
+  overflow: hidden;
+  width: 300px;
+}
+
+.filterButton,
+.sortSection {
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
 }
 
 .destinationContainer {
