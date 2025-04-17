@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Menu, MenuItem, Button, Box } from "@mui/material";
 import typeIconsMapping from "@/utils/typeIconsMapping";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 export default function DestinationTypeDropdown({
   selectedType,
@@ -24,30 +25,44 @@ export default function DestinationTypeDropdown({
     handleClose();
   };
 
+  // Get the icon component for the selected type
+  const SelectedIcon = selectedType ? typeIconsMapping[selectedType] : null;
+
   return (
-    <Box>
+    <Box sx={{ position: "relative" }}>
       <Button
         className="typesDropdown"
         onClick={handleClick}
         sx={{
           display: "flex",
           alignItems: "center",
-          gap: "4px",
+          gap: "8px",
           padding: "8px 16px",
+          height: "34px",
           border: "none",
           borderRadius: "8px",
           cursor: "pointer",
           fontFamily: '"DM Sans"',
           fontWeight: "500",
+          letterSpacing: "0",
           color: "var(--Neutrals-Background)",
           backgroundColor: "var(--Neutrals-Black-Text)",
           transition: "all 0.3s ease-in-out",
+          textTransform: "capitalize",
           "&:hover": {
             backgroundColor: "var(--Neutrals-Medium-Outline)",
           },
         }}
       >
+        {SelectedIcon && <SelectedIcon sx={{ fontSize: "18px" }} />}
         {selectedType || "All"}
+        <KeyboardArrowDownIcon
+          sx={{
+            transition: "transform 0.3s ease-in-out",
+            transform: open ? "rotate(180deg)" : "rotate(0)",
+            fontSize: "18px",
+          }}
+        />
       </Button>
       <Menu
         anchorEl={anchorEl}
@@ -57,11 +72,39 @@ export default function DestinationTypeDropdown({
           "aria-labelledby": "basic-button",
           sx: {
             maxHeight: 400,
-            width: "300px",
+            width: "200px",
+            padding: "4px",
+            "& .MuiMenuItem-root": {
+              borderRadius: "8px",
+              border: "1px solid #FFF",
+              padding: "8px 10px",
+              fontFamily: '"DM Sans"',
+              fontWeight: "500",
+              fontSize: "14px",
+              color: "var(--Neutrals-Medium-Outline)",
+              transition: "all 0.2s ease-in-out",
+              "&:hover": {
+                backgroundColor: "var(--Beige-Very-Bright)",
+                color: "var(--Neutrals-Black-Text)",
+                border: "1px solid var(--Neutrals-Light-Outline)",
+              },
+            },
+          },
+        }}
+        PaperProps={{
+          sx: {
+            borderRadius: "12px",
+            border: "1px solid var(--Neutrals-Light-Outline)",
+            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+            marginTop: "4px",
           },
         }}
       >
-        <MenuItem onClick={() => handleTypeSelect(null)}>All</MenuItem>
+        <MenuItem onClick={() => handleTypeSelect(null)}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            All
+          </Box>
+        </MenuItem>
         {Object.keys(typeIconsMapping).map((type) => {
           const IconComponent = typeIconsMapping[type];
           return (
