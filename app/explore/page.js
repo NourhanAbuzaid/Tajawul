@@ -1,40 +1,78 @@
+"use client";
+
 import Link from "next/link";
 import axios from "axios";
+import { useState, useEffect } from "react";
 import DestinationCard from "@/components/ui/DestinationCard";
 import TypesSection from "@/components/ui/filter/TypesSection";
 import TuneIcon from "@mui/icons-material/Tune";
 import styles from "@/Explore.module.css";
 
-export default async function ExplorePage() {
+export default function ExplorePage() {
+  const [destinations, setDestinations] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selectedType, setSelectedType] = useState(null);
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-  try {
-    const response = await axios.get(
-      `${baseUrl}/Destination?PageNumber=1&PageSize=50`,
-      {
-        next: { revalidate: 120 },
+
+  const fetchDestinations = async (type = null) => {
+    try {
+      setLoading(true);
+      let url = `${baseUrl}/Destination?PageNumber=1&PageSize=50`;
+      if (type) {
+        url += `&Type=${type}`;
       }
-    );
 
-    const destinations = response.data.destinations || [];
+      const response = await axios.get(url, {
+        next: { revalidate: 120 },
+      });
+      setDestinations(response.data.destinations || []);
+      setError(null);
+    } catch (err) {
+      console.error("Error fetching destinations:", err);
+      setError("Failed to load destinations.");
+      setDestinations([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    return (
-      <div className={styles.exploreContainer}>
-        <div className={styles.searchSection}>
-          <h1>Explore Destinations</h1>
+  useEffect(() => {
+    fetchDestinations();
+  }, []);
+
+  const handleTypeSelect = (type) => {
+    setSelectedType(type);
+    fetchDestinations(type);
+  };
+
+  return (
+    <div className={styles.exploreContainer}>
+      <div className={styles.searchSection}>
+        <h1>Explore Destinations</h1>
+      </div>
+      <div className={styles.filterSection}>
+        <div className={styles.typesSection}>
+          <TypesSection
+            onTypeSelect={handleTypeSelect}
+            selectedType={selectedType}
+          />
         </div>
-        <div className={styles.filterSection}>
-          <div className={styles.typesSection}>
-            <TypesSection />
-          </div>
-          <button className={styles.filterButton}>
-            <TuneIcon sx={{ fontSize: "18px" }} /> Filter
-          </button>
-          <button className={styles.sortSection}>Sort by:</button>
-        </div>
-        <div className={styles.destinationContainer}>
-          {destinations.length === 0 && <p>No destinations found.</p>}
+        <button className={styles.filterButton}>
+          <TuneIcon sx={{ fontSize: "18px" }} /> Filter
+        </button>
+        <button className={styles.sortSection}>Sorted by:</button>
+      </div>
+      <div className={styles.destinationContainer}>
+        {loading && <p>Loading destinations...</p>}
+        {error && <p style={{ color: "red" }}>{error}</p>}
+        {!loading && !error && destinations.length === 0 && (
+          <p>No destinations found.</p>
+        )}
 
-          {destinations.map((destination) => (
+        {!loading &&
+          !error &&
+          destinations.map((destination) => (
             <Link
               key={destination.destinationId}
               href={`/explore/${destination.destinationId}`}
@@ -44,18 +82,14 @@ export default async function ExplorePage() {
                 name={destination.name}
                 type={destination.type}
                 location={`${destination.city}, ${destination.country}`}
-                typeIcon={null} // You can update this to use your icon mapping
+                typeIcon={null}
                 rating={destination.averageRating}
                 ratingCount={destination.reviewsCount}
                 priceRange={destination.priceRange}
               />
             </Link>
           ))}
-        </div>
       </div>
-    );
-  } catch (error) {
-    console.error("Error fetching destinations:", error);
-    return <p style={{ color: "red" }}>Failed to load destinations.</p>;
-  }
+    </div>
+  );
 }

@@ -1,4 +1,3 @@
-// app/components/ui/filter/TypesSection.jsx
 "use client";
 
 import { useState, useRef } from "react";
@@ -8,9 +7,16 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import DestinationType from "./DestinationType";
 import destinationTypes from "@/data/destinationTypes.json";
 
-export default function TypesSection() {
-  const [selectedType, setSelectedType] = useState(null);
+export default function TypesSection({
+  onTypeSelect,
+  selectedType: propSelectedType,
+}) {
+  const [internalSelectedType, setInternalSelectedType] = useState(null);
   const scrollContainerRef = useRef(null);
+
+  // Use the prop if provided, otherwise use internal state
+  const selectedType =
+    propSelectedType !== undefined ? propSelectedType : internalSelectedType;
 
   const scroll = (scrollOffset) => {
     if (scrollContainerRef.current) {
@@ -19,9 +25,12 @@ export default function TypesSection() {
   };
 
   const handleTypeClick = (type) => {
-    setSelectedType(type === selectedType ? null : type);
-    // Here you would typically also filter the destinations
-    // For now we're just tracking the selected state
+    const newSelectedType = type === selectedType ? null : type;
+    if (onTypeSelect) {
+      onTypeSelect(newSelectedType);
+    } else {
+      setInternalSelectedType(newSelectedType);
+    }
   };
 
   return (
