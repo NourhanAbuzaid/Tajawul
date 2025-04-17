@@ -58,8 +58,9 @@ export default function ExplorePage() {
             selectedType={selectedType}
           />
         </div>
+        <button className={styles.typesDropdown}>All</button>
         <button className={styles.filterButton}>
-          <TuneIcon sx={{ fontSize: "18px" }} /> Filter
+          <TuneIcon sx={{ fontSize: "18px" }} /> Advanced Filter
         </button>
         <button className={styles.sortSection}>Sorted by:</button>
       </div>
