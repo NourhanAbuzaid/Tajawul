@@ -83,7 +83,7 @@ export default function DestinationTypeDropdown({
               fontSize: "14px",
               color: "var(--Neutrals-Medium-Outline)",
               transition: "all 0.2s ease-in-out",
-              "&:hover": {
+              "&:hover, &.Mui-focusVisible": {
                 backgroundColor: "var(--Beige-Very-Bright)",
                 color: "var(--Neutrals-Black-Text)",
                 border: "1px solid var(--Neutrals-Light-Outline)",
