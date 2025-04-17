@@ -4,7 +4,7 @@ import { IconButton } from "@mui/material";
 import countryFlags from "@/utils/countryFlags"; // We'll create this mapping
 
 export default function CountryType({ country, isActive, onClick }) {
-  const FlagComponent = countryFlags[country] || null;
+  const FlagComponent = countryFlags[country];
 
   return (
     <IconButton
@@ -34,7 +34,7 @@ export default function CountryType({ country, isActive, onClick }) {
         },
       }}
     >
-      {FlagComponent && <FlagComponent fontSize="small" />}
+      {FlagComponent && <FlagComponent style={{ fontSize: "1.5rem" }} />}
       <span
         style={{
           fontSize: "0.75rem",
@@ -43,7 +43,7 @@ export default function CountryType({ country, isActive, onClick }) {
           fontWeight: isActive ? "700" : "400",
         }}
       >
-        {country}
+        {country === "United Arab Emirates" ? "UAE" : country}
       </span>
     </IconButton>
   );
