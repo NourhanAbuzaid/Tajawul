@@ -29,18 +29,11 @@
   align-items: center;
   margin-bottom: 18px;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-end;
   padding: 0 5%;
   gap: 18px;
 }
 
-.typesSection {
-  flex: 1;
-  overflow: hidden;
-  width: 300px;
-}
-
-.typesDropdown,
 .filterButton,
 .sortSection {
   display: flex;
@@ -57,7 +50,6 @@
   transition: all 0.3s ease-in-out;
 }
 
-.typesDropdown:hover,
 .filterButton:hover,
 .sortSection:hover {
   background-color: var(--Neutrals-Medium-Outline);

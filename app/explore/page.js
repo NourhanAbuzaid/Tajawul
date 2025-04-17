@@ -4,9 +4,9 @@ import Link from "next/link";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import DestinationCard from "@/components/ui/DestinationCard";
-import TypesSection from "@/components/ui/filter/TypesSection";
 import TuneIcon from "@mui/icons-material/Tune";
 import styles from "@/Explore.module.css";
+import DestinationTypeDropdown from "@/components/ui/filter/DestinationTypeDropdown";
 
 export default function ExplorePage() {
   const [destinations, setDestinations] = useState([]);
@@ -52,13 +52,10 @@ export default function ExplorePage() {
         <h1>Explore Destinations</h1>
       </div>
       <div className={styles.filterSection}>
-        <div className={styles.typesSection}>
-          <TypesSection
-            onTypeSelect={handleTypeSelect}
-            selectedType={selectedType}
-          />
-        </div>
-        <button className={styles.typesDropdown}>All</button>
+        <DestinationTypeDropdown
+          selectedType={selectedType}
+          onTypeSelect={handleTypeSelect}
+        />
         <button className={styles.filterButton}>
           <TuneIcon sx={{ fontSize: "18px" }} /> Advanced Filter
         </button>
