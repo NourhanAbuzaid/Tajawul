@@ -7,18 +7,23 @@ import DestinationCard from "@/components/ui/DestinationCard";
 import TuneIcon from "@mui/icons-material/Tune";
 import styles from "@/Explore.module.css";
 import DestinationTypeDropdown from "@/components/ui/filter/DestinationTypeDropdown";
+import CountriesSection from "@/components/ui/filter/CountriesSection";
 
 export default function ExplorePage() {
   const [destinations, setDestinations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedType, setSelectedType] = useState(null);
+  const [selectedCountry, setSelectedCountry] = useState(null);
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-  const fetchDestinations = async (type = null) => {
+  const fetchDestinations = async (country = null, type = null) => {
     try {
       setLoading(true);
       let url = `${baseUrl}/Destination?PageNumber=1&PageSize=50`;
+      if (country) {
+        url += `&Country=${country}`;
+      }
       if (type) {
         url += `&Type=${type}`;
       }
@@ -39,11 +44,16 @@ export default function ExplorePage() {
 
   useEffect(() => {
     fetchDestinations();
-  }, []);
+  }, []); // Empty dependency array means this runs once on mount
+
+  const handleCountrySelect = (country) => {
+    setSelectedCountry(country);
+    fetchDestinations(country, selectedType);
+  };
 
   const handleTypeSelect = (type) => {
     setSelectedType(type);
-    fetchDestinations(type);
+    fetchDestinations(selectedCountry, type);
   };
 
   return (
@@ -51,15 +61,28 @@ export default function ExplorePage() {
       <div className={styles.searchSection}>
         <h1>Explore Destinations</h1>
       </div>
+
       <div className={styles.filterSection}>
-        <DestinationTypeDropdown
-          selectedType={selectedType}
-          onTypeSelect={handleTypeSelect}
-        />
-        <button className={styles.filterButton}>
-          <TuneIcon sx={{ fontSize: "18px" }} /> Advanced Filter
-        </button>
-        <button className={styles.sortSection}>Sorted by:</button>
+        <div className={styles.filterControls}>
+          <div className={styles.countriesWrapper}>
+            <CountriesSection
+              onCountrySelect={handleCountrySelect}
+              selectedCountry={selectedCountry}
+            />
+          </div>
+
+          <DestinationTypeDropdown
+            selectedType={selectedType}
+            onTypeSelect={handleTypeSelect}
+            className={styles.typeButton}
+          />
+
+          <button className={styles.filterButton}>
+            <TuneIcon sx={{ fontSize: "18px" }} /> Advanced Filter
+          </button>
+
+          <button className={styles.sortSection}>Sorted by: Recommended</button>
+        </div>
       </div>
       <div className={styles.destinationContainer}>
         {loading && <p>Loading destinations...</p>}

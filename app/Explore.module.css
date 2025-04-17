@@ -28,14 +28,27 @@
   height: 80px;
   align-items: center;
   margin-bottom: 18px;
-  flex-direction: row;
-  justify-content: flex-end;
   padding: 0 5%;
   gap: 18px;
 }
 
+.filterControls {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex: 1;
+  min-width: 0; /* Allows flex items to shrink below their content size */
+}
+
+.countriesWrapper {
+  flex: 2; /* Takes more space than other controls */
+  min-width: 0; /* Important for text truncation */
+  overflow: hidden;
+}
+
 .filterButton,
-.sortSection {
+.sortSection,
+.typeButton {
   display: flex;
   align-items: center;
   gap: 4px;
@@ -45,13 +58,17 @@
   cursor: pointer;
   font-family: "DM Sans";
   font-weight: 500;
-  color: var(--Neutrals-Background);
-  background-color: var(--Neutrals-Black-Text);
+  color: var(--Neutrals-Black-Text);
+  background-color: var(--Neutrals-Background);
+  border: 1px solid var(--Neutrals-Light-Outline);
   transition: all 0.3s ease-in-out;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .filterButton:hover,
-.sortSection:hover {
+.sortSection:hover,
+.typeButton:hover {
   background-color: var(--Neutrals-Medium-Outline);
 }
 

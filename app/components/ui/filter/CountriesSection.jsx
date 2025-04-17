@@ -4,19 +4,24 @@ import { useState, useRef } from "react";
 import { IconButton, Box } from "@mui/material";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import DestinationType from "./DestinationType";
-import destinationTypes from "@/data/destinationTypes.json";
+import CountryType from "./CountryType";
+import arabCountries from "@/data/arabCountries.json";
 
-export default function TypesSection({
-  onTypeSelect,
-  selectedType: propSelectedType,
+export default function CountriesSection({
+  onCountrySelect,
+  selectedCountry: propSelectedCountry,
 }) {
-  const [internalSelectedType, setInternalSelectedType] = useState(null);
+  const [internalSelectedCountry, setInternalSelectedCountry] = useState(null);
   const scrollContainerRef = useRef(null);
 
+  // Extract country names from the JSON
+  const countries = Object.keys(arabCountries);
+
   // Use the prop if provided, otherwise use internal state
-  const selectedType =
-    propSelectedType !== undefined ? propSelectedType : internalSelectedType;
+  const selectedCountry =
+    propSelectedCountry !== undefined
+      ? propSelectedCountry
+      : internalSelectedCountry;
 
   const scroll = (scrollOffset) => {
     if (scrollContainerRef.current) {
@@ -24,17 +29,17 @@ export default function TypesSection({
     }
   };
 
-  const handleTypeClick = (type) => {
-    const newSelectedType = type === selectedType ? null : type;
-    if (onTypeSelect) {
-      onTypeSelect(newSelectedType);
+  const handleCountryClick = (country) => {
+    const newSelectedCountry = country === selectedCountry ? null : country;
+    if (onCountrySelect) {
+      onCountrySelect(newSelectedCountry);
     } else {
-      setInternalSelectedType(newSelectedType);
+      setInternalSelectedCountry(newSelectedCountry);
     }
   };
 
   return (
-    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+    <Box sx={{ display: "flex", alignItems: "center", gap: 1, width: "100%" }}>
       <IconButton
         onClick={() => scroll(-200)}
         sx={{
@@ -56,6 +61,8 @@ export default function TypesSection({
         ref={scrollContainerRef}
         sx={{
           display: "flex",
+          width: "100%",
+          maxWidth: "calc(100% - 80px)",
           overflowX: "auto",
           scrollBehavior: "smooth",
           gap: 1,
@@ -66,12 +73,12 @@ export default function TypesSection({
           scrollbarWidth: "none",
         }}
       >
-        {destinationTypes.destinations.map((type) => (
-          <DestinationType
-            key={type}
-            type={type}
-            isActive={type === selectedType}
-            onClick={handleTypeClick}
+        {countries.map((country) => (
+          <CountryType
+            key={country}
+            country={country}
+            isActive={country === selectedCountry}
+            onClick={handleCountryClick}
           />
         ))}
       </Box>

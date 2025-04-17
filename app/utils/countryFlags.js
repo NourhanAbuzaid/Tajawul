@@ -1,0 +1,56 @@
+import {
+  Flag as SaudiArabiaFlag,
+  Flag as UAEFlag,
+  Flag as KuwaitFlag,
+  Flag as QatarFlag,
+  Flag as BahrainFlag,
+  Flag as OmanFlag,
+  Flag as YemenFlag,
+  Flag as JordanFlag,
+  Flag as SyriaFlag,
+  Flag as LebanonFlag,
+  Flag as PalestineFlag,
+  Flag as EgyptFlag,
+  Flag as IraqFlag,
+  Flag as LibyaFlag,
+  Flag as TunisiaFlag,
+  Flag as AlgeriaFlag,
+  Flag as MoroccoFlag,
+  Flag as MauritaniaFlag,
+  Flag as SudanFlag,
+  Flag as SouthSudanFlag,
+  Flag as DjiboutiFlag,
+  Flag as SomaliaFlag,
+  Flag as ComorosFlag,
+} from "@mui/icons-material";
+
+// Note: You'll need to replace these with actual flag SVG components
+// or use a library like react-country-flag
+
+const countryFlags = {
+  "Saudi Arabia": SaudiArabiaFlag,
+  "United Arab Emirates": UAEFlag,
+  Kuwait: KuwaitFlag,
+  Qatar: QatarFlag,
+  Bahrain: BahrainFlag,
+  Oman: OmanFlag,
+  Yemen: YemenFlag,
+  Jordan: JordanFlag,
+  Syria: SyriaFlag,
+  Lebanon: LebanonFlag,
+  Palestine: PalestineFlag,
+  Egypt: EgyptFlag,
+  Iraq: IraqFlag,
+  Libya: LibyaFlag,
+  Tunisia: TunisiaFlag,
+  Algeria: AlgeriaFlag,
+  Morocco: MoroccoFlag,
+  Mauritania: MauritaniaFlag,
+  Sudan: SudanFlag,
+  "South Sudan": SouthSudanFlag,
+  Djibouti: DjiboutiFlag,
+  Somalia: SomaliaFlag,
+  Comoros: ComorosFlag,
+};
+
+export default countryFlags;

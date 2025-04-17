@@ -1,14 +1,14 @@
 "use client";
 
 import { IconButton } from "@mui/material";
-import typeIconsMapping from "@/utils/typeIconsMapping";
+import countryFlags from "@/utils/countryFlags"; // We'll create this mapping
 
-export default function DestinationType({ type, isActive, onClick }) {
-  const IconComponent = typeIconsMapping[type] || null;
+export default function CountryType({ country, isActive, onClick }) {
+  const FlagComponent = countryFlags[country] || null;
 
   return (
     <IconButton
-      onClick={() => onClick(type)}
+      onClick={() => onClick(country)}
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -34,7 +34,7 @@ export default function DestinationType({ type, isActive, onClick }) {
         },
       }}
     >
-      {IconComponent && <IconComponent fontSize="small" />}
+      {FlagComponent && <FlagComponent fontSize="small" />}
       <span
         style={{
           fontSize: "0.75rem",
@@ -43,7 +43,7 @@ export default function DestinationType({ type, isActive, onClick }) {
           fontWeight: isActive ? "700" : "400",
         }}
       >
-        {type}
+        {country}
       </span>
     </IconButton>
   );
