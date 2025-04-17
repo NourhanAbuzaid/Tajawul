@@ -14,8 +14,10 @@ export default function CountriesSection({
   const [internalSelectedCountry, setInternalSelectedCountry] = useState(null);
   const scrollContainerRef = useRef(null);
 
-  // Extract country names from the JSON
-  const countries = Object.keys(arabCountries);
+  // Extract and sort country names alphabetically
+  const countries = Object.keys(arabCountries).sort((a, b) =>
+    a.localeCompare(b)
+  );
 
   // Use the prop if provided, otherwise use internal state
   const selectedCountry =

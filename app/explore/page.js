@@ -59,7 +59,15 @@ export default function ExplorePage() {
   return (
     <div className={styles.exploreContainer}>
       <div className={styles.searchSection}>
-        <h1>Explore Destinations</h1>
+        <h1>
+          {selectedCountry
+            ? `Explore ${
+                selectedCountry === "United Arab Emirates"
+                  ? "UAE"
+                  : selectedCountry
+              }`
+            : "Explore Destinations"}
+        </h1>
       </div>
 
       <div className={styles.filterSection}>
