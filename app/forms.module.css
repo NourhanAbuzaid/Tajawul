@@ -413,3 +413,42 @@
 .closeButton:hover {
   color: var(--Neutrals-Medium-Text);
 }
+
+.subheaderStepOne {
+  width: 100%;
+  font-family: Merriweather;
+  padding: 0px;
+  color: var(--Blue-Dark);
+  font-weight: 600;
+  font-size: 20px;
+  margin-top: -16px;
+  margin-bottom: 4px;
+}
+
+.descriptionStepOne {
+  width: 100%;
+  padding: 0px 10%;
+  color: var(--Blue-Perfect);
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 28px;
+}
+
+.subheaderStepTwo {
+  width: 100%;
+  font-family: Merriweather;
+  padding: 0px;
+  color: var(--Blue-Dark);
+  font-weight: 600;
+  font-size: 20px;
+  margin-top: -16px;
+  margin-bottom: 4px;
+}
+
+.descriptionStepTwo {
+  width: 100%;
+  padding: 0px 10%;
+  color: var(--Blue-Perfect);
+  font-size: 14px;
+  font-weight: 500;
+}

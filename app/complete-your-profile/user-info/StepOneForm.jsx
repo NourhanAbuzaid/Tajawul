@@ -192,162 +192,173 @@ export default function StepOneForm() {
   }));
 
   return (
-    <div className={styles.formContainer}>
-      <form className={styles.formWidth} onSubmit={handleSubmit}>
-        <div className={styles.formRow}>
+    <div>
+      <p className={styles.subheaderStepOne}>
+        Step One: Tell us more about yourself
+      </p>
+      <p className={styles.descriptionStepOne}>
+        <strong>Help us personalize your travel experiences. </strong> This also
+        sets up your profile, unlocking social features to connect with fellow
+        travelers who share your interests.
+      </p>
+
+      <div className={styles.formContainer}>
+        <form className={styles.formWidth} onSubmit={handleSubmit}>
+          <div className={styles.formRow}>
+            <Input
+              label="First Name"
+              id="firstName"
+              type="text"
+              required
+              value={formData.firstName}
+              onChange={handleChange}
+              errorMsg={errors.firstName}
+            />
+            <Input
+              label="Last Name"
+              id="lastName"
+              type="text"
+              required
+              value={formData.lastName}
+              onChange={handleChange}
+              errorMsg={errors.lastName}
+            />
+          </div>
+
+          <ImageUpload
+            label="Profile Picture"
+            id="profilePicture"
+            description="Accepted formats: jpg, jpeg, png, webp"
+            required
+            onUpload={handleFileUpload}
+            errorMsg={errors.profilePicture}
+            accept="image/*"
+          />
+
           <Input
-            label="First Name"
-            id="firstName"
+            label="Username"
+            id="username"
             type="text"
             required
-            value={formData.firstName}
+            value={formData.username}
             onChange={handleChange}
-            errorMsg={errors.firstName}
+            errorMsg={errors.username}
           />
-          <Input
-            label="Last Name"
-            id="lastName"
-            type="text"
+          <Textarea
+            label="Bio"
+            id="bio"
             required
-            value={formData.lastName}
+            value={formData.bio}
             onChange={handleChange}
-            errorMsg={errors.lastName}
+            errorMsg={errors.bio}
           />
-        </div>
 
-        <ImageUpload
-          label="Profile Picture"
-          id="profilePicture"
-          description="Accepted formats: jpg, jpeg, png, webp"
-          required
-          onUpload={handleFileUpload}
-          errorMsg={errors.profilePicture}
-          accept="image/*"
-        />
+          <Input
+            label="Phone Number"
+            id="phoneNumber"
+            description="Include country code if applicable."
+            type="tel"
+            required
+            value={formData.phoneNumber}
+            onChange={handleChange}
+            errorMsg={errors.phoneNumber}
+          />
 
-        <Input
-          label="Username"
-          id="username"
-          type="text"
-          required
-          value={formData.username}
-          onChange={handleChange}
-          errorMsg={errors.username}
-        />
-        <Textarea
-          label="Bio"
-          id="bio"
-          required
-          value={formData.bio}
-          onChange={handleChange}
-          errorMsg={errors.bio}
-        />
+          <Input
+            label="Birth Date"
+            id="birthDate"
+            type="date"
+            required
+            value={formData.birthDate}
+            onChange={handleChange}
+            errorMsg={errors.birthDate}
+          />
 
-        <Input
-          label="Phone Number"
-          id="phoneNumber"
-          description="Include country code if applicable."
-          type="tel"
-          required
-          value={formData.phoneNumber}
-          onChange={handleChange}
-          errorMsg={errors.phoneNumber}
-        />
-
-        <Input
-          label="Birth Date"
-          id="birthDate"
-          type="date"
-          required
-          value={formData.birthDate}
-          onChange={handleChange}
-          errorMsg={errors.birthDate}
-        />
-
-        <Dropdown
-          label="Nationality"
-          id="nationality"
-          required
-          value={formData.nationality}
-          onChange={handleChange}
-          options={countryOptions}
-          errorMsg={errors.nationality}
-        />
-
-        <div className={styles.formRow}>
           <Dropdown
-            label="Country"
-            id="country"
+            label="Nationality"
+            id="nationality"
             required
-            value={formData.country}
+            value={formData.nationality}
             onChange={handleChange}
             options={countryOptions}
-            errorMsg={errors.country}
+            errorMsg={errors.nationality}
           />
-          <Dropdown
-            label="City"
-            id="city"
+
+          <div className={styles.formRow}>
+            <Dropdown
+              label="Country"
+              id="country"
+              required
+              value={formData.country}
+              onChange={handleChange}
+              options={countryOptions}
+              errorMsg={errors.country}
+            />
+            <Dropdown
+              label="City"
+              id="city"
+              required
+              value={formData.city}
+              onChange={handleChange}
+              options={cities}
+              errorMsg={
+                cityClicked && !formData.country
+                  ? "Please Select a Country"
+                  : errors.city
+              }
+              disabled={!formData.country || cities.length === 0}
+              onDropdownClick={() => setCityClicked(true)}
+            />
+          </div>
+
+          <Input
+            label="Address"
+            id="address"
+            type="text"
             required
-            value={formData.city}
+            value={formData.address}
             onChange={handleChange}
-            options={cities}
-            errorMsg={
-              cityClicked && !formData.country
-                ? "Please Select a Country"
-                : errors.city
-            }
-            disabled={!formData.country || cities.length === 0}
-            onDropdownClick={() => setCityClicked(true)}
+            errorMsg={errors.address}
           />
-        </div>
 
-        <Input
-          label="Address"
-          id="address"
-          type="text"
-          required
-          value={formData.address}
-          onChange={handleChange}
-          errorMsg={errors.address}
-        />
+          <div className={styles.genderContainer}>
+            <span className={styles.label}>Gender</span>
+            <RadioGroup
+              value={formData.gender}
+              onValueChange={handleGenderChange}
+            >
+              <label style={{ display: "flex", alignItems: "center" }}>
+                <RadioGroupItem value="male" />
+                Male
+              </label>
+              <label style={{ display: "flex", alignItems: "center" }}>
+                <RadioGroupItem value="female" />
+                Female
+              </label>
+            </RadioGroup>
+          </div>
 
-        <div className={styles.genderContainer}>
-          <span className={styles.label}>Gender</span>
-          <RadioGroup
-            value={formData.gender}
-            onValueChange={handleGenderChange}
+          <MultiDropdown
+            label="Spoken Language/s"
+            id="spokenLanguages"
+            required
+            options={languageOptions}
+            value={formData.spokenLanguageNamesList}
+            onChange={(e) => handleSpokenLanguagesChange(e.target.value)}
+          />
+
+          {success && <SuccessMessage message={success} />}
+          {error && <ErrorMessage message={error} />}
+
+          <button
+            type="submit"
+            className={styles.submitButton}
+            disabled={loading}
           >
-            <label style={{ display: "flex", alignItems: "center" }}>
-              <RadioGroupItem value="male" />
-              Male
-            </label>
-            <label style={{ display: "flex", alignItems: "center" }}>
-              <RadioGroupItem value="female" />
-              Female
-            </label>
-          </RadioGroup>
-        </div>
-
-        <MultiDropdown
-          label="Spoken Language/s"
-          id="spokenLanguages"
-          required
-          options={languageOptions}
-          value={formData.spokenLanguageNamesList}
-          onChange={(e) => handleSpokenLanguagesChange(e.target.value)}
-        />
-
-        {success && <SuccessMessage message={success} />}
-        {error && <ErrorMessage message={error} />}
-
-        <button
-          type="submit"
-          className={styles.submitButton}
-          disabled={loading}
-        >
-          {loading ? "Submitting..." : "Next Step"}
-        </button>
-      </form>
+            {loading ? "Submitting..." : "Next Step"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

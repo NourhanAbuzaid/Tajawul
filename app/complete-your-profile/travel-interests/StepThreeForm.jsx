@@ -1,3 +1,4 @@
+import styles from "@/forms.module.css";
 import React, { useState, useEffect } from "react";
 import TagQuestion from "@/components/ui/TagQuestion";
 import { groupSizeIcons } from "@/utils/tagIconsMapping";
@@ -92,43 +93,51 @@ export default function StepThreeForm() {
 
   return (
     <div>
+      <p className={styles.subheaderStepTwo}>
+        Step Two: Tell Us About Your Travel Preferences
+      </p>
+      <p className={styles.descriptionStepTwo}>
+        <strong>Choose All that may apply, </strong>Help us understand your
+        travel style so we can recommend the best destinations and experiences
+        for you.
+      </p>
       <TagQuestion
-        question="Choose all the Tags that apply to you"
+        question="What types of travel experiences excite you the most?"
         options={tagsOptions}
         selectedValues={selectedTags}
         onChange={handleTagChange}
         required
       />
       <TagQuestion
-        question="Choose all the preferred destinations"
+        question="Which destinations are you most interested in?"
         options={destinationTypesOptions}
         selectedValues={selectedTags}
         onChange={handleTagChange}
         required
       />
       <TagQuestion
-        question="Choose all Activities"
+        question="What activities do you enjoy while traveling?"
         options={activitiesOptions}
         selectedValues={selectedTags}
         onChange={handleTagChange}
         required
       />
       <TagQuestion
-        question="How long are your trips usually?"
+        question="How long do your trips usually last?"
         options={durationOptions}
         selectedValues={selectedTags}
         onChange={handleTagChange}
         required
       />
       <TagQuestion
-        question="What is your budget range for most of your trips?"
+        question="What's your usual travel budget?"
         options={budgetOptions}
         selectedValues={selectedTags}
         onChange={handleTagChange}
         required
       />
       <TagQuestion
-        question="What is your preferred group size trips?"
+        question="Who do you usually travel with?"
         options={groupSizeOptions}
         selectedValues={selectedTags}
         onChange={handleTagChange}
