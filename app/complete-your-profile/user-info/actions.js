@@ -11,6 +11,8 @@ export const stepOneSchema = z.object({
       /^[a-zA-Z0-9_.]+$/,
       "Username can only contain letters, numbers, underscores, and periods."
     ),
+  maritalStatus: z.string().min(1, "Marital status is required"),
+
   phoneNumber: z
     .string()
     .regex(
