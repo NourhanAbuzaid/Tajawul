@@ -46,7 +46,6 @@ const DynamicInput = ({ label, type, value, onChange, errorMsg, onRemove }) => (
 );
 
 export default function CreateDestinationForm() {
-  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const [formData, setFormData] = useState({
     name: "",
     type: "",
