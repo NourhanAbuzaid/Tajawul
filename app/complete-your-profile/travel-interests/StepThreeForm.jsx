@@ -1,21 +1,24 @@
 import styles from "@/forms.module.css";
 import React, { useState, useEffect } from "react";
-import TagQuestion from "@/components/ui/TagQuestion";
+import InterestsTagQuestion from "@/components/ui/InterestsTagQuestion";
 import { groupSizeIcons } from "@/utils/tagIconsMapping";
 import axios from "axios";
+import ErrorMessage from "app/components/ui/ErrorMessage";
+import SuccessMessage from "app/components/ui/SuccessMessage";
+import API from "@/utils/api";
 
 const durationOptions = [
-  { label: "Day", value: "day" },
-  { label: "3 Days", value: "3 days" },
-  { label: "Week", value: "week" },
-  { label: "2 Weeks", value: "2 weeks" },
-  { label: "Month", value: "month" },
-  { label: "More than a month", value: "more than a month" },
+  { label: "Day", value: "Day" },
+  { label: "3 Days", value: "3 Days" },
+  { label: "Week", value: "Week" },
+  { label: "2 Weeks", value: "2 Weeks" },
+  { label: "Month", value: "Month" },
+  { label: "More than a month", value: "More than Month" },
 ];
 
 const budgetOptions = [
   { label: "$ Low", value: "low" },
-  { label: "$$ Mid-range", value: "mid-range" },
+  { label: "$$ Mid-range", value: "mid" },
   { label: "$$$$ Luxury", value: "luxury" },
 ];
 
@@ -32,12 +35,21 @@ const groupSizeOptions = [
 ];
 
 export default function StepThreeForm() {
-  const [selectedTags, setSelectedTags] = useState([]);
+  const [selectedTags, setSelectedTags] = useState({
+    tags: [],
+    destinationTypes: [],
+    activities: [],
+    tripDurations: [],
+    priceRanges: [],
+    groupSizes: [],
+  });
   const [tagsOptions, setTagsOptions] = useState([]);
   const [destinationTypesOptions, setDestinationTypesOptions] = useState([]);
   const [activitiesOptions, setActivitiesOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [submitLoading, setSubmitLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState("");
 
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -57,7 +69,7 @@ export default function StepThreeForm() {
           return (
             items?.map((item) => ({
               label: item.name,
-              value: item.name.toLowerCase().replace(/\s+/g, "-"),
+              value: item.name.toLowerCase(),
             })) || []
           );
         };
@@ -79,17 +91,52 @@ export default function StepThreeForm() {
     fetchOptions();
   }, [baseUrl]);
 
-  const handleTagChange = (e) => {
-    setSelectedTags(e.target.value);
+  const handleTagChange = (field) => (selectedValues) => {
+    setSelectedTags((prev) => ({
+      ...prev,
+      [field]: selectedValues,
+    }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Selected Tags:", selectedTags);
+    setSubmitLoading(true);
+    setError(null);
+    setSuccess("");
+
+    try {
+      // Prepare the request body according to the API specification
+      const requestBody = {
+        destinationTypes: selectedTags.destinationTypes,
+        groupSizes: selectedTags.groupSizes,
+        activities: selectedTags.activities,
+        tags: selectedTags.tags,
+        tripDurations: selectedTags.tripDurations,
+        priceRanges: selectedTags.priceRanges,
+      };
+
+      console.log("Submitting interests:", requestBody); // For debugging
+
+      // Submit the data to the API using the API instance
+      const response = await API.post("/User/interests", requestBody);
+
+      console.log("API response:", response.data); // For debugging
+      setSuccess(
+        response.data.message || "Travel preferences saved successfully!"
+      );
+    } catch (err) {
+      console.error("API Request Failed:", err.response?.data || err.message);
+      setError(
+        err.response?.data?.message || "Failed to save travel preferences."
+      );
+    } finally {
+      setSubmitLoading(false);
+    }
   };
 
   if (isLoading) return <div>Loading options...</div>;
-  if (error) return <div>Error loading options. Please try again later.</div>;
+  if (error && !submitLoading)
+    return <div>Error loading options. Please try again later.</div>;
 
   return (
     <div>
@@ -101,48 +148,62 @@ export default function StepThreeForm() {
         travel style so we can recommend the best destinations and experiences
         for you.
       </p>
-      <TagQuestion
-        question="What types of travel experiences excite you the most?"
-        options={tagsOptions}
-        selectedValues={selectedTags}
-        onChange={handleTagChange}
-        required
-      />
-      <TagQuestion
-        question="Which destinations are you most interested in?"
-        options={destinationTypesOptions}
-        selectedValues={selectedTags}
-        onChange={handleTagChange}
-        required
-      />
-      <TagQuestion
-        question="What activities do you enjoy while traveling?"
-        options={activitiesOptions}
-        selectedValues={selectedTags}
-        onChange={handleTagChange}
-        required
-      />
-      <TagQuestion
-        question="How long do your trips usually last?"
-        options={durationOptions}
-        selectedValues={selectedTags}
-        onChange={handleTagChange}
-        required
-      />
-      <TagQuestion
-        question="What's your usual travel budget?"
-        options={budgetOptions}
-        selectedValues={selectedTags}
-        onChange={handleTagChange}
-        required
-      />
-      <TagQuestion
-        question="Who do you usually travel with?"
-        options={groupSizeOptions}
-        selectedValues={selectedTags}
-        onChange={handleTagChange}
-        required
-      />
+
+      <form onSubmit={handleSubmit}>
+        <InterestsTagQuestion
+          question="What types of travel experiences excite you the most?"
+          options={tagsOptions}
+          selectedValues={selectedTags.tags}
+          onChange={handleTagChange("tags")}
+          required
+        />
+        <InterestsTagQuestion
+          question="Which destinations are you most interested in?"
+          options={destinationTypesOptions}
+          selectedValues={selectedTags.destinationTypes}
+          onChange={handleTagChange("destinationTypes")}
+          required
+        />
+        <InterestsTagQuestion
+          question="What activities do you enjoy while traveling?"
+          options={activitiesOptions}
+          selectedValues={selectedTags.activities}
+          onChange={handleTagChange("activities")}
+          required
+        />
+        <InterestsTagQuestion
+          question="How long do your trips usually last?"
+          options={durationOptions}
+          selectedValues={selectedTags.tripDurations}
+          onChange={handleTagChange("tripDurations")}
+          required
+        />
+        <InterestsTagQuestion
+          question="What's your usual travel budget?"
+          options={budgetOptions}
+          selectedValues={selectedTags.priceRanges}
+          onChange={handleTagChange("priceRanges")}
+          required
+        />
+        <InterestsTagQuestion
+          question="Who do you usually travel with?"
+          options={groupSizeOptions}
+          selectedValues={selectedTags.groupSizes}
+          onChange={handleTagChange("groupSizes")}
+          required
+        />
+
+        {success && <SuccessMessage message={success} />}
+        {error && <ErrorMessage message={error} />}
+
+        <button
+          type="submit"
+          className={styles.submitButton}
+          disabled={submitLoading}
+        >
+          {submitLoading ? "Submitting..." : "Save Preferences"}
+        </button>
+      </form>
     </div>
   );
 }

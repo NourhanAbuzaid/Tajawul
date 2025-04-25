@@ -167,7 +167,7 @@ export default function StepOneForm() {
       console.log("Formatted data:", formattedData); // Debugging: Log the data being sent
 
       // Submit the data to the API using the API instance
-      const response = await API.post("/user/profile/complete1", formattedData);
+      const response = await API.post("/User/info", formattedData);
 
       console.log("API response:", response.data); // Debugging: Log the API response
       setSuccess(response.data.message || "Profile updated successfully!");
