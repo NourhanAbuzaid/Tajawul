@@ -38,7 +38,7 @@ export default function StepOneForm() {
     address: "",
     nationality: "",
     gender: "",
-    spokenLanguageNamesList: [],
+    spokenLanguages: [],
   });
 
   const [errors, setErrors] = useState({});
@@ -117,7 +117,7 @@ export default function StepOneForm() {
   const handleSpokenLanguagesChange = (selectedLanguages) => {
     setFormData((prev) => ({
       ...prev,
-      spokenLanguageNamesList: selectedLanguages,
+      spokenLanguages: selectedLanguages,
     }));
   };
 
@@ -150,18 +150,17 @@ export default function StepOneForm() {
 
       // Format the data for the API
       const formattedData = {
+        username: dataToSubmit.username,
         firstName: dataToSubmit.firstName,
         lastName: dataToSubmit.lastName,
-        userName: dataToSubmit.username,
         bio: dataToSubmit.bio,
         phoneNumber: dataToSubmit.phoneNumber,
         birthDate: dataToSubmit.birthDate,
-        cityName: dataToSubmit.city,
-        countryName: dataToSubmit.country,
-        address: dataToSubmit.address,
+        city: dataToSubmit.city,
+        country: dataToSubmit.country,
         nationality: dataToSubmit.nationality,
         gender: dataToSubmit.gender,
-        spokenLanguageNamesList: dataToSubmit.spokenLanguageNamesList,
+        spokenLanguages: dataToSubmit.spokenLanguageNamesList,
       };
 
       console.log("Formatted data:", formattedData); // Debugging: Log the data being sent
