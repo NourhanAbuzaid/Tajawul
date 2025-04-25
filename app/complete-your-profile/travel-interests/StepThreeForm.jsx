@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TagQuestion from "@/components/ui/TagQuestion";
 import { groupSizeIcons } from "@/utils/tagIconsMapping";
+import axios from "axios";
 
 const durationOptions = [
   { label: "Day", value: "day" },
@@ -31,6 +32,51 @@ const groupSizeOptions = [
 
 export default function StepThreeForm() {
   const [selectedTags, setSelectedTags] = useState([]);
+  const [tagsOptions, setTagsOptions] = useState([]);
+  const [destinationTypesOptions, setDestinationTypesOptions] = useState([]);
+  const [activitiesOptions, setActivitiesOptions] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+  useEffect(() => {
+    const fetchOptions = async () => {
+      try {
+        // Fetch all options in parallel
+        const [tagsResponse, destinationTypesResponse, activitiesResponse] =
+          await Promise.all([
+            axios.get(`${baseUrl}/tags`),
+            axios.get(`${baseUrl}/destination-types`),
+            axios.get(`${baseUrl}/activities`),
+          ]);
+
+        // Process the responses to match the expected format
+        const processOptions = (items) => {
+          return (
+            items?.map((item) => ({
+              label: item.name,
+              value: item.name.toLowerCase().replace(/\s+/g, "-"),
+            })) || []
+          );
+        };
+
+        setTagsOptions(processOptions(tagsResponse.data));
+        setDestinationTypesOptions(
+          processOptions(destinationTypesResponse.data)
+        );
+        setActivitiesOptions(processOptions(activitiesResponse.data));
+
+        setIsLoading(false);
+      } catch (err) {
+        console.error("Failed to fetch options:", err);
+        setError(err);
+        setIsLoading(false);
+      }
+    };
+
+    fetchOptions();
+  }, [baseUrl]);
 
   const handleTagChange = (e) => {
     setSelectedTags(e.target.value);
@@ -41,10 +87,34 @@ export default function StepThreeForm() {
     console.log("Selected Tags:", selectedTags);
   };
 
+  if (isLoading) return <div>Loading options...</div>;
+  if (error) return <div>Error loading options. Please try again later.</div>;
+
   return (
     <div>
       <TagQuestion
-        question="How long do you plan to travel?"
+        question="Choose all the Tags that apply to you"
+        options={tagsOptions}
+        selectedValues={selectedTags}
+        onChange={handleTagChange}
+        required
+      />
+      <TagQuestion
+        question="Choose all the preferred destinations"
+        options={destinationTypesOptions}
+        selectedValues={selectedTags}
+        onChange={handleTagChange}
+        required
+      />
+      <TagQuestion
+        question="Choose all Activities"
+        options={activitiesOptions}
+        selectedValues={selectedTags}
+        onChange={handleTagChange}
+        required
+      />
+      <TagQuestion
+        question="How long are your trips usually?"
         options={durationOptions}
         selectedValues={selectedTags}
         onChange={handleTagChange}
