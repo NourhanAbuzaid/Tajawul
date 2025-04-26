@@ -17,6 +17,27 @@ import SuccessMessage from "app/components/ui/SuccessMessage";
 import { Menu, MenuItem, Button, Box } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
+// Reusable component for dynamic inputs
+const DynamicInput = ({ label, type, value, onChange, errorMsg, onRemove }) => (
+  <div className={styles.contactInput}>
+    <Input
+      label={label}
+      type={type}
+      value={value}
+      onChange={onChange}
+      errorMsg={errorMsg}
+    />
+    <button
+      type="button"
+      onClick={onRemove}
+      className={styles.removeButton}
+      aria-label={`Remove ${label}`}
+    >
+      Remove
+    </button>
+  </div>
+);
+
 const MaritalStatusDropdown = ({ value, onChange }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -147,6 +168,7 @@ export default function StepOneForm() {
     gender: "",
     spokenLanguages: [],
     maritalStatus: "",
+    socialMediaLinks: [],
   });
 
   const [errors, setErrors] = useState({});
@@ -227,6 +249,38 @@ export default function StepOneForm() {
     }));
   };
 
+  // Add social media link
+  const addSocialMediaLink = () => {
+    setFormData((prev) => ({
+      ...prev,
+      socialMediaLinks: [...prev.socialMediaLinks, { platform: "", url: "" }],
+    }));
+  };
+
+  // Handle social media changes
+  const handleSocialMediaChange = (index, field, value) => {
+    const updatedLinks = [...formData.socialMediaLinks];
+    updatedLinks[index] = { ...updatedLinks[index], [field]: value };
+    setFormData((prev) => ({ ...prev, socialMediaLinks: updatedLinks }));
+
+    if (field === "url") {
+      let error = "";
+      if (!/^https?:\/\/[\w\-]+(\.[\w\-]+)+[/#?]?.*$/.test(value)) {
+        error = "Invalid social media URL";
+      }
+
+      setErrors((prev) => ({ ...prev, [`socialMedia-${index}`]: error }));
+    }
+  };
+
+  // Remove social media link
+  const removeSocialMediaLink = (index) => {
+    const updatedLinks = formData.socialMediaLinks.filter(
+      (_, i) => i !== index
+    );
+    setFormData((prev) => ({ ...prev, socialMediaLinks: updatedLinks }));
+  };
+
   // Handle Form Submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -266,8 +320,9 @@ export default function StepOneForm() {
         country: dataToSubmit.country,
         nationality: dataToSubmit.nationality,
         gender: dataToSubmit.gender,
-        spokenLanguages: dataToSubmit.spokenLanguageNamesList,
+        spokenLanguages: dataToSubmit.spokenLanguages,
         maritalStatus: dataToSubmit.maritalStatus,
+        socialMediaLinks: dataToSubmit.socialMediaLinks,
       };
 
       console.log("Formatted data:", formattedData); // Debugging: Log the data being sent
@@ -358,6 +413,54 @@ export default function StepOneForm() {
             onChange={handleChange}
             errorMsg={errors.bio}
           />
+
+          {/* Social Media Links Section */}
+          <div className={styles.contactButtons}>
+            <button
+              type="button"
+              onClick={addSocialMediaLink}
+              className={styles.addButton}
+            >
+              + Add Social Media
+            </button>
+          </div>
+          {formData.socialMediaLinks.map((link, index) => (
+            <div key={index} className={styles.contactInput}>
+              <Dropdown
+                label="Platform"
+                id={`socialMediaPlatform-${index}`}
+                required
+                value={link.platform}
+                onChange={(e) =>
+                  handleSocialMediaChange(index, "platform", e.target.value)
+                }
+                options={[
+                  { value: "Facebook", label: "Facebook" },
+                  { value: "Instagram", label: "Instagram" },
+                  { value: "Twitter", label: "Twitter" },
+                  { value: "LinkedIn", label: "LinkedIn" },
+                ]}
+              />
+              <Input
+                label="URL"
+                id={`socialMediaUrl-${index}`}
+                type="url"
+                required
+                value={link.url}
+                onChange={(e) =>
+                  handleSocialMediaChange(index, "url", e.target.value)
+                }
+                errorMsg={errors[`socialMedia-${index}`]}
+              />
+              <button
+                type="button"
+                onClick={() => removeSocialMediaLink(index)}
+                className={styles.removeButton}
+              >
+                Remove
+              </button>
+            </div>
+          ))}
 
           <Input
             label="Phone Number"
@@ -460,7 +563,7 @@ export default function StepOneForm() {
             id="spokenLanguages"
             required
             options={languageOptions}
-            value={formData.spokenLanguageNamesList}
+            value={formData.spokenLanguages}
             onChange={(e) => handleSpokenLanguagesChange(e.target.value)}
           />
 

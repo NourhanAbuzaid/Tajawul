@@ -299,7 +299,7 @@ export default function CreateDestinationForm() {
       // Include the accessToken in the headers
       console.log("Including accessToken in headers:", accessToken); // Debug: Log the token being included in headers
 
-      const response = await API.post("/Destination", formattedData);
+      const response = await API.post("Destination", formattedData);
 
       console.log("API Response:", response.data); // Debug: Log the API response
 
