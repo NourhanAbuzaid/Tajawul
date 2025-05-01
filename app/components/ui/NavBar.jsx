@@ -11,10 +11,19 @@ import Avatar from "@mui/material/Avatar";
 import Button from "./Button";
 import styles from "./NavBar.module.css";
 import LogoutButton from "@/components/ui/LogoutButton"; // ✅ Import the Logout Button
+import { useEffect, useState } from "react"; // Add this import
 
 export default function NavBar() {
   const { accessToken } = useAuthStore(); // ✅ Get authentication state
   const pathname = usePathname(); // ✅ Get current pathname
+  const [isMounted, setIsMounted] = useState(false); // Add this state
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // Don't render anything until mounted (client-side)
+  if (!isMounted) return null;
 
   return (
     <nav className={styles.navBar}>
