@@ -153,3 +153,25 @@
   color: var(--Neutrals-Dark-Outline);
   margin: 0.5rem 0 0 0;
 }
+
+.hiddenInput {
+  display: none;
+}
+
+.errorMessage {
+  margin-top: 1rem;
+  width: 100%;
+  max-width: 350px;
+}
+
+/* Add disabled state for the upload button */
+.uploadButton:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+}
+
+.uploadButton:disabled:hover {
+  background: #cccccc;
+  transform: none;
+  box-shadow: none;
+}
