@@ -5,6 +5,7 @@ import Image from "next/image";
 import styles from "./ImageList.module.css";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 const ImageList = ({ images = [] }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -18,6 +19,38 @@ const ImageList = ({ images = [] }) => {
       (prevIndex) => (prevIndex - 1 + images.length) % images.length
     );
   };
+
+  const handleUploadClick = () => {
+    // You can implement your upload logic here
+    console.log("Upload images clicked");
+    // For example: trigger file input, open modal, etc.
+  };
+
+  if (images.length === 0) {
+    return (
+      <div className={styles.emptyContainer}>
+        <div className={styles.emptyIllustration}>
+          <Image
+            src="/no-images-upload.svg" // Replace with your illustration
+            alt="No images"
+            width={300}
+            height={300}
+          />
+        </div>
+        <h3 className={styles.emptyTitle}>No Images Found</h3>
+        <p className={styles.emptyMessage}>
+          You haven't added any images yet. Upload some to get started!
+        </p>
+        <button onClick={handleUploadClick} className={styles.uploadButton}>
+          <CloudUploadIcon className={styles.uploadIcon} />
+          Upload Images
+        </button>
+        <p className={styles.emptyHint}>
+          <strong>Supported formats:</strong> JPG, JPEG, PNG, WEBP (Max 2MB)
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.container}>

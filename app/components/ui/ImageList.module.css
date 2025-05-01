@@ -77,3 +77,79 @@
   height: 100px;
   cursor: pointer;
 }
+
+.emptyContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 3rem 2rem;
+  text-align: center;
+  background-color: #e9ebed;
+  border-radius: 12px;
+  border: 1.5px dashed var(--Neutrals-Medium-Outline);
+  margin: 0 auto;
+}
+
+.emptyTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--Neutrals-Black-Text);
+  margin: 0;
+  padding: 0;
+}
+
+.emptyMessage {
+  font-size: 1rem;
+  color: var(--Neutrals-Dark-Outline);
+  margin: 0 0 8px 0;
+  max-width: 350px;
+}
+
+.uploadButton {
+  display: flex;
+  height: 46px;
+  padding: 16px 32px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 12px;
+  background: linear-gradient(268deg, #253f3b 23.52%, #5c9c92 136.03%);
+  color: var(--Neutrals-Background, #fffbf4);
+  font-family: Merriweather;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 120%;
+  letter-spacing: 0.32px;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.uploadButton::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(270deg, #253f3b -25.25%, #5c9c92 99.99%);
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+  z-index: -1;
+}
+
+.uploadButton:hover::before {
+  opacity: 1;
+}
+.uploadIcon {
+  font-size: 1.2rem;
+}
+
+.emptyHint {
+  font-size: 0.85rem;
+  color: var(--Neutrals-Dark-Outline);
+  margin: 0.5rem 0 0 0;
+}
