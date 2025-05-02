@@ -40,7 +40,7 @@ const ImageList = ({ images = [] }) => {
     try {
       const formData = new FormData();
       Array.from(files).forEach((file) => {
-        formData.append("imageFiles", file);
+        formData.append("Images", file);
       });
 
       const response = await API.put(

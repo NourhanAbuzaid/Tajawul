@@ -81,7 +81,7 @@ export default function UploadDestinationImages() {
       if (destinationImages.length > 0) {
         const imagesFormData = new FormData();
         destinationImages.forEach((file) => {
-          imagesFormData.append("imageFiles", file);
+          imagesFormData.append("Images", file);
         });
 
         console.log("Uploading destination images...");
