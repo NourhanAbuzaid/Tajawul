@@ -16,6 +16,7 @@ import PriceRange from "./tags/PriceRange";
 import EditTags from "@/components/ui/edit/EditTags";
 import GroupSize from "./tags/GroupSize";
 import Tag from "./tags/Tag";
+import DestinationIdHandler from "@/components/DestinationIdHandler";
 
 export default async function DestinationDetails({ destinationId }) {
   await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -23,7 +24,7 @@ export default async function DestinationDetails({ destinationId }) {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   let destination = null;
-  let groupSizes = []; // Initialize groupSizes as an empty array
+  let groupSizes = [];
   let activities = [];
   let tags = [];
 
@@ -75,6 +76,7 @@ export default async function DestinationDetails({ destinationId }) {
 
   return (
     <div>
+      <DestinationIdHandler destinationId={destinationId} />
       <div className={styles.coverWrapper}>
         <div className={styles.destinationCover}>
           {destination?.coverImage && (

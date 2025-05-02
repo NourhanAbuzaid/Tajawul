@@ -10,11 +10,15 @@ import API from "@/utils/api";
 import { useRouter } from "next/navigation";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 
-const ImageList = ({ images = [], destinationId }) => {
+const ImageList = ({ images = [] }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
+  const destinationId =
+    typeof window !== "undefined"
+      ? localStorage.getItem("destinationId")
+      : null;
 
   const handleNext = () => {
     setSelectedIndex((prevIndex) => (prevIndex + 1) % images.length);

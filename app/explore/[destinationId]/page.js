@@ -2,7 +2,7 @@ import DestinationDetails from "@/components/ui/DestinationDetails";
 import { Suspense } from "react";
 
 export default async function DestinationDetailsPage({ params }) {
-  const { destinationId } = await params; // ✅ Await params
+  const { destinationId } = params;
 
   return (
     <div>
