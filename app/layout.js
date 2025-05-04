@@ -1,5 +1,6 @@
 import "./globals.css";
 import { AnimatePresence } from "framer-motion";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata = {
   title: "Tajawul",
@@ -11,6 +12,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <AnimatePresence mode="wait">{children}</AnimatePresence>
+        <SpeedInsights />
       </body>
     </html>
   );
