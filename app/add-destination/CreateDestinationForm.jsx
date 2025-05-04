@@ -15,6 +15,14 @@ import arabCountries from "@/data/arabCountries.json";
 import API from "@/utils/api";
 import { useRouter } from "next/navigation"; // Import useRouter for redirection
 
+import dynamic from "next/dynamic";
+
+const LocationPicker = dynamic(() => import("@/components/map/LocationPicker"), {
+  ssr: false,
+  loading: () => <p>Loading map...</p>
+});
+
+
 // Debounce utility function to limit the number of calls to saveToLocalStorage
 const debounce = (func, delay) => {
   let timeout;
@@ -426,42 +434,74 @@ export default function CreateDestinationForm() {
           disabled={!formData.country || cities.length === 0}
           onDropdownClick={() => setCityClicked(true)}
         />
-        <Input
-          label="Address"
-          id="address"
-          type="text"
-          required
-          value={formData.locations[0].address}
-          onChange={(e) =>
-            setFormData((prev) => ({
-              ...prev,
-              locations: [{ ...prev.locations[0], address: e.target.value }],
-            }))
-          }
-          errorMsg={errors.address}
-        />
         <div className={styles.formRow}>
           <Input
-            label="Longitude"
-            id="longitude"
-            type="number"
-            step="any"
+            label="Address"
+            id="address"
+            type="text"
             required
-            value={formData.locations?.[0]?.longitude || 0} // ✅ Prevents undefined access
-            onChange={(e) => handleLocationChange("longitude", e.target.value)}
-            errorMsg={errors.longitude}
+            value={formData.locations[0]?.address || ""}
+            onChange={(e) => setFormData(prev => ({
+              ...prev,
+              locations: [{ ...prev.locations[0], address: e.target.value }]
+            }))}
+            errorMsg={errors.address}
           />
-
-          <Input
-            label="Latitude"
-            id="latitude"
-            type="number"
-            step="any"
-            required
-            value={formData.locations?.[0]?.latitude || 0} // ✅ Prevents undefined access
-            onChange={(e) => handleLocationChange("latitude", e.target.value)}
-            errorMsg={errors.latitude}
-          />
+        </div>
+        <div className={styles.coordinatesContainer}>
+          <div className={styles.longitudeField}>
+            <Input
+              label="Longitude"
+              id="longitude"
+              type="number"
+              step="any"
+              required
+              value={formData.locations[0]?.longitude || 0}
+              onChange={(e) => {
+                setFormData(prev => ({
+                  ...prev,
+                  locations: [{ ...prev.locations[0], longitude: e.target.value }]
+                }));
+              }}
+              errorMsg={errors.longitude}
+            />
+          </div>
+          
+          <div className={styles.latitudeField}>
+            <Input
+              label="Latitude"
+              id="latitude"
+              type="number"
+              step="any"
+              required
+              value={formData.locations[0]?.latitude || 0}
+              onChange={(e) => {
+                setFormData(prev => ({
+                  ...prev,
+                  locations: [{ ...prev.locations[0], latitude: e.target.value }]
+                }));
+              }}
+              errorMsg={errors.latitude}
+            />
+            <LocationPicker
+              onLocationSelect={(location) => {
+                setFormData(prev => ({
+                  ...prev,
+                  locations: [{
+                    ...prev.locations[0],
+                    longitude: location.lng,
+                    latitude: location.lat,
+                    address: location.address || prev.locations[0]?.address || ""
+                  }]
+                }));
+              }}
+              initialLocation={{
+                lng: formData.locations[0]?.longitude || 0,
+                lat: formData.locations[0]?.latitude || 0,
+                address: formData.locations[0]?.address || ""
+              }}
+            />
+          </div>
         </div>
 
         <h2 className={styles.subheader}>Operating Hours & Pricing</h2>
