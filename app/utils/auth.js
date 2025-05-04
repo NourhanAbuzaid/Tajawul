@@ -17,12 +17,18 @@ export async function login(email, password) {
     // Extract tokens and roles
     const { token, refreshToken, role } = response.data;
 
-    if (!token || !refreshToken || !role) {
-      throw new Error("Invalid response from server");
+    if (!token || !refreshToken) {
+      throw new Error("Invalid response from server - missing tokens");
     }
 
+    // Convert role to array if it's a string (backward compatibility)
+    const roles = Array.isArray(role) ? role : [role].filter(Boolean);
+
+    // Debug logging
+    console.log("Login successful. Roles:", roles);
+
     // Store access token, refresh token, and roles
-    useAuthStore.getState().setAuth(token, refreshToken, [role]);
+    useAuthStore.getState().setAuth(token, refreshToken, roles);
 
     return true; // ✅ Login successful
   } catch (error) {
@@ -38,7 +44,11 @@ export async function logout() {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   try {
-    const { accessToken, refreshToken, clearAuth } = useAuthStore.getState();
+    const { accessToken, refreshToken, clearAuth, roles } =
+      useAuthStore.getState();
+
+    // Debug logging
+    console.log("Logging out. Current roles:", roles);
 
     if (!accessToken) {
       console.warn("No access token available, logging out locally.");
