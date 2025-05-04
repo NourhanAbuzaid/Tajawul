@@ -2,8 +2,8 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  width: 260px;
-  height: 350px;
+  width: 290px;
+  height: 380px;
   margin-bottom: 16px;
   transition: all 0.4s ease-in;
 }
@@ -132,6 +132,42 @@
 .priceRange {
   font-size: 14px;
   color: var(--Neutrals-Black-Text, #221a14);
+}
+
+.addDestinationButton {
+  display: flex;
+  height: 44px;
+  padding: 0px 28px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 12px;
+  background: linear-gradient(268deg, #253f3b 23.52%, #5c9c92 136.03%);
+  color: var(--Neutrals-Background, #fffbf4);
+  font-family: Merriweather;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 120%; /* 19.2px */
+  letter-spacing: 0.32px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.addDestinationButton::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(270deg, #253f3b -25.25%, #5c9c92 99.99%);
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+  z-index: -1;
+}
+
+.addDestinationButton:hover::before {
+  opacity: 1;
 }
 
 @media (max-width: 1456px) {

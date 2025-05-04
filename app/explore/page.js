@@ -8,6 +8,7 @@ import TuneIcon from "@mui/icons-material/Tune";
 import styles from "@/Explore.module.css";
 import DestinationTypeDropdown from "@/components/ui/filter/DestinationTypeDropdown";
 import CountriesSection from "@/components/ui/filter/CountriesSection";
+import AddDestinationCard from "@/components/ui/AddDestinationCard";
 
 export default function ExplorePage() {
   const [destinations, setDestinations] = useState([]);
@@ -143,6 +144,7 @@ export default function ExplorePage() {
         </div>
       </div>
       <div className={styles.destinationContainer}>
+        <AddDestinationCard />
         {loading && <p>Loading destinations...</p>}
         {error && <p style={{ color: "red" }}>{error}</p>}
         {!loading && !error && destinations.length === 0 && (
