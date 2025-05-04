@@ -47,10 +47,10 @@ export default function Home() {
         <div className={styles.popupOverlay}>
           <div className={styles.popupContent}>
             <Image
-              src="/complete-your-profile.svg"
-              alt="Complete your profile illustration"
-              width={250}
-              height={250}
+              src="/welcome-illustration.svg"
+              alt="welcome illustration"
+              width={300}
+              height={300}
               priority
             />
             <button className={styles.closeButton} onClick={handleClosePopup}>
