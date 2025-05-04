@@ -5,6 +5,10 @@ const useAuthStore = create((set) => ({
     typeof window !== "undefined" ? localStorage.getItem("authToken") : null,
   refreshToken:
     typeof window !== "undefined" ? localStorage.getItem("refreshToken") : null,
+  roles:
+    typeof window !== "undefined"
+      ? JSON.parse(localStorage.getItem("roles") || "[]")
+      : [],
 
   setTokens: (accessToken, refreshToken) => {
     localStorage.setItem("authToken", accessToken);
@@ -12,10 +16,36 @@ const useAuthStore = create((set) => ({
     set({ accessToken, refreshToken });
   },
 
-  clearTokens: () => {
+  setRoles: (roles) => {
+    localStorage.setItem("roles", JSON.stringify(roles));
+    set({ roles });
+  },
+
+  addRole: (role) => {
+    set((state) => {
+      const updatedRoles = [...new Set([...state.roles, role])];
+      localStorage.setItem("roles", JSON.stringify(updatedRoles));
+      return { roles: updatedRoles };
+    });
+  },
+
+  removeRole: (role) => {
+    set((state) => {
+      const updatedRoles = state.roles.filter((r) => r !== role);
+      localStorage.setItem("roles", JSON.stringify(updatedRoles));
+      return { roles: updatedRoles };
+    });
+  },
+
+  hasRole: (role) => {
+    return useAuthStore.getState().roles.includes(role);
+  },
+
+  clearAuth: () => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("refreshToken");
-    set({ accessToken: null, refreshToken: null });
+    localStorage.removeItem("roles");
+    set({ accessToken: null, refreshToken: null, roles: [] });
   },
 }));
 

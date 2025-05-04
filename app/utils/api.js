@@ -12,7 +12,7 @@ const API = axios.create({
 // Attach access token and refresh if about to expire
 API.interceptors.request.use(
   async (config) => {
-    const { accessToken, refreshToken, setTokens, clearTokens } =
+    const { accessToken, refreshToken, setTokens, clearAuth } =
       useAuthStore.getState();
 
     if (accessToken) {
@@ -48,7 +48,7 @@ API.interceptors.request.use(
           config.headers.Authorization = `Bearer ${newAccessToken}`; // Update request headers
         } catch (refreshError) {
           console.error("Failed to refresh token:", refreshError);
-          clearTokens(); // Clear tokens if refresh fails
+          clearAuth(); // Clear tokens if refresh fails
           Router.push("/login"); // Redirect to login
         }
       } else {
@@ -74,12 +74,12 @@ API.interceptors.response.use(
       console.log("Access token expired. Attempting to refresh token...");
 
       try {
-        const { refreshToken, setTokens, clearTokens } =
+        const { refreshToken, setTokens, clearAuth } =
           useAuthStore.getState();
 
         if (!refreshToken) {
           console.error("No refresh token available. Logging out...");
-          clearTokens(); // Clear tokens
+          clearAuth(); // Clear tokens
           Router.push("/login"); // Redirect to login
           throw new Error("No refresh token available");
         }
@@ -110,7 +110,7 @@ API.interceptors.response.use(
           "Refresh token expired or invalid. Logging out...",
           refreshError
         );
-        clearTokens(); // Clear tokens if refresh fails
+        clearAuth(); // Clear tokens if refresh fails
         Router.push("/login"); // Redirect to login
       }
     }

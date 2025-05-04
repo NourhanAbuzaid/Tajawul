@@ -37,11 +37,11 @@ export async function login(email, password) {
 export async function logout() {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   try {
-    const { accessToken, refreshToken, clearTokens } = useAuthStore.getState();
+    const { accessToken, refreshToken, clearAuth } = useAuthStore.getState();
 
     if (!accessToken) {
       console.warn("No access token available, logging out locally.");
-      clearTokens();
+      clearAuth();
       return;
     }
     console.log(accessToken);
@@ -82,7 +82,7 @@ export async function logout() {
           );
         } catch (refreshError) {
           console.error("Refresh token also expired, logging out...");
-          clearTokens();
+          clearAuth();
           window.location.href = "/login"; // Redirect to login page
           return;
         }
@@ -92,7 +92,7 @@ export async function logout() {
     }
 
     // If logout API succeeds, clear stored tokens
-    clearTokens();
+    clearAuth();
     window.location.href = "/login";
   } catch (error) {
     console.error("Logout failed:", error);
