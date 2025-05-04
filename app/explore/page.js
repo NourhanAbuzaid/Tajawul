@@ -9,6 +9,7 @@ import styles from "@/Explore.module.css";
 import DestinationTypeDropdown from "@/components/ui/filter/DestinationTypeDropdown";
 import CountriesSection from "@/components/ui/filter/CountriesSection";
 import AddDestinationCard from "@/components/ui/AddDestinationCard";
+import { GreenLoading } from "@/components/ui/Loading";
 
 export default function ExplorePage() {
   const [destinations, setDestinations] = useState([]);
@@ -144,32 +145,44 @@ export default function ExplorePage() {
         </div>
       </div>
       <div className={styles.destinationContainer}>
-        <AddDestinationCard />
-        {loading && <p>Loading destinations...</p>}
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        {!loading && !error && destinations.length === 0 && (
-          <p>No destinations found.</p>
-        )}
+        {loading ? (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              width: "100%",
+            }}
+          >
+            <div style={{ margin: "20% 0" }}>
+              <GreenLoading />
+            </div>
+          </div>
+        ) : (
+          <>
+            <AddDestinationCard />
+            {error && <p style={{ color: "red" }}>{error}</p>}
+            {destinations.length === 0 && <p>No destinations found.</p>}
 
-        {!loading &&
-          !error &&
-          destinations.map((destination) => (
-            <Link
-              key={destination.destinationId}
-              href={`/explore/${destination.destinationId}`}
-            >
-              <DestinationCard
-                image={destination.coverImage || "/fallback.jpg"}
-                name={destination.name}
-                type={destination.type}
-                location={`${destination.city}, ${destination.country}`}
-                typeIcon={null}
-                rating={destination.averageRating}
-                ratingCount={destination.reviewsCount}
-                priceRange={destination.priceRange}
-              />
-            </Link>
-          ))}
+            {destinations.map((destination) => (
+              <Link
+                key={destination.destinationId}
+                href={`/explore/${destination.destinationId}`}
+              >
+                <DestinationCard
+                  image={destination.coverImage || "/fallback.jpg"}
+                  name={destination.name}
+                  type={destination.type}
+                  location={`${destination.city}, ${destination.country}`}
+                  typeIcon={null}
+                  rating={destination.averageRating}
+                  ratingCount={destination.reviewsCount}
+                  priceRange={destination.priceRange}
+                />
+              </Link>
+            ))}
+          </>
+        )}
       </div>
     </div>
   );
