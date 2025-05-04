@@ -14,15 +14,15 @@ export async function login(email, password) {
       password,
     });
 
-    // Extract tokens
-    const { token, refreshToken } = response.data;
+    // Extract tokens and roles
+    const { token, refreshToken, role } = response.data;
 
-    if (!token || !refreshToken) {
+    if (!token || !refreshToken || !role) {
       throw new Error("Invalid response from server");
     }
 
-    // Store both tokens
-    useAuthStore.getState().setTokens(token, refreshToken);
+    // Store access token, refresh token, and roles
+    useAuthStore.getState().setAuth(token, refreshToken, [role]);
 
     return true; // ✅ Login successful
   } catch (error) {
@@ -36,6 +36,7 @@ export async function login(email, password) {
 
 export async function logout() {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+
   try {
     const { accessToken, refreshToken, clearAuth } = useAuthStore.getState();
 
@@ -44,46 +45,45 @@ export async function logout() {
       clearAuth();
       return;
     }
-    console.log(accessToken);
 
-    // Try refreshing the token if accessToken is expired
+    // Attempt logout with current token
     try {
       await axios.post(
         `${baseUrl}/Auth/logout`,
         {},
         {
-          headers: { Authorization: `Bearer ${accessToken}` }, // Correctly pass headers here
+          headers: { Authorization: `Bearer ${accessToken}` },
         }
       );
     } catch (logoutError) {
       if (logoutError.response?.status === 401) {
         console.warn("Access token expired, attempting refresh...");
 
-        // Try refreshing the token before retrying logout
+        // Refresh token
         try {
           const refreshResponse = await axios.post(
             `${baseUrl}/Auth/refreshToken`,
-            {
-              refreshToken,
-            }
+            { refreshToken }
           );
+
           const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
             refreshResponse.data;
 
+          // Update only tokens, not roles during refresh
           useAuthStore.getState().setTokens(newAccessToken, newRefreshToken);
 
-          // Retry logout with the new access token
+          // Retry logout
           await axios.post(
             `${baseUrl}/Auth/logout`,
-            {}, // Empty body
+            {},
             {
-              headers: { Authorization: `Bearer ${newAccessToken}` }, // Correctly pass headers here
+              headers: { Authorization: `Bearer ${newAccessToken}` },
             }
           );
         } catch (refreshError) {
           console.error("Refresh token also expired, logging out...");
           clearAuth();
-          window.location.href = "/login"; // Redirect to login page
+          window.location.href = "/login";
           return;
         }
       } else {
@@ -91,7 +91,7 @@ export async function logout() {
       }
     }
 
-    // If logout API succeeds, clear stored tokens
+    // Clear all stored auth info
     clearAuth();
     window.location.href = "/login";
   } catch (error) {

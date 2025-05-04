@@ -10,6 +10,13 @@ const useAuthStore = create((set) => ({
       ? JSON.parse(localStorage.getItem("roles") || "[]")
       : [],
 
+  setAuth: (accessToken, refreshToken, roles) => {
+    localStorage.setItem("authToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
+    localStorage.setItem("roles", JSON.stringify(roles));
+    set({ accessToken, refreshToken, roles });
+  },
+
   setTokens: (accessToken, refreshToken) => {
     localStorage.setItem("authToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
