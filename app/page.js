@@ -9,11 +9,20 @@ import useAuthStore from "@/store/authStore";
 
 export default function Home() {
   const [showPopup, setShowPopup] = useState(false);
+  const [popupType, setPopupType] = useState("initial");
   const { roles } = useAuthStore();
 
   useEffect(() => {
     // Check if user is logged in and has "Person" role
     if (roles.includes("Person")) {
+      if (
+        roles.includes("CompletedInterestInfo") ||
+        roles.includes("CompletedSocialInfo")
+      ) {
+        setPopupType("partial");
+      } else {
+        setPopupType("initial");
+      }
       setShowPopup(true);
     }
   }, [roles]);
@@ -46,35 +55,61 @@ export default function Home() {
       {showPopup && (
         <div className={styles.popupOverlay}>
           <div className={styles.popupContent}>
-            <Image
-              src="/welcome-illustration.svg"
-              alt="welcome illustration"
-              width={300}
-              height={300}
-              priority
-            />
+            {popupType === "initial" ? (
+              <>
+                <Image
+                  src="/welcome-illustration.svg"
+                  alt="welcome illustration"
+                  width={300}
+                  height={300}
+                  priority
+                />
+                <h2>Welcome to Tajawul!</h2>
+                <p>
+                  Tell us a little about yourself so we can match you with the
+                  perfect destinations and fellow travelers. It only takes a
+                  couple of minutes — and it makes all the difference.
+                </p>
+              </>
+            ) : (
+              <>
+                <Image
+                  src="/complete-your-profile.svg"
+                  alt="complete your profile"
+                  width={300}
+                  height={300}
+                  priority
+                />
+                <h2>
+                  You're one step away from unlocking the full Tajawul
+                  experience!
+                </h2>
+                <p>
+                  Complete your profile to access all features — personalized
+                  recommendations, social connections, and a travel experience
+                  made just for you.
+                </p>
+              </>
+            )}
+
             <button className={styles.closeButton} onClick={handleClosePopup}>
               ✕
             </button>
 
-            <h2>Welcome to Tajawul!</h2>
-            <p>
-              Tell us a little about yourself so we can match you with the
-              perfect destinations and fellow travelers. It only takes a minute
-              — and it makes all the difference.
-            </p>
             <div className={styles.buttonGroup}>
               <button
                 className={styles.secondaryButton}
                 onClick={handleClosePopup}
               >
-                Maybe Later
+                {popupType === "initial" ? "Maybe Later" : "Remind Me Later"}
               </button>
               <Link
                 href="/complete-your-profile/"
                 className={styles.submitButton}
               >
-                Complete My Profile
+                {popupType === "initial"
+                  ? "Complete My Profile"
+                  : "Continue Profile Setup"}
               </Link>
             </div>
           </div>

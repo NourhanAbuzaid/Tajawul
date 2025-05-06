@@ -7,7 +7,7 @@
   border: none;
   cursor: pointer;
   transition: all 200ms ease-in-out;
-  font-family: Merriweather;
+  font-family: var(--font-heading), Georgia, serif;
 }
 
 .primary {
@@ -64,6 +64,7 @@
   height: 32px;
   padding: 5px 24px;
   border-radius: 38px;
+  font-family: var(--font-heading), Georgia, serif;
 }
 
 .px16 {
@@ -74,4 +75,5 @@
   height: 46px;
   padding: 16px 32px;
   border-radius: 24px;
+  font-family: var(--font-heading), Georgia, serif;
 }

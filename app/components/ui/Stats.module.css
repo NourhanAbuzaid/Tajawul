@@ -28,7 +28,7 @@
 .count {
   color: var(--Neutrals-Black-Text, #221a14);
   text-align: center;
-  font-family: "DM Sans";
+  font-family: var(--font-body), system-ui, sans-serif;
   font-size: 24px;
   font-style: normal;
   font-weight: 700;
@@ -39,7 +39,7 @@
 .type {
   color: var(--Neutrals-Dark-Outline, #2d2d2d);
   text-align: center;
-  font-family: "DM Sans";
+  font-family: var(--font-body), system-ui, sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 500;

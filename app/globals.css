@@ -1,5 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap");
-
 :root {
   /* Color styles */
   --Grey: rgba(124, 124, 124, 1);
@@ -83,7 +81,7 @@ body {
 body {
   color: var(--Neutrals-Black-Text);
   background: var(--Neutrals-Background);
-  font-family: "DM Sans", sans-serif;
+  font-family: var(--font-body), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -109,7 +107,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "Merriweather", serif;
+  font-family: var(--font-heading), Georgia, serif;
   padding: 8px;
 }
 
@@ -155,7 +153,7 @@ h6 {
   width: 48px;
   height: 32px;
   color: var(--Beige-Perfect);
-  font-family: Merriweather, serif;
+  font-family: var(--font-heading), Georgia, serif;
   font-size: 14px;
   font-weight: 400;
   line-height: 120%; /* 16.8px */

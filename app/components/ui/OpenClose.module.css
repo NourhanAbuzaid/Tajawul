@@ -3,7 +3,7 @@
   align-items: center;
   gap: 8px;
   width: 100%;
-  font-family: "DM Sans";
+  font-family: var(--font-body), system-ui, sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 500;
@@ -15,7 +15,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: "DM Sans";
+  font-family: var(--font-body), system-ui, sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 700;
@@ -27,7 +27,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: "DM Sans";
+  font-family: var(--font-body), system-ui, sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 700;

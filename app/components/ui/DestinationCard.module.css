@@ -60,7 +60,7 @@
   gap: 6px;
   color: var(--Neutrals-Background, #fffbf4);
   text-align: right;
-  font-family: "DM Sans";
+  font-family: var(--font-body), system-ui, sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -84,7 +84,7 @@
 
 .name {
   color: var(--Neutrals-Black-Text, #221a14);
-  font-family: Merriweather;
+  font-family: var(--font-heading), Georgia, serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 700;
@@ -94,7 +94,7 @@
 
 .description {
   color: var(--Neutrals-Medium-Outline, #837468);
-  font-family: "DM Sans";
+  font-family: var(--font-body), system-ui, sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
@@ -122,7 +122,7 @@
 
 .rating span {
   color: var(--Green-Hover, #5c9c92);
-  font-family: "DM Sans";
+  font-family: var(--font-body), system-ui, sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
@@ -144,7 +144,7 @@
   border-radius: 12px;
   background: linear-gradient(268deg, #253f3b 23.52%, #5c9c92 136.03%);
   color: var(--Neutrals-Background, #fffbf4);
-  font-family: Merriweather;
+  font-family: var(--font-heading), Georgia, serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 700;

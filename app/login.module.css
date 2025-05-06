@@ -70,7 +70,7 @@
 
 .title {
   color: var(--Neutrals-Black-Text, #221a14);
-  font-family: Merriweather;
+  font-family: var(--font-heading), Georgia, serif;
   font-size: 36px;
   font-style: normal;
   font-weight: 700;
@@ -82,7 +82,7 @@
 .subtitle {
   text-align: left;
   color: var(--Neutrals-Dark-Outline, #2d2d2d);
-  font-family: "DM Sans";
+  font-family: var(--font-body), system-ui, sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -114,7 +114,7 @@
   border-radius: 12px;
   background: var(--Beige-Perfect, #f3ddbb);
   color: var(--Neutrals-Black-Text, #221a14);
-  font-family: Merriweather;
+  font-family: var(--font-heading), Georgia, serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
@@ -141,7 +141,7 @@
 
 .formContainer label {
   color: var(--Neutrals-Black-Text, #221a14);
-  font-family: Merriweather;
+  font-family: var(--font-heading), Georgia, serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 700;
@@ -166,7 +166,7 @@
 
 .formContainer input::placeholder {
   color: var(--Neutrals-Dark-Outline, #2d2d2d);
-  font-family: "DM Sans";
+  font-family: var(--font-body), system-ui, sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 300;
@@ -201,7 +201,7 @@
 
 .link {
   color: var(--Green-Hover, #3b655f);
-  font-family: "DM Sans";
+  font-family: var(--font-body), system-ui, sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: bold;
@@ -232,7 +232,7 @@
   border-radius: 12px;
   background: linear-gradient(268deg, #253f3b 23.52%, #5c9c92 136.03%);
   color: var(--Neutrals-Background, #fffbf4);
-  font-family: Merriweather;
+  font-family: var(--font-heading), Georgia, serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 700;
@@ -348,7 +348,7 @@
   backdrop-filter: blur(4px);
   color: var(--Neutrals-Background, #fffbf4);
   text-align: right;
-  font-family: "DM Sans";
+  font-family: var(--font-body), system-ui, sans-serif;
   font-size: 16px;
   font-weight: 400;
   z-index: 2;
