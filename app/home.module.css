@@ -70,14 +70,15 @@
 }
 
 .popupContent h2 {
-  font-size: 28px;
+  font-size: 24px;
   color: var(--Neutrals-Black-Text, #221a14);
+  padding: 0 0 16px 0;
 }
 
 .popupContent p {
   font-size: 16px;
   color: var(--Neutrals-Dark-Outline, #2d2d2d);
-  margin-bottom: 16px;
+  padding: 0 0 16px 0;
 }
 
 .closeButton {

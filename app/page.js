@@ -109,7 +109,7 @@ export default function Home() {
               >
                 {popupType === "initial"
                   ? "Complete My Profile"
-                  : "Continue Profile Setup"}
+                  : "Continue My Profile"}
               </Link>
             </div>
           </div>
