@@ -7,7 +7,7 @@
 
 .important {
   color: var(--Neutrals-Black-Text, #221a14);
-  font-family: "DM Sans";
+  font-family: var(--font-body), system-ui, sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 700;
@@ -48,6 +48,7 @@
   align-items: center;
   gap: 8px;
   border: 2px solid var(--Neutrals-Light-Outline);
+  font-family: var(--font-body), system-ui, sans-serif;
 }
 
 .popupContent h2 {
@@ -60,6 +61,7 @@
   gap: 8px;
   align-items: center;
   font-weight: 500;
+  font-family: var(--font-body), system-ui, sans-serif;
 }
 
 .editorsContainer {

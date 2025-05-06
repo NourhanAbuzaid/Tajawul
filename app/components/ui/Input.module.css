@@ -7,7 +7,7 @@
 
 .inputLabel {
   color: var(--Neutrals-Black-Text, #221a14);
-  font-family: Merriweather;
+  font-family: var(--font-heading), Georgia, serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 700;
@@ -19,11 +19,11 @@
 
 .requiredMark {
   color: #ef4444;
-  font-family: "DM Sans";
+  font-family: var(--font-body), system-ui, sans-serif;
 }
 
 .inputDescription {
-  font-family: "DM Sans";
+  font-family: var(--font-body), system-ui, sans-serif;
   font-size: 0.875rem; /* Equivalent to text-sm */
   font-weight: 400;
   color: var(--Neutrals-Medium-Outline); /* Equivalent to text-slate-200 */
@@ -32,7 +32,7 @@
 }
 
 .inputField {
-  font-family: "DM Sans";
+  font-family: var(--font-body), system-ui, sans-serif;
   margin-top: 2px;
   width: 100%;
   display: flex;
@@ -60,4 +60,5 @@
   margin-top: 2px;
   font-size: 0.875rem; /* Equivalent to text-sm */
   color: #ef4444; /* Equivalent to text-red-500 */
+  font-family: var(--font-body), system-ui, sans-serif;
 }

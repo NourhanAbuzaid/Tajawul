@@ -118,7 +118,7 @@
   border-radius: 12px;
   background: linear-gradient(268deg, #253f3b 23.52%, #5c9c92 136.03%);
   color: var(--Neutrals-Background, #fffbf4);
-  font-family: Merriweather;
+  font-family: var(--font-heading), Georgia, serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 700;

@@ -9,7 +9,7 @@
 /* 🔹 Label */
 .fileUploadLabel {
   color: var(--Neutrals-Black-Text, #221a14);
-  font-family: Merriweather;
+  font-family: var(--font-heading), Georgia, serif;
   font-size: 16px;
   font-weight: 700;
   line-height: 120%;
@@ -20,12 +20,12 @@
 
 .requiredMark {
   color: #ef4444;
-  font-family: "DM Sans";
+  font-family: var(--font-body), system-ui, sans-serif;
 }
 
 /* 🔹 Description */
 .fileUploadDescription {
-  font-family: "DM Sans";
+  font-family: var(--font-body), system-ui, sans-serif;
   font-size: 0.875rem;
   font-weight: 400;
   color: var(--Neutrals-Medium-Outline);
@@ -52,7 +52,7 @@
   gap: 8px;
   align-items: center;
   margin-top: 8px;
-  font-family: "DM Sans";
+  font-family: var(--font-body), system-ui, sans-serif;
   font-size: 14px;
   font-weight: 500;
   padding: 10px 24px;
@@ -76,7 +76,7 @@
 
 /* 🔹 File Name Display */
 .fileName {
-  font-family: "DM Sans";
+  font-family: var(--font-body), system-ui, sans-serif;
   font-size: 14px;
   color: var(--Neutrals-Medium-Outline);
   flex-grow: 1;
@@ -89,6 +89,7 @@
   margin-top: 2px;
   font-size: 0.875rem;
   color: #ef4444;
+  font-family: var(--font-body), system-ui, sans-serif;
 }
 
 .previewContainer {

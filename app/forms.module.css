@@ -65,7 +65,7 @@
 
 .title {
   color: var(--Neutrals-Black-Text, #221a14);
-  font-family: Merriweather;
+  font-family: var(--font-heading), Georgia, serif;
   font-size: 36px;
   font-style: normal;
   font-weight: 700;
@@ -79,7 +79,7 @@
 .subtitle {
   text-align: left;
   color: var(--Neutrals-Dark-Outline, #2d2d2d);
-  font-family: Merriweather;
+  font-family: var(--font-heading), Georgia, serif;
   font-size: 26px;
   font-style: normal;
   font-weight: 600;
@@ -114,7 +114,7 @@
 
 .label {
   color: var(--Neutrals-Black-Text, #221a14);
-  font-family: Merriweather;
+  font-family: var(--font-heading), Georgia, serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 700;
@@ -142,7 +142,7 @@
   border-radius: 12px;
   background: var(--Neutrals-Black-Text);
   color: var(--Neutrals-Background);
-  font-family: Merriweather;
+  font-family: var(--font-heading), Georgia, serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 700;
@@ -209,7 +209,7 @@
 .addButton {
   display: flex;
   border: none;
-  font-family: "DM Sans";
+  font-family: var(--font-body), system-ui, sans-serif;
   height: 38px;
   padding: 16px 20px;
   align-items: center;
@@ -239,7 +239,7 @@
 .removeButton {
   display: flex;
   border: none;
-  font-family: "DM Sans";
+  font-family: var(--font-body), system-ui, sans-serif;
   height: 48px;
   padding: 16px 20px;
   align-items: center;

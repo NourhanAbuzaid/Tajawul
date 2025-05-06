@@ -25,7 +25,7 @@
   align-items: center;
   gap: 8px;
   color: var(--Neutrals-Black-Text, #221a14);
-  font-family: Merriweather;
+  font-family: var(--font-heading), Georgia, serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 700;
@@ -51,7 +51,7 @@
   align-items: center;
   gap: 8px;
   color: var(--Neutrals-Black-Text, #221a14);
-  font-family: Merriweather;
+  font-family: var(--font-heading), Georgia, serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 700;
@@ -167,7 +167,7 @@
 /* 🔹 Dropdown Items */
 .dropdownItem {
   padding: 10px 15px;
-  font-family: Merriweather;
+  font-family: var(--font-heading), Georgia, serif;
   font-size: 16px;
   font-weight: 700;
   color: var(--Neutrals-Black-Text, #221a14);

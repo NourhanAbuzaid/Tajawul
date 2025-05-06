@@ -57,7 +57,7 @@
   backdrop-filter: blur(4px);
   /*Font*/
   color: var(--Neutrals-Background, #fffbf4);
-  font-family: "DM Sans";
+  font-family: var(--font-body), system-ui, sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -87,7 +87,7 @@
 
 .destinationName {
   color: var(--Neutrals-Background, #fffbf4);
-  font-family: Merriweather;
+  font-family: var(--font-heading), Georgia, serif;
   font-size: 56px;
   font-style: normal;
   font-weight: 700;
@@ -105,7 +105,7 @@
 
 .reviewsCount {
   color: var(--Neutrals-Background, #fffbf4);
-  font-family: "DM Sans";
+  font-family: var(--font-body), system-ui, sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -177,7 +177,7 @@
 
 .navItem {
   color: var(--Neutrals-Medium-Outline, #837468);
-  font-family: Merriweather;
+  font-family: var(--font-heading), Georgia, serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 700;
@@ -227,7 +227,7 @@
 .section h2 {
   padding: 0;
   color: var(--Neutrals-Black-Text, #221a14);
-  font-family: Merriweather;
+  font-family: var(--font-heading), Georgia, serif;
   font-size: 32px;
   font-weight: 700;
   line-height: 100%;
@@ -254,7 +254,7 @@
 .description {
   text-align: left;
   color: var(--Neutrals-Dark-Outline, #2d2d2d);
-  font-family: "DM Sans";
+  font-family: var(--font-body), system-ui, sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -264,7 +264,7 @@
 .type {
   text-align: left;
   color: var(--Burgundy-Perfect, #8c2d2d);
-  font-family: "DM Sans";
+  font-family: var(--font-body), system-ui, sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 600;
@@ -343,7 +343,7 @@
   background: var(--Neutrals-Black-Text, #221a14);
   color: var(--Neutrals-Background, #fffbf4);
   border: none;
-  font-family: "DM Sans";
+  font-family: var(--font-body), system-ui, sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
