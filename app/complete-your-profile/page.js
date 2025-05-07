@@ -41,8 +41,8 @@ function CompleteYourProfile() {
           <Image
             src="/profile-completed.svg"
             alt="Profile completed"
-            width={400}
-            height={400}
+            width={350}
+            height={350}
             className={styles.completedImage}
           />
           <p className={styles.completedText}>
@@ -63,6 +63,8 @@ function CompleteYourProfile() {
 
   return (
     <div className={styles.container}>
+      <StepProgress />
+      <p className={styles.title}>Complete Your Profile</p>
       <p className={styles.introText}>
         Before we open the doors wide to your personalized journey across the
         Arab world, we'd love to get to know you a little better. This short

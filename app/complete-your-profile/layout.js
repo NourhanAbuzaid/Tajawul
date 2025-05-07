@@ -1,6 +1,5 @@
 import NavBar from "@/components/ui/NavBar";
 import styles from "@/forms.module.css";
-import StepProgress from "@/components/ui/StepProgress";
 
 export const metadata = {
   title: "Complete Your Profile",
@@ -16,11 +15,7 @@ export default function ({ children }) {
           alt="Arabic Typography Pattern"
           className={styles.svgPattern}
         />
-        <div className={styles.formFrame}>
-          <StepProgress />
-          <p className={styles.title}>Complete Your Profile</p>
-          {children}
-        </div>
+        <div className={styles.formFrame}>{children}</div>
       </div>
     </div>
   );

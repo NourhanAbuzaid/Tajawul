@@ -9,6 +9,7 @@ import { RadioGroup, RadioGroupItem } from "app/components/ui/RadioGroup";
 import { useState, useEffect, useCallback } from "react";
 import { stepOneSchema } from "./actions";
 import Dropdown from "app/components/ui/Dropdown";
+import StepProgress from "@/components/ui/StepProgress";
 import allCountriesStates from "@/data/allCountriesStates.json";
 import languages from "@/data/languages.json";
 import API from "@/utils/api";
@@ -16,6 +17,10 @@ import ErrorMessage from "app/components/ui/ErrorMessage";
 import SuccessMessage from "app/components/ui/SuccessMessage";
 import { Menu, MenuItem, Button, Box } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import Image from "next/image";
+import useAuthStore from "@/store/authStore";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 // Reusable component for dynamic inputs
 const DynamicInput = ({ label, type, value, onChange, errorMsg, onRemove }) => (
@@ -352,8 +357,45 @@ export default function StepOneForm() {
     label: country,
   }));
 
+  const router = useRouter();
+  const { roles } = useAuthStore();
+
+  useEffect(() => {
+    if (roles.includes("User")) {
+      router.push("/complete-your-profile");
+    }
+  }, [roles, router]);
+
+  // Show completion message if user has already completed this step
+  if (roles.includes("Person") && roles.includes("CompletedSocialInfo")) {
+    return (
+      <div>
+        <div className={styles.completedStep}>
+          <Image
+            src="/one-step-completed.svg"
+            alt="Step completed"
+            width={350}
+            height={350}
+            className={styles.completedImage}
+          />
+          <p className={styles.completedText}>
+            You've already completed this step, only one step is left
+          </p>
+          <Link
+            href="/complete-your-profile/travel-interests"
+            className={styles.ctaButton}
+          >
+            Continue to Next Step
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
+      <StepProgress />
+      <p className={styles.title}>Complete Your Profile</p>
       <p className={styles.subheaderStepOne}>
         Step One: Tell us more about yourself
       </p>
