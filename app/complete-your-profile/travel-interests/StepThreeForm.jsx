@@ -66,17 +66,6 @@ export default function StepThreeForm() {
     }
   }, [roles, router]);
 
-  // Refresh the page after successful submission and roles update
-  useEffect(() => {
-    if (success && roles.includes("CompletedInterestInfo")) {
-      const timer = setTimeout(() => {
-        window.location.reload();
-      }, 2000); // Refresh after 2 seconds to show success message
-
-      return () => clearTimeout(timer);
-    }
-  }, [success, roles]);
-
   useEffect(() => {
     const fetchOptions = async () => {
       try {
@@ -129,7 +118,6 @@ export default function StepThreeForm() {
     setSuccess("");
 
     try {
-      // Prepare the request body according to the API specification
       const requestBody = {
         destinationTypes: selectedTags.destinationTypes,
         groupSizes: selectedTags.groupSizes,
@@ -139,14 +127,8 @@ export default function StepThreeForm() {
         priceRanges: selectedTags.priceRanges,
       };
 
-      console.log("Submitting interests:", requestBody); // For debugging
-
-      // Submit the data to the API using the API instance
       const response = await API.post("/User/interests", requestBody);
 
-      console.log("API response:", response.data); // For debugging
-
-      // Update roles from the response
       if (response.data.role) {
         response.data.role.forEach((role) => {
           addRole(role);
@@ -157,6 +139,11 @@ export default function StepThreeForm() {
         response.data.message ||
           "Travel preferences saved successfully! Redirecting..."
       );
+
+      // Add this redirect after 2 seconds
+      setTimeout(() => {
+        router.push("/complete-your-profile");
+      }, 2000);
     } catch (err) {
       console.error("API Request Failed:", err.response?.data || err.message);
       setError(
