@@ -11,6 +11,8 @@ import Image from "next/image";
 import useAuthStore from "@/store/authStore";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { GreenLoading } from "@/components/ui/Loading";
+import { WhiteLoading } from "@/components/ui/Loading";
 
 const durationOptions = [
   { label: "Day", value: "Day" },
@@ -179,7 +181,7 @@ export default function StepThreeForm() {
     );
   }
 
-  if (isLoading) return <div>Loading options...</div>;
+  if (isLoading) return <GreenLoading />;
   if (error && !submitLoading)
     return <div>Error loading options. Please try again later.</div>;
 
@@ -248,7 +250,7 @@ export default function StepThreeForm() {
           className={styles.submitButton}
           disabled={submitLoading}
         >
-          {submitLoading ? "Submitting..." : "Save Preferences"}
+          {submitLoading ? <WhiteLoading /> : "Save Preferences"}
         </button>
       </form>
     </div>

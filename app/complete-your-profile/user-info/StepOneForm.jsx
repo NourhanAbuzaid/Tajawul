@@ -21,6 +21,8 @@ import Image from "next/image";
 import useAuthStore from "@/store/authStore";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { GreenLoading } from "@/components/ui/Loading";
+import { WhiteLoading } from "@/components/ui/Loading";
 
 // Reusable component for dynamic inputs
 const DynamicInput = ({ label, type, value, onChange, errorMsg, onRemove }) => (
@@ -654,7 +656,7 @@ export default function StepOneForm() {
             className={styles.submitButton}
             disabled={loading}
           >
-            {loading ? "Submitting..." : "Next Step"}
+            {loading ? <WhiteLoading /> : "Next Step"}
           </button>
         </form>
       </div>
