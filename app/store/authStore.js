@@ -36,6 +36,11 @@ const useAuthStore = create((set) => ({
     });
   },
 
+  replaceRoles: (newRoles) => {
+    localStorage.setItem("roles", JSON.stringify(newRoles));
+    set({ roles: newRoles });
+  },
+
   removeRole: (role) => {
     set((state) => {
       const updatedRoles = state.roles.filter((r) => r !== role);

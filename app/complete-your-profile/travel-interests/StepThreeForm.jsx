@@ -11,6 +11,8 @@ import Image from "next/image";
 import useAuthStore from "@/store/authStore";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { GreenLoading } from "@/components/ui/Loading";
+import { WhiteLoading } from "@/components/ui/Loading";
 
 const durationOptions = [
   { label: "Day", value: "Day" },
@@ -130,9 +132,7 @@ export default function StepThreeForm() {
       const response = await API.post("/User/interests", requestBody);
 
       if (response.data.role) {
-        response.data.role.forEach((role) => {
-          addRole(role);
-        });
+        useAuthStore.getState().replaceRoles(response.data.role);
       }
 
       setSuccess(
@@ -181,7 +181,7 @@ export default function StepThreeForm() {
     );
   }
 
-  if (isLoading) return <div>Loading options...</div>;
+  if (isLoading) return <GreenLoading />;
   if (error && !submitLoading)
     return <div>Error loading options. Please try again later.</div>;
 
@@ -250,7 +250,7 @@ export default function StepThreeForm() {
           className={styles.submitButton}
           disabled={submitLoading}
         >
-          {submitLoading ? "Submitting..." : "Save Preferences"}
+          {submitLoading ? <WhiteLoading /> : "Save Preferences"}
         </button>
       </form>
     </div>
