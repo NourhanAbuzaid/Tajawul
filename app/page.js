@@ -6,8 +6,9 @@ import NavBar from "./components/ui/NavBar";
 import styles from "@/home.module.css";
 import { useEffect, useState } from "react";
 import useAuthStore from "@/store/authStore";
+import withAuth from "@/utils/withAuth"; // Import the withAuth HOC
 
-export default function Home() {
+function Home() {
   const [showPopup, setShowPopup] = useState(false);
   const [popupType, setPopupType] = useState("initial");
   const { roles } = useAuthStore();
@@ -118,3 +119,5 @@ export default function Home() {
     </div>
   );
 }
+
+export default withAuth(Home); // Wrap the Home component with withAuth

@@ -46,12 +46,6 @@ export default function LoginPage() {
             <Logo width={120} height={100} />
             <div className={styles.formContainer}>
               <p className={styles.title}>Welcome Back</p>
-              <button className={styles.googleButton}>
-                <GoogleIcon /> Continue with Google
-              </button>
-              <div className={styles.divider}>
-                <span>Or</span>
-              </div>
               <form onSubmit={handleSubmit} className={styles.formWidth}>
                 <label>
                   Email Address
