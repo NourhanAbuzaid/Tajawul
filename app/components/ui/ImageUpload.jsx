@@ -16,10 +16,21 @@ export default function ImageUpload({
   disabled = false,
 }) {
   const [filePreview, setFilePreview] = useState("");
+  const [fileSizeError, setFileSizeError] = useState("");
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        // 2MB limit
+        setFileSizeError("Please choose an image that doesn't exceed 2 MB.");
+        setFilePreview("");
+        onUpload({ target: { files: [] } });
+        return;
+      } else {
+        setFileSizeError("");
+      }
+
       if (
         file.type === "image/jpeg" ||
         file.type === "image/jpg" ||
@@ -29,23 +40,25 @@ export default function ImageUpload({
         const reader = new FileReader();
         reader.onload = (e) => {
           setFilePreview(e.target.result);
-          onUpload({ target: { name: id, value: e.target.result } });
         };
         reader.readAsDataURL(file);
+
+        // Pass the entire event object like in CoverUpload
+        onUpload(event);
       } else {
         alert("Only JPG, JPEG, PNG, and WEBP files are allowed.");
         setFilePreview("");
-        onUpload({ target: { name: id, value: "" } });
+        onUpload({ target: { files: [] } });
       }
     } else {
       setFilePreview("");
-      onUpload({ target: { name: id, value: "" } });
+      onUpload({ target: { files: [] } });
     }
   };
 
   const handleRemoveImage = () => {
     setFilePreview("");
-    onUpload({ target: { name: id, value: "" } });
+    onUpload({ target: { files: [] } });
   };
 
   return (
@@ -92,7 +105,9 @@ export default function ImageUpload({
         )}
       </div>
 
-      {errorMsg && <div className={styles.fileUploadError}>{errorMsg}</div>}
+      {fileSizeError && (
+        <div className={styles.fileUploadError}>{fileSizeError}</div>
+      )}
     </div>
   );
 }

@@ -242,8 +242,12 @@ export default function StepOneForm() {
     setFormData((prev) => ({ ...prev, gender: value }));
   };
 
-  const handleFileUpload = (fileUrl) => {
-    setFormData((prev) => ({ ...prev, profilePicture: fileUrl }));
+  const handleFileUpload = (event) => {
+    if (!event.target.files || event.target.files.length === 0) {
+      setFormData((prev) => ({ ...prev, profilePicture: null }));
+      return;
+    }
+    setFormData((prev) => ({ ...prev, profilePicture: event.target.files[0] }));
   };
 
   // Handle Spoken Language Selection
@@ -289,20 +293,17 @@ export default function StepOneForm() {
   // Handle Form Submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted"); // Debugging: Check if this logs
     setLoading(true);
     setSuccess("");
     setError("");
 
     try {
-      // Exclude profilePicture from the data to be submitted
+      // First validate all form data except profile picture
       const { profilePicture, ...dataToSubmit } = formData;
 
-      // Validate the remaining data
       const validation = stepOneSchema.safeParse(dataToSubmit);
       if (!validation.success) {
         const newErrors = validation.error.format();
-        console.log("Validation errors:", newErrors); // Debugging: Log validation errors
         setErrors(
           Object.keys(newErrors).reduce((acc, key) => {
             acc[key] = newErrors[key]?._errors?.[0] || "";
@@ -313,7 +314,7 @@ export default function StepOneForm() {
         return;
       }
 
-      // Format the data for the API
+      // Submit the main form data
       const formattedData = {
         username: dataToSubmit.username,
         firstName: dataToSubmit.firstName,
@@ -330,13 +331,45 @@ export default function StepOneForm() {
         socialMediaLinks: dataToSubmit.socialMediaLinks,
       };
 
-      console.log("Formatted data:", formattedData); // Debugging: Log the data being sent
-
-      // Submit the data to the API using the API instance
       const response = await API.post("/User/info", formattedData);
+      let imageUploadSuccess = true;
 
-      console.log("API response:", response.data); // Debugging: Log the API response
-      setSuccess(response.data.message || "Profile updated successfully!");
+      // Upload image if it exists
+      if (profilePicture) {
+        try {
+          const imageFormData = new FormData();
+          imageFormData.append("ProfileImage", profilePicture);
+
+          const imageResponse = await API.put(
+            "/User/profile/image",
+            imageFormData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
+
+          if (imageResponse.status !== 200) {
+            imageUploadSuccess = false;
+            setError("Profile info saved, but image upload failed.");
+          }
+        } catch (imageError) {
+          imageUploadSuccess = false;
+          console.error("Image upload failed:", imageError);
+          setError("Profile info saved, but image upload failed.");
+        }
+      }
+
+      // Redirect if both requests succeeded
+      if (response.status === 200 && imageUploadSuccess) {
+        router.push("/complete-your-profile/travel-interests");
+      }
+
+      // Set success message if only profile info succeeded
+      if (response.status === 200 && !imageUploadSuccess) {
+        setSuccess("Profile info updated, but image upload failed.");
+      }
     } catch (err) {
       console.error("API Request Failed:", err.response?.data || err.message);
       setError(err.response?.data?.message || "Failed to update profile.");
@@ -431,7 +464,7 @@ export default function StepOneForm() {
           <ImageUpload
             label="Profile Picture"
             id="profilePicture"
-            description="Accepted formats: jpg, jpeg, png, webp"
+            description="Accepted formats: jpg, jpeg, png, webp (max 2MB)"
             required
             onUpload={handleFileUpload}
             errorMsg={errors.profilePicture}
