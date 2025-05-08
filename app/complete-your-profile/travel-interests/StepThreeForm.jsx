@@ -57,6 +57,25 @@ export default function StepThreeForm() {
   const [success, setSuccess] = useState("");
 
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+  const router = useRouter();
+  const { roles, addRole } = useAuthStore();
+
+  useEffect(() => {
+    if (roles.includes("User")) {
+      router.push("/complete-your-profile");
+    }
+  }, [roles, router]);
+
+  // Refresh the page after successful submission and roles update
+  useEffect(() => {
+    if (success && roles.includes("CompletedInterestInfo")) {
+      const timer = setTimeout(() => {
+        window.location.reload();
+      }, 2000); // Refresh after 2 seconds to show success message
+
+      return () => clearTimeout(timer);
+    }
+  }, [success, roles]);
 
   useEffect(() => {
     const fetchOptions = async () => {
@@ -126,8 +145,17 @@ export default function StepThreeForm() {
       const response = await API.post("/User/interests", requestBody);
 
       console.log("API response:", response.data); // For debugging
+
+      // Update roles from the response
+      if (response.data.role) {
+        response.data.role.forEach((role) => {
+          addRole(role);
+        });
+      }
+
       setSuccess(
-        response.data.message || "Travel preferences saved successfully!"
+        response.data.message ||
+          "Travel preferences saved successfully! Redirecting..."
       );
     } catch (err) {
       console.error("API Request Failed:", err.response?.data || err.message);
@@ -138,15 +166,6 @@ export default function StepThreeForm() {
       setSubmitLoading(false);
     }
   };
-
-  const router = useRouter();
-  const { roles } = useAuthStore();
-
-  useEffect(() => {
-    if (roles.includes("User")) {
-      router.push("/complete-your-profile");
-    }
-  }, [roles, router]);
 
   // Show completion message if user has already completed this step
   if (roles.includes("Person") && roles.includes("CompletedInterestInfo")) {
