@@ -130,9 +130,7 @@ export default function StepThreeForm() {
       const response = await API.post("/User/interests", requestBody);
 
       if (response.data.role) {
-        response.data.role.forEach((role) => {
-          addRole(role);
-        });
+        useAuthStore.getState().replaceRoles(response.data.role);
       }
 
       setSuccess(

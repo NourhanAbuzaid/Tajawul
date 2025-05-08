@@ -363,19 +363,15 @@ export default function StepOneForm() {
 
       // Redirect if both requests succeeded
       if (response.status === 200 && imageUploadSuccess) {
-        // Add the new roles from the response
-        response.data.role.forEach((role) => {
-          useAuthStore.getState().addRole(role);
-        });
+        // Replace the roles with the new ones from response
+        useAuthStore.getState().replaceRoles(response.data.role);
         setSuccess("Profile info & image updated successfully. Redirecting...");
         router.push("/complete-your-profile/travel-interests");
       }
 
       // Also update the success case where only profile info succeeded
       if (response.status === 200 && !imageUploadSuccess) {
-        response.data.role.forEach((role) => {
-          useAuthStore.getState().addRole(role);
-        });
+        useAuthStore.getState().replaceRoles(response.data.role);
         setSuccess("Profile info updated, but image upload failed.");
       }
     } catch (err) {
