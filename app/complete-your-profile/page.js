@@ -4,6 +4,7 @@ import styles from "./CompleteProfile.module.css";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import useAuthStore from "@/store/authStore";
+import StepProgress from "@/components/ui/StepProgress";
 import Link from "next/link";
 import Image from "next/image";
 
