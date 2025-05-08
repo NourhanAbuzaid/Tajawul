@@ -452,3 +452,62 @@
   font-size: 14px;
   font-weight: 500;
 }
+
+/* Complete Your Profile */
+.ctaButton {
+  display: flex;
+  height: 46px;
+  padding: 16px 20px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  align-self: stretch;
+  border-radius: 12px;
+  background: linear-gradient(268deg, #253f3b 23.52%, #5c9c92 136.03%);
+  color: var(--Neutrals-Background, #fffbf4);
+  font-family: var(--font-heading), Georgia, serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 120%;
+  letter-spacing: 0.32px;
+  width: 100%;
+  border: none;
+  margin-top: 12px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.ctaButton::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(270deg, #253f3b -25.25%, #5c9c92 99.99%);
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+  z-index: -1;
+}
+
+.ctaButton:hover::before {
+  opacity: 1;
+}
+
+.completedProfile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 1.5rem;
+}
+
+.completedText {
+  font-size: 24px;
+  color: var(--Neutrals-Black-Text);
+  font-weight: 700;
+  padding: 0 5rem;
+  line-height: 100%;
+  margin-bottom: 28px;
+}

@@ -9,6 +9,7 @@ import { RadioGroup, RadioGroupItem } from "app/components/ui/RadioGroup";
 import { useState, useEffect, useCallback } from "react";
 import { stepOneSchema } from "./actions";
 import Dropdown from "app/components/ui/Dropdown";
+import StepProgress from "@/components/ui/StepProgress";
 import allCountriesStates from "@/data/allCountriesStates.json";
 import languages from "@/data/languages.json";
 import API from "@/utils/api";
@@ -16,6 +17,10 @@ import ErrorMessage from "app/components/ui/ErrorMessage";
 import SuccessMessage from "app/components/ui/SuccessMessage";
 import { Menu, MenuItem, Button, Box } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import Image from "next/image";
+import useAuthStore from "@/store/authStore";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 // Reusable component for dynamic inputs
 const DynamicInput = ({ label, type, value, onChange, errorMsg, onRemove }) => (
@@ -237,8 +242,12 @@ export default function StepOneForm() {
     setFormData((prev) => ({ ...prev, gender: value }));
   };
 
-  const handleFileUpload = (fileUrl) => {
-    setFormData((prev) => ({ ...prev, profilePicture: fileUrl }));
+  const handleFileUpload = (event) => {
+    if (!event.target.files || event.target.files.length === 0) {
+      setFormData((prev) => ({ ...prev, profilePicture: null }));
+      return;
+    }
+    setFormData((prev) => ({ ...prev, profilePicture: event.target.files[0] }));
   };
 
   // Handle Spoken Language Selection
@@ -284,20 +293,17 @@ export default function StepOneForm() {
   // Handle Form Submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted"); // Debugging: Check if this logs
     setLoading(true);
     setSuccess("");
     setError("");
 
     try {
-      // Exclude profilePicture from the data to be submitted
+      // First validate all form data except profile picture
       const { profilePicture, ...dataToSubmit } = formData;
 
-      // Validate the remaining data
       const validation = stepOneSchema.safeParse(dataToSubmit);
       if (!validation.success) {
         const newErrors = validation.error.format();
-        console.log("Validation errors:", newErrors); // Debugging: Log validation errors
         setErrors(
           Object.keys(newErrors).reduce((acc, key) => {
             acc[key] = newErrors[key]?._errors?.[0] || "";
@@ -308,7 +314,7 @@ export default function StepOneForm() {
         return;
       }
 
-      // Format the data for the API
+      // Submit the main form data
       const formattedData = {
         username: dataToSubmit.username,
         firstName: dataToSubmit.firstName,
@@ -325,13 +331,53 @@ export default function StepOneForm() {
         socialMediaLinks: dataToSubmit.socialMediaLinks,
       };
 
-      console.log("Formatted data:", formattedData); // Debugging: Log the data being sent
-
-      // Submit the data to the API using the API instance
       const response = await API.post("/User/info", formattedData);
+      let imageUploadSuccess = true;
 
-      console.log("API response:", response.data); // Debugging: Log the API response
-      setSuccess(response.data.message || "Profile updated successfully!");
+      // Upload image if it exists
+      if (profilePicture) {
+        try {
+          const imageFormData = new FormData();
+          imageFormData.append("ProfileImage", profilePicture);
+
+          const imageResponse = await API.put(
+            "/User/profile/image",
+            imageFormData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
+
+          if (imageResponse.status !== 200) {
+            imageUploadSuccess = false;
+            setError("Profile info saved, but image upload failed.");
+          }
+        } catch (imageError) {
+          imageUploadSuccess = false;
+          console.error("Image upload failed:", imageError);
+          setError("Profile info saved, but image upload failed.");
+        }
+      }
+
+      // Redirect if both requests succeeded
+      if (response.status === 200 && imageUploadSuccess) {
+        // Add the new roles from the response
+        response.data.role.forEach((role) => {
+          useAuthStore.getState().addRole(role);
+        });
+        setSuccess("Profile info & image updated successfully. Redirecting...");
+        router.push("/complete-your-profile/travel-interests");
+      }
+
+      // Also update the success case where only profile info succeeded
+      if (response.status === 200 && !imageUploadSuccess) {
+        response.data.role.forEach((role) => {
+          useAuthStore.getState().addRole(role);
+        });
+        setSuccess("Profile info updated, but image upload failed.");
+      }
     } catch (err) {
       console.error("API Request Failed:", err.response?.data || err.message);
       setError(err.response?.data?.message || "Failed to update profile.");
@@ -352,8 +398,45 @@ export default function StepOneForm() {
     label: country,
   }));
 
+  const router = useRouter();
+  const { roles } = useAuthStore();
+
+  useEffect(() => {
+    if (roles.includes("User")) {
+      router.push("/complete-your-profile");
+    }
+  }, [roles, router]);
+
+  // Show completion message if user has already completed this step
+  if (roles.includes("Person") && roles.includes("CompletedSocialInfo")) {
+    return (
+      <div>
+        <div className={styles.completedStep}>
+          <Image
+            src="/one-step-completed.svg"
+            alt="Step completed"
+            width={350}
+            height={350}
+            className={styles.completedImage}
+          />
+          <p className={styles.completedText}>
+            You've already completed this step, only one step is left
+          </p>
+          <Link
+            href="/complete-your-profile/travel-interests"
+            className={styles.ctaButton}
+          >
+            Continue to Next Step
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
+      <StepProgress />
+      <p className={styles.title}>Complete Your Profile</p>
       <p className={styles.subheaderStepOne}>
         Step One: Tell us more about yourself
       </p>
@@ -389,7 +472,7 @@ export default function StepOneForm() {
           <ImageUpload
             label="Profile Picture"
             id="profilePicture"
-            description="Accepted formats: jpg, jpeg, png, webp"
+            description="Accepted formats: jpg, jpeg, png, webp (max 2MB)"
             required
             onUpload={handleFileUpload}
             errorMsg={errors.profilePicture}

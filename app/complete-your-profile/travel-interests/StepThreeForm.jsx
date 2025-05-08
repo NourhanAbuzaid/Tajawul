@@ -6,6 +6,11 @@ import axios from "axios";
 import ErrorMessage from "app/components/ui/ErrorMessage";
 import SuccessMessage from "app/components/ui/SuccessMessage";
 import API from "@/utils/api";
+import StepProgress from "@/components/ui/StepProgress";
+import Image from "next/image";
+import useAuthStore from "@/store/authStore";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const durationOptions = [
   { label: "Day", value: "Day" },
@@ -52,6 +57,25 @@ export default function StepThreeForm() {
   const [success, setSuccess] = useState("");
 
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+  const router = useRouter();
+  const { roles, addRole } = useAuthStore();
+
+  useEffect(() => {
+    if (roles.includes("User")) {
+      router.push("/complete-your-profile");
+    }
+  }, [roles, router]);
+
+  // Refresh the page after successful submission and roles update
+  useEffect(() => {
+    if (success && roles.includes("CompletedInterestInfo")) {
+      const timer = setTimeout(() => {
+        window.location.reload();
+      }, 2000); // Refresh after 2 seconds to show success message
+
+      return () => clearTimeout(timer);
+    }
+  }, [success, roles]);
 
   useEffect(() => {
     const fetchOptions = async () => {
@@ -121,8 +145,17 @@ export default function StepThreeForm() {
       const response = await API.post("/User/interests", requestBody);
 
       console.log("API response:", response.data); // For debugging
+
+      // Update roles from the response
+      if (response.data.role) {
+        response.data.role.forEach((role) => {
+          addRole(role);
+        });
+      }
+
       setSuccess(
-        response.data.message || "Travel preferences saved successfully!"
+        response.data.message ||
+          "Travel preferences saved successfully! Redirecting..."
       );
     } catch (err) {
       console.error("API Request Failed:", err.response?.data || err.message);
@@ -134,12 +167,41 @@ export default function StepThreeForm() {
     }
   };
 
+  // Show completion message if user has already completed this step
+  if (roles.includes("Person") && roles.includes("CompletedInterestInfo")) {
+    return (
+      <div className={styles.container}>
+        <StepProgress />
+        <div className={styles.completedStep}>
+          <Image
+            src="/one-step-completed.svg"
+            alt="Step completed"
+            width={350}
+            height={350}
+            className={styles.completedImage}
+          />
+          <p className={styles.completedText}>
+            You've already completed this step, only one step is left
+          </p>
+          <Link
+            href="/complete-your-profile/user-info"
+            className={styles.ctaButton}
+          >
+            Continue to Next Step
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   if (isLoading) return <div>Loading options...</div>;
   if (error && !submitLoading)
     return <div>Error loading options. Please try again later.</div>;
 
   return (
     <div>
+      <StepProgress />
+      <p className={styles.title}>Complete Your Profile</p>
       <p className={styles.subheaderStepTwo}>
         Step Two: Tell Us About Your Travel Preferences
       </p>
