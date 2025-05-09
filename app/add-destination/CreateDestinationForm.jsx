@@ -13,7 +13,8 @@ import DOMPurify from "dompurify";
 import useAuthStore from "@/store/authStore";
 import arabCountries from "@/data/arabCountries.json";
 import API from "@/utils/api";
-import { useRouter } from "next/navigation"; // Import useRouter for redirection
+import { useRouter } from "next/navigation";
+import destinationTypes from "@/data/destinationTypes.json";
 
 // Debounce utility function to limit the number of calls to saveToLocalStorage
 const debounce = (func, delay) => {
@@ -366,13 +367,10 @@ export default function CreateDestinationForm() {
             required
             value={formData.type}
             onChange={handleChange}
-            options={[
-              { value: "cafe", label: "Cafe" },
-              { value: "restaurant", label: "Restaurant" },
-              { value: "hotel", label: "Hotel" },
-              { value: "park", label: "Park" },
-              { value: "museum", label: "Museum" },
-            ]}
+            options={destinationTypes.destinations.map((type) => ({
+              value: type.toLowerCase(),
+              label: type,
+            }))}
             errorMsg={errors.type}
           />
           <Dropdown
