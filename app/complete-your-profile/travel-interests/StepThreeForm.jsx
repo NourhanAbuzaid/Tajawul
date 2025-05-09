@@ -55,7 +55,8 @@ export default function StepThreeForm() {
   const [activitiesOptions, setActivitiesOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [submitLoading, setSubmitLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [loadError, setLoadError] = useState(null); // Renamed from error
+  const [submitError, setSubmitError] = useState(null); // New state for submission errors
   const [success, setSuccess] = useState("");
 
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -98,7 +99,7 @@ export default function StepThreeForm() {
         setIsLoading(false);
       } catch (err) {
         console.error("Failed to fetch options:", err);
-        setError(err);
+        setLoadError(err);
         setIsLoading(false);
       }
     };
@@ -116,7 +117,7 @@ export default function StepThreeForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitLoading(true);
-    setError(null);
+    setSubmitError(null);
     setSuccess("");
 
     try {
@@ -146,7 +147,7 @@ export default function StepThreeForm() {
       }, 2000);
     } catch (err) {
       console.error("API Request Failed:", err.response?.data || err.message);
-      setError(
+      setSubmitError(
         err.response?.data?.message || "Failed to save travel preferences."
       );
     } finally {
@@ -182,8 +183,9 @@ export default function StepThreeForm() {
   }
 
   if (isLoading) return <GreenLoading />;
-  if (error && !submitLoading)
+  if (loadError && !submitLoading) {
     return <div>Error loading options. Please try again later.</div>;
+  }
 
   return (
     <div>
@@ -243,7 +245,7 @@ export default function StepThreeForm() {
         />
 
         {success && <SuccessMessage message={success} />}
-        {error && <ErrorMessage message={error} />}
+        {submitError && <ErrorMessage message={submitError} />}
 
         <button
           type="submit"
