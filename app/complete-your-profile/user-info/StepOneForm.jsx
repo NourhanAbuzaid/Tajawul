@@ -21,29 +21,7 @@ import Image from "next/image";
 import useAuthStore from "@/store/authStore";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { GreenLoading } from "@/components/ui/Loading";
 import { WhiteLoading } from "@/components/ui/Loading";
-
-// Reusable component for dynamic inputs
-const DynamicInput = ({ label, type, value, onChange, errorMsg, onRemove }) => (
-  <div className={styles.contactInput}>
-    <Input
-      label={label}
-      type={type}
-      value={value}
-      onChange={onChange}
-      errorMsg={errorMsg}
-    />
-    <button
-      type="button"
-      onClick={onRemove}
-      className={styles.removeButton}
-      aria-label={`Remove ${label}`}
-    >
-      Remove
-    </button>
-  </div>
-);
 
 const MaritalStatusDropdown = ({ value, onChange }) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -62,7 +40,7 @@ const MaritalStatusDropdown = ({ value, onChange }) => {
     handleClose();
   };
 
-  const options = ["Single", "Married", "Divorced", "Widowed"];
+  const options = ["Single", "Married"];
 
   return (
     <Box sx={{ position: "relative" }}>

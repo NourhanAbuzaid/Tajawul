@@ -1,4 +1,4 @@
-"use client"; // If you're using Next.js App Router
+"use client";
 
 export default function Loading() {
   return (
@@ -11,26 +11,48 @@ export default function Loading() {
 export function GreenLoading() {
   return (
     <div
-      className="spinner"
       style={{
-        borderColor: "rgba(92, 156, 146, 0.3)",
-        borderTopColor: "var(--Green-Hover)",
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
       }}
-    ></div>
+    >
+      <div
+        className="spinner"
+        style={{
+          borderColor: "rgba(92, 156, 146, 0.3)",
+          borderTopColor: "var(--Green-Hover)",
+        }}
+      ></div>
+    </div>
   );
 }
 
 export function WhiteLoading() {
   return (
     <div
-      className="spinner"
       style={{
-        width: "20px",
-        height: "20px",
-        borderWidth: "3px",
-        borderColor: "rgba(255, 251, 244, 0.3)",
-        borderTopColor: "var(--Neutrals-Background)",
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
       }}
-    ></div>
+    >
+      <div
+        className="spinner"
+        style={{
+          width: "25px",
+          height: "25px",
+          borderWidth: "4px", // Increased from 3px
+          borderColor: "rgba(255, 251, 244, 0.3)",
+          borderTopColor: "var(--Neutrals-Background)",
+          borderRadius: "50%", // Ensures perfect circle
+          animation: "spin 1s linear infinite", // Ensure animation is applied
+        }}
+      ></div>
+    </div>
   );
 }
