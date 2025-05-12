@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation"; // ✅ Import usePathname for active link detection
-import useAuthStore from "@/store/authStore"; // ✅ Import Zustand store
+import { usePathname } from "next/navigation";
+import useAuthStore from "@/store/authStore";
 import Logo from "./Logo";
 import TranslationShortcut from "./TranslationShortcut";
 import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";
@@ -10,17 +10,85 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import Avatar from "@mui/material/Avatar";
 import Button from "./Button";
 import styles from "./NavBar.module.css";
-import LogoutButton from "@/components/ui/LogoutButton"; // ✅ Import the Logout Button
-import { useEffect, useState } from "react"; // Add this import
+import LogoutButton from "@/components/ui/LogoutButton";
+import { useEffect, useState, Suspense } from "react";
+import API from "@/utils/api"; // Import your API instance
 
 export default function NavBar() {
-  const { accessToken } = useAuthStore(); // ✅ Get authentication state
-  const pathname = usePathname(); // ✅ Get current pathname
-  const [isMounted, setIsMounted] = useState(false); // Add this state
+  const { accessToken } = useAuthStore();
+  const pathname = usePathname();
+  const [isMounted, setIsMounted] = useState(false);
+  const [profileData, setProfileData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setIsMounted(true);
-  }, []);
+
+    if (accessToken) {
+      fetchProfileData();
+    } else {
+      setLoading(false);
+    }
+  }, [accessToken]);
+
+  const fetchProfileData = async () => {
+    try {
+      setLoading(true);
+      const response = await API.get("/User/profile");
+      setProfileData(response.data);
+    } catch (error) {
+      console.error("Failed to fetch profile data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getAvatarContent = () => {
+    // Show default avatar while loading
+    if (loading) {
+      return (
+        <Avatar
+          sx={{
+            width: 40,
+            height: 40,
+            bgcolor: "var(--Neutrals-Black-Text)",
+            color: "var(--Beige-Perfect)",
+          }}
+        />
+      );
+    }
+
+    if (profileData?.profileImage) {
+      return (
+        <Avatar
+          sx={{
+            width: 40,
+            height: 40,
+            bgcolor: "var(--Neutrals-Black-Text)",
+            color: "var(--Beige-Perfect)",
+          }}
+          src={profileData.profileImage}
+          alt="Profile"
+        />
+      );
+    }
+
+    // Use initials if no profile image
+    const firstNameInitial = profileData?.firstName?.[0] || "";
+    const lastNameInitial = profileData?.lastName?.[0] || "";
+    return (
+      <Avatar
+        sx={{
+          width: 40,
+          height: 40,
+          bgcolor: "var(--Neutrals-Black-Text)",
+          color: "var(--Beige-Perfect)",
+        }}
+      >
+        {`${firstNameInitial}${lastNameInitial}`}
+      </Avatar>
+    );
+  };
 
   // Don't render anything until mounted (client-side)
   if (!isMounted) return null;
@@ -49,7 +117,7 @@ export default function NavBar() {
         Explore
       </Link>
 
-      {/* 🔹 Trips Dropdown - Opens/Closes on Hover */}
+      {/* Trips Dropdown */}
       <div className={styles.dropdownContainer}>
         <button className={styles.dropItem} aria-label="Trips">
           Trips{" "}
@@ -87,7 +155,7 @@ export default function NavBar() {
         About
       </Link>
 
-      {/* 🔹 Show Login/Register buttons if NOT logged in */}
+      {/* Show Login/Register buttons if NOT logged in */}
       {!accessToken && (
         <div className={styles.loginFrame}>
           <Link href="/login">
@@ -103,25 +171,30 @@ export default function NavBar() {
         </div>
       )}
 
-      {/* 🔹 Show Profile & Avatar Dropdown if user IS logged in */}
+      {/* Show Profile & Avatar Dropdown if user IS logged in */}
       {accessToken && (
         <div className={styles.profileFrame}>
           <CircleNotificationsIcon
             sx={{ width: 48, height: 48, color: "var(--Neutrals-Black-Text)" }}
             aria-label="Notifications"
           />
-          {/* 🔹 Avatar Dropdown */}
+          {/* Avatar Dropdown */}
           <div className={styles.dropdownContainer}>
             <button className={styles.avatarButton} aria-label="Profile">
-              <Avatar
-                sx={{
-                  width: 40,
-                  height: 40,
-                  bgcolor: "var(--Neutrals-Black-Text)",
-                }}
+              <Suspense
+                fallback={
+                  <Avatar
+                    sx={{
+                      width: 40,
+                      height: 40,
+                      bgcolor: "var(--Neutrals-Black-Text)",
+                      color: "var(--Beige-Perfect)",
+                    }}
+                  />
+                }
               >
-                OP
-              </Avatar>
+                {getAvatarContent()}
+              </Suspense>
             </button>
             <div className={styles.dropdownMenuAvatar}>
               <Link href="/profile" className={styles.dropdownItem}>

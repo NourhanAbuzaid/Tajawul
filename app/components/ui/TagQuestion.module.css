@@ -172,3 +172,32 @@
 .divider {
   border-color: var(--Neutrals-Light-Outline);
 }
+
+.descriptionContainer {
+  display: block;
+  margin-top: 0.25rem;
+}
+
+.description {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 0.875rem; /* Equivalent to text-sm */
+  font-weight: 400;
+  color: var(--Neutrals-Medium-Outline); /* Equivalent to text-slate-200 */
+  display: block;
+  margin-top: 2px;
+}
+
+/* Add to existing styles */
+.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.selectionLimitMessage {
+  display: block;
+  color: var(--Error-Text);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  font-family: var(--font-body), system-ui, sans-serif;
+}

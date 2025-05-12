@@ -203,45 +203,57 @@ export default function StepThreeForm() {
       <form onSubmit={handleSubmit}>
         <InterestsTagQuestion
           question="What types of travel experiences excite you the most?"
+          description="Select 1-10 options that best match your travel preferences"
           options={tagsOptions}
           selectedValues={selectedTags.tags}
           onChange={handleTagChange("tags")}
           required
+          maxSelections={10}
         />
         <InterestsTagQuestion
           question="Which destinations are you most interested in?"
+          description="Choose 1-10 destination types you'd like to visit"
           options={destinationTypesOptions}
           selectedValues={selectedTags.destinationTypes}
           onChange={handleTagChange("destinationTypes")}
           required
+          maxSelections={10}
         />
         <InterestsTagQuestion
           question="What activities do you enjoy while traveling?"
+          description="Pick 1-10 activities that make your trips memorable"
           options={activitiesOptions}
           selectedValues={selectedTags.activities}
           onChange={handleTagChange("activities")}
           required
+          maxSelections={10}
         />
         <InterestsTagQuestion
           question="How long do your trips usually last?"
+          description="Select 1-3 typical durations for your trips"
           options={durationOptions}
           selectedValues={selectedTags.tripDurations}
           onChange={handleTagChange("tripDurations")}
           required
+          maxSelections={3}
         />
         <InterestsTagQuestion
           question="What's your usual travel budget?"
+          description="Select one price range that fits your typical spending"
           options={budgetOptions}
           selectedValues={selectedTags.priceRanges}
           onChange={handleTagChange("priceRanges")}
           required
+          maxSelections={1}
         />
         <InterestsTagQuestion
           question="Who do you usually travel with?"
+          description="Choose 1-2 options that describe your travel companions"
           options={groupSizeOptions}
           selectedValues={selectedTags.groupSizes}
           onChange={handleTagChange("groupSizes")}
           required
+          maxSelections={2}
         />
 
         {success && <SuccessMessage message={success} />}
