@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Menu, MenuItem, Button, Box } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import LanguageIcon from "@mui/icons-material/Language";
+import languages from "@/data/languages.json";
 
 export default function TranslationDropdown({
   selectedLanguage,
@@ -47,7 +48,7 @@ export default function TranslationDropdown({
           fontWeight: "600",
           letterSpacing: "0",
           textTransform: "capitalize",
-          transition: "all 0.3s ease-in-out",
+          transition: "all 0.2s ease-in-out",
           border: open
             ? "1.5px solid var(--Neutrals-Light-Outline)"
             : "1.5px solid var(--Neutrals-Light-Outline)",
@@ -63,11 +64,11 @@ export default function TranslationDropdown({
       >
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
           <LanguageIcon sx={{ fontSize: "18px" }} />
-          {selectedLanguage || "Select Language"}
+          {selectedLanguage || "Choose Language"}
         </div>
         <KeyboardArrowDownIcon
           sx={{
-            transition: "transform 0.3s ease-in-out",
+            transition: "transform 0.2s ease-in-out",
             transform: open ? "rotate(180deg)" : "rotate(0)",
             fontSize: "18px",
           }}
@@ -122,19 +123,17 @@ export default function TranslationDropdown({
           },
         }}
       >
-        {["English", "Spanish", "French", "German", "Chinese", "Japanese"].map(
-          (language) => (
-            <MenuItem
-              key={language}
-              selected={language === selectedLanguage}
-              onClick={() => handleLanguageSelect(language)}
-            >
-              <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                {language}
-              </Box>
-            </MenuItem>
-          )
-        )}
+        {languages.map((language) => (
+          <MenuItem
+            key={language.alpha2}
+            selected={language.English === selectedLanguage}
+            onClick={() => handleLanguageSelect(language.English)}
+          >
+            <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              {language.English}
+            </Box>
+          </MenuItem>
+        ))}
       </Menu>
     </Box>
   );
