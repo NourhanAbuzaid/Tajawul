@@ -57,6 +57,7 @@ export default function Translate() {
               placeholder="Translated text appears here."
             ></textarea>
           </div>
+          <div className={styles.translateButtonContainer}></div>
         </div>
       </div>
     </div>
