@@ -51,9 +51,12 @@ function Home() {
               />
             </div>
             <div className={styles.heroContent}>
-              <div className={styles.searchBarWrapper}>
-                <SearchBar searchType="all" />
-              </div>
+              <h1>Explore the Heart of the Arab World</h1>
+              <p>
+                Find unique experiences, hidden gems, and cultural wonders.
+                Begin your search!
+              </p>
+              <SearchBar searchType="all" size="large" />
             </div>
           </section>
 

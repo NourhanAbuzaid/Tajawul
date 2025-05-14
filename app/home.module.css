@@ -32,13 +32,34 @@
 }
 
 .heroContent {
-  position: relative;
-  z-index: 2;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 100%;
-  max-width: 1200px;
-  padding: 0 2rem;
-  color: white;
-  /* Add styles for your hero content here */
+  padding: 16px;
+  z-index: 2; /* Above overlay */
+  color: var(--Neutrals-Background);
+}
+
+.heroContent h1 {
+  text-align: center;
+  font-family: var(--font-heading), Georgia, serif;
+  font-size: 58px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 120%; /* 69.6px */
+  padding: 0;
+}
+
+.heroContent p {
+  text-align: center;
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 120%;
+  margin-bottom: 16px;
 }
 
 /* Content Section */
@@ -62,17 +83,6 @@
   height: 50px; /* Should match the negative top value */
   background: var(--Neutrals-Background);
   border-radius: 120px 120px 0 0;
-}
-
-.searchBarWrapper {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
-  max-width: 600px;
-  padding: 16px;
-  z-index: 2; /* Above overlay */
 }
 
 .sectionBelowImage {

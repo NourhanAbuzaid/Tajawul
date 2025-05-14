@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styles from "./Search.module.css";
+import SearchIcon from "@mui/icons-material/Search";
 
 const ENDPOINTS = {
   all: "/Search",
@@ -9,7 +10,7 @@ const ENDPOINTS = {
   event: "/Search/event",
 };
 
-const SearchBar = ({ searchType = "all" }) => {
+const SearchBar = ({ searchType = "all", size = "default" }) => {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const [query, setQuery] = useState("");
   const [results, setResults] = useState(null);
@@ -65,15 +66,22 @@ const SearchBar = ({ searchType = "all" }) => {
 
   return (
     <div className={styles.searchContainer}>
-      <input
-        type="text"
-        placeholder={`Search ${
-          searchType !== "all" ? searchType : "anything"
-        }...`}
-        value={query}
-        onChange={handleChange}
-        className={styles.searchInput}
-      />
+      <div className={styles.inputWrapper}>
+        <input
+          type="text"
+          placeholder={`Search ${
+            searchType !== "all" ? searchType : "anything"
+          }...`}
+          value={query}
+          onChange={handleChange}
+          className={`${styles.searchInput} ${
+            size === "large" ? styles.searchInputLarge : ""
+          }`}
+        />
+        <div className={styles.searchIcon}>
+          <SearchIcon sx={{ fontSize: 34 }} />
+        </div>
+      </div>
       {isLoading && <p>Loading...</p>}
       {results && (
         <div className={styles.searchResults}>
