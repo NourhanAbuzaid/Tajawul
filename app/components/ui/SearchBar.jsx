@@ -40,7 +40,18 @@ const SearchBar = ({ searchType = "all" }) => {
 
       const res = await fetch(url);
       const data = await res.json();
-      setResults(data);
+
+      if (searchType === "destination") {
+        setResults(data.destinations || []);
+      } else if (searchType === "user") {
+        setResults(data.users || []);
+      } else if (searchType === "trip") {
+        setResults(data.trips || []);
+      } else if (searchType === "event") {
+        setResults(data.events || []);
+      } else {
+        setResults(data); // For "all"
+      }
     } catch (error) {
       console.error("Search error:", error);
     } finally {

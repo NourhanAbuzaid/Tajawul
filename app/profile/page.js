@@ -9,7 +9,7 @@ function ProfilePage() {
     <div className="container">
       <NavBar />
       <h1>Profile</h1>
-      <SearchBar searchType="all" />
+      <SearchBar searchType="destination" />
     </div>
   );
 }
