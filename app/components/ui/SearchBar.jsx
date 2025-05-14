@@ -217,11 +217,19 @@ const SearchBar = ({ searchType = "all", size = "default" }) => {
 
 const Section = ({ data, type }) => {
   if (!data || data.length === 0) return null;
+
+  const handleItemClick = (item) => {
+    if (type === "destinations") {
+      window.location.href = `/explore/${item.id}`;
+    }
+    // Add similar handlers for other types if needed
+  };
+
   return (
     <div className={styles.section}>
       <ul>
         {data.map((item) => (
-          <li key={item.id}>
+          <li key={item.id} onClick={() => handleItemClick(item)}>
             <span className={styles.resultContent}>
               {item.name || item.title || `${item.firstName} ${item.lastName}`}
             </span>
