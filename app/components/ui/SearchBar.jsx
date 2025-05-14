@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "./Search.module.css";
 import SearchIcon from "@mui/icons-material/Search";
+import { WhiteLoading } from "./Loading";
 
 const ENDPOINTS = {
   all: "/Search",
@@ -79,10 +80,9 @@ const SearchBar = ({ searchType = "all", size = "default" }) => {
           }`}
         />
         <div className={styles.searchIcon}>
-          <SearchIcon sx={{ fontSize: 34 }} />
+          {isLoading ? <WhiteLoading /> : <SearchIcon sx={{ fontSize: 34 }} />}
         </div>
       </div>
-      {isLoading && <p>Loading...</p>}
       {results && (
         <div className={styles.searchResults}>
           {searchType === "all" && (

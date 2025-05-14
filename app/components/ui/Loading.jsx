@@ -44,8 +44,8 @@ export function WhiteLoading() {
       <div
         className="spinner"
         style={{
-          width: "25px",
-          height: "25px",
+          width: "22px",
+          height: "22px",
           borderWidth: "4px", // Increased from 3px
           borderColor: "rgba(255, 251, 244, 0.3)",
           borderTopColor: "var(--Neutrals-Background)",
