@@ -7,6 +7,7 @@ import styles from "@/home.module.css";
 import { useEffect, useState } from "react";
 import useAuthStore from "@/store/authStore";
 import withAuth from "@/utils/withAuth"; // Import the withAuth HOC
+import SearchBar from "@/components/ui/SearchBar";
 
 function Home() {
   const [showPopup, setShowPopup] = useState(false);
@@ -38,8 +39,9 @@ function Home() {
 
       <div className={styles.container}>
         <main>
-          <div className={styles.coverWrapper}>
-            <div className={styles.mainCover}>
+          {/* Hero Section */}
+          <section className={styles.heroSection}>
+            <div className={styles.heroBackground}>
               <Image
                 src="/Egypt.jpg"
                 alt="Luxor, Egypt"
@@ -48,8 +50,20 @@ function Home() {
                 priority
               />
             </div>
-          </div>
-          <div className={styles.sectionBelowImage}> </div>
+            <div className={styles.heroContent}>
+              <h1>Explore the Heart of the Arab World</h1>
+              <p>
+                Find unique experiences, hidden gems, and cultural wonders.
+                Begin your search!
+              </p>
+              <SearchBar searchType="all" size="large" />
+            </div>
+          </section>
+
+          {/* Content Section */}
+          <section className={styles.contentSection}>
+            {/* Add your main content here */}
+          </section>
         </main>
       </div>
 
