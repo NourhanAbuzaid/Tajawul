@@ -1,5 +1,6 @@
 import axios from "axios";
 import useAuthStore from "@/store/authStore";
+import API from "./api"; // Import the configured API instance
 
 export async function login(email, password) {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -41,70 +42,24 @@ export async function login(email, password) {
 }
 
 export async function logout() {
-  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-
   try {
-    const { accessToken, refreshToken, clearAuth, roles } =
-      useAuthStore.getState();
+    // Correct way to access clearAuth
+    const { clearAuth } = useAuthStore.getState();
 
-    // Debug logging
-    console.log("Logging out. Current roles:", roles);
+    await API.post("/Auth/logout");
 
-    if (!accessToken) {
-      console.warn("No access token available, logging out locally.");
-      clearAuth();
-      return;
-    }
-
-    // Attempt logout with current token
-    try {
-      await axios.post(
-        `${baseUrl}/Auth/logout`,
-        {},
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        }
-      );
-    } catch (logoutError) {
-      if (logoutError.response?.status === 401) {
-        console.warn("Access token expired, attempting refresh...");
-
-        // Refresh token
-        try {
-          const refreshResponse = await axios.post(
-            `${baseUrl}/Auth/refreshToken`,
-            { refreshToken }
-          );
-
-          const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
-            refreshResponse.data;
-
-          // Update only tokens, not roles during refresh
-          useAuthStore.getState().setTokens(newAccessToken, newRefreshToken);
-
-          // Retry logout
-          await axios.post(
-            `${baseUrl}/Auth/logout`,
-            {},
-            {
-              headers: { Authorization: `Bearer ${newAccessToken}` },
-            }
-          );
-        } catch (refreshError) {
-          console.error("Refresh token also expired, logging out...");
-          clearAuth();
-          window.location.href = "/login";
-          return;
-        }
-      } else {
-        throw logoutError; // Handle other errors
-      }
-    }
-
-    // Clear all stored auth info
+    // Now this will work
     clearAuth();
-    window.location.href = "/login";
+
+    if (typeof window !== "undefined") {
+      window.location.href = "/login";
+    }
   } catch (error) {
     console.error("Logout failed:", error);
+    // Fallback cleanup
+    useAuthStore.getState().clearAuth();
+    if (typeof window !== "undefined") {
+      window.location.href = "/login";
+    }
   }
 }
