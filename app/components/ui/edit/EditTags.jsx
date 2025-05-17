@@ -55,13 +55,13 @@ export default function EditTags({ destinationId }) {
   };
 
   const groupSizeOptions = [
-    { label: "Solo", value: "solo", icon: groupSizeIcons.solo },
-    { label: "Couple", value: "couple", icon: groupSizeIcons.couple },
-    { label: "Family", value: "family", icon: groupSizeIcons.family },
-    { label: "Group", value: "group", icon: groupSizeIcons.group },
+    { label: "Solo", value: "Solo", icon: groupSizeIcons.solo },
+    { label: "Couple", value: "Couple", icon: groupSizeIcons.couple },
+    { label: "Family", value: "Family", icon: groupSizeIcons.family },
+    { label: "Group", value: "Group", icon: groupSizeIcons.group },
     {
       label: "Big Group",
-      value: "big-group",
+      value: "Big Group",
       icon: groupSizeIcons["big-group"],
     },
   ];
