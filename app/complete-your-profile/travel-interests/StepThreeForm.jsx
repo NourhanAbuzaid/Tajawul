@@ -85,7 +85,7 @@ export default function StepThreeForm() {
           return (
             items?.map((item) => ({
               label: item.name,
-              value: item.name.toLowerCase(),
+              value: item.name,
             })) || []
           );
         };
@@ -134,13 +134,10 @@ export default function StepThreeForm() {
 
       if (response.data.role) {
         useAuthStore.getState().replaceRoles(response.data.role);
-        if (response.data.accessToken && response.data.refreshToken) {
+        if (response.data.token && response.data.refreshToken) {
           useAuthStore
             .getState()
-            .replaceTokens(
-              response.data.accessToken,
-              response.data.refreshToken
-            );
+            .replaceTokens(response.data.token, response.data.refreshToken);
         }
       }
 
