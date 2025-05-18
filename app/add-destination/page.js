@@ -16,7 +16,6 @@ function AddDestination() {
           className={styles.svgPattern}
         />
         <div className={styles.formFrame}>
-          <p className={styles.title}>Add Destination</p>
           <CreateDestinationForm />
         </div>
       </div>

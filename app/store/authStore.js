@@ -9,12 +9,19 @@ const useAuthStore = create((set) => ({
     typeof window !== "undefined"
       ? JSON.parse(localStorage.getItem("roles") || "[]")
       : [],
+  profileData:
+    typeof window !== "undefined"
+      ? JSON.parse(localStorage.getItem("profileData") || null)
+      : null,
 
-  setAuth: (accessToken, refreshToken, roles) => {
+  setAuth: (accessToken, refreshToken, roles, profileData) => {
     localStorage.setItem("authToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
     localStorage.setItem("roles", JSON.stringify(roles));
-    set({ accessToken, refreshToken, roles });
+    if (profileData) {
+      localStorage.setItem("profileData", JSON.stringify(profileData));
+    }
+    set({ accessToken, refreshToken, roles, profileData });
   },
 
   setTokens: (accessToken, refreshToken) => {
@@ -41,6 +48,12 @@ const useAuthStore = create((set) => ({
     set({ roles: newRoles });
   },
 
+  replaceTokens: (accessToken, refreshToken) => {
+    localStorage.setItem("authToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
+    set({ accessToken, refreshToken });
+  },
+
   removeRole: (role) => {
     set((state) => {
       const updatedRoles = state.roles.filter((r) => r !== role);
@@ -53,11 +66,22 @@ const useAuthStore = create((set) => ({
     return useAuthStore.getState().roles.includes(role);
   },
 
+  setProfileData: (profileData) => {
+    localStorage.setItem("profileData", JSON.stringify(profileData));
+    set({ profileData });
+  },
+
   clearAuth: () => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("roles");
-    set({ accessToken: null, refreshToken: null, roles: [] });
+    localStorage.removeItem("profileData");
+    set({
+      accessToken: null,
+      refreshToken: null,
+      roles: [],
+      profileData: null,
+    });
   },
 }));
 

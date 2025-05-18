@@ -12,30 +12,28 @@ import Button from "./Button";
 import styles from "./NavBar.module.css";
 import LogoutButton from "@/components/ui/LogoutButton";
 import { useEffect, useState, Suspense } from "react";
-import API from "@/utils/api"; // Import your API instance
+import API from "@/utils/api";
 
 export default function NavBar() {
-  const { accessToken } = useAuthStore();
+  const { accessToken, profileData, setProfileData } = useAuthStore();
   const pathname = usePathname();
   const [isMounted, setIsMounted] = useState(false);
-  const [profileData, setProfileData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
 
-    if (accessToken) {
+    // Only fetch if we have accessToken but no profileData in the store
+    if (accessToken && !profileData) {
       fetchProfileData();
-    } else {
-      setLoading(false);
     }
-  }, [accessToken]);
+  }, [accessToken]); // Removed profileData from dependencies
 
   const fetchProfileData = async () => {
     try {
       setLoading(true);
       const response = await API.get("/User/profile");
-      setProfileData(response.data);
+      setProfileData(response.data); // This updates the authStore
     } catch (error) {
       console.error("Failed to fetch profile data:", error);
     } finally {
@@ -44,8 +42,8 @@ export default function NavBar() {
   };
 
   const getAvatarContent = () => {
-    // Show default avatar while loading
-    if (loading) {
+    // Show default avatar while loading (only if we have accessToken but no profileData yet)
+    if (loading && accessToken && !profileData) {
       return (
         <Avatar
           sx={{

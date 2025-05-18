@@ -15,6 +15,8 @@ import arabCountries from "@/data/arabCountries.json";
 import API from "@/utils/api";
 import { useRouter } from "next/navigation";
 import destinationTypes from "@/data/destinationTypes.json";
+import Image from "next/image";
+import Link from "next/link";
 
 // Debounce utility function to limit the number of calls to saveToLocalStorage
 const debounce = (func, delay) => {
@@ -69,12 +71,34 @@ export default function CreateDestinationForm() {
   const [error, setError] = useState("");
   const [cities, setCities] = useState([]);
   const [cityClicked, setCityClicked] = useState(false);
-  const router = useRouter(); // Initialize useRouter for redirection
+  const { roles } = useAuthStore();
+  const router = useRouter();
 
   const arabCountriesOptions = Object.keys(arabCountries).map((country) => ({
     value: country,
     label: country,
   }));
+
+  // Show protected feature message if user doesn't have the right role
+  if (!roles.includes("User")) {
+    return (
+      <div>
+        <div className={styles.completedStep}>
+          <Image
+            src="/protected-feature.svg"
+            alt="Protected feature"
+            width={580}
+            height={400}
+            className={styles.completedImage}
+          />
+
+          <Link href="/complete-your-profile" className={styles.ctaButton}>
+            Complete Your Profile to Access
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   // Debounced fetch cities function
   const fetchCities = useCallback(
@@ -341,6 +365,7 @@ export default function CreateDestinationForm() {
 
   return (
     <div className={styles.formContainer}>
+      <p className={styles.title}>Add Destination</p>
       <form className={styles.formWidth} onSubmit={handleSubmit}>
         <h2 className={styles.subheader}>General Info</h2>
         <Divider

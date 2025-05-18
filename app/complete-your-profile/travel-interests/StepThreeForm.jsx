@@ -134,6 +134,14 @@ export default function StepThreeForm() {
 
       if (response.data.role) {
         useAuthStore.getState().replaceRoles(response.data.role);
+        if (response.data.accessToken && response.data.refreshToken) {
+          useAuthStore
+            .getState()
+            .replaceTokens(
+              response.data.accessToken,
+              response.data.refreshToken
+            );
+        }
       }
 
       setSuccess(
