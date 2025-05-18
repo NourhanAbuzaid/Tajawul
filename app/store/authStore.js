@@ -48,6 +48,12 @@ const useAuthStore = create((set) => ({
     set({ roles: newRoles });
   },
 
+  replaceTokens: (accessToken, refreshToken) => {
+    localStorage.setItem("authToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
+    set({ accessToken, refreshToken });
+  },
+
   removeRole: (role) => {
     set((state) => {
       const updatedRoles = state.roles.filter((r) => r !== role);

@@ -342,16 +342,33 @@ export default function StepOneForm() {
       }
 
       // Redirect if both requests succeeded
+      // In the handleSubmit function, update the success cases:
       if (response.status === 200 && imageUploadSuccess) {
-        // Replace the roles with the new ones from response
+        // Replace the roles and tokens with the new ones from response
         useAuthStore.getState().replaceRoles(response.data.role);
+        if (response.data.accessToken && response.data.refreshToken) {
+          useAuthStore
+            .getState()
+            .replaceTokens(
+              response.data.accessToken,
+              response.data.refreshToken
+            );
+        }
         setSuccess("Profile info & image updated successfully. Redirecting...");
         router.push("/complete-your-profile/travel-interests");
       }
 
-      // Also update the success case where only profile info succeeded
+      // Also update the case where only profile info succeeded
       if (response.status === 200 && !imageUploadSuccess) {
         useAuthStore.getState().replaceRoles(response.data.role);
+        if (response.data.accessToken && response.data.refreshToken) {
+          useAuthStore
+            .getState()
+            .replaceTokens(
+              response.data.accessToken,
+              response.data.refreshToken
+            );
+        }
         setSuccess("Profile info updated, but image upload failed.");
       }
     } catch (err) {
