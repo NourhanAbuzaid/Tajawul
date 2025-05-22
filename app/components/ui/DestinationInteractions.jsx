@@ -10,6 +10,7 @@ import PersonRemoveAlt1Icon from "@mui/icons-material/PersonRemoveAlt1";
 import API from "@/utils/api";
 import useAuthStore from "@/store/authStore";
 import styles from "@/destination.module.css";
+import { SmolGreenLoading } from "./Loading";
 
 const DestinationInteractions = ({ destinationId }) => {
   const [interactions, setInteractions] = useState({
@@ -29,7 +30,6 @@ const DestinationInteractions = ({ destinationId }) => {
         }
 
         const response = await API.get(`/user/${destinationId}/status`);
-        // Make sure the response contains the expected fields
         if (response.data) {
           setInteractions({
             follow: response.data.follow || false,
@@ -50,7 +50,6 @@ const DestinationInteractions = ({ destinationId }) => {
   const handleInteraction = async (type) => {
     try {
       const currentValue = interactions[type];
-      // Optimistically update the UI
       setInteractions((prev) => ({ ...prev, [type]: !currentValue }));
 
       if (currentValue) {
@@ -60,13 +59,24 @@ const DestinationInteractions = ({ destinationId }) => {
       }
     } catch (error) {
       console.error(`Failed to update ${type} status:`, error);
-      // Revert on error
       setInteractions((prev) => ({ ...prev, [type]: !prev[type] }));
     }
   };
 
   if (loading) {
-    return <div className={styles.saveButton}>Loading...</div>;
+    return (
+      <>
+        <button className={styles.saveButton}>
+          <SmolGreenLoading />
+        </button>
+        <button className={styles.saveButton}>
+          <SmolGreenLoading />
+        </button>
+        <button className={styles.saveButton}>
+          <SmolGreenLoading />
+        </button>
+      </>
+    );
   }
 
   if (!accessToken) {
