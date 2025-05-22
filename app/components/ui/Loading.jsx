@@ -30,6 +30,33 @@ export function GreenLoading() {
   );
 }
 
+export function SmolGreenLoading() {
+  return (
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <div
+        className="spinner"
+        style={{
+          width: "25px",
+          height: "25px",
+          borderWidth: "4px", // Increased from 3px
+          borderColor: "rgba(92, 156, 146, 0.3)",
+          borderTopColor: "var(--Green-Hover)",
+          borderRadius: "50%", // Ensures perfect circle
+          animation: "spin 1s linear infinite", // Ensure animation is applied
+        }}
+      ></div>
+    </div>
+  );
+}
+
 export function WhiteLoading() {
   return (
     <div

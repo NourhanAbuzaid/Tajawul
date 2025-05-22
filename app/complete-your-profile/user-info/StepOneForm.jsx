@@ -346,13 +346,10 @@ export default function StepOneForm() {
       if (response.status === 200 && imageUploadSuccess) {
         // Replace the roles and tokens with the new ones from response
         useAuthStore.getState().replaceRoles(response.data.role);
-        if (response.data.accessToken && response.data.refreshToken) {
+        if (response.data.token && response.data.refreshToken) {
           useAuthStore
             .getState()
-            .replaceTokens(
-              response.data.accessToken,
-              response.data.refreshToken
-            );
+            .replaceTokens(response.data.token, response.data.refreshToken);
         }
         setSuccess("Profile info & image updated successfully. Redirecting...");
         router.push("/complete-your-profile/travel-interests");
@@ -361,13 +358,10 @@ export default function StepOneForm() {
       // Also update the case where only profile info succeeded
       if (response.status === 200 && !imageUploadSuccess) {
         useAuthStore.getState().replaceRoles(response.data.role);
-        if (response.data.accessToken && response.data.refreshToken) {
+        if (response.data.token && response.data.refreshToken) {
           useAuthStore
             .getState()
-            .replaceTokens(
-              response.data.accessToken,
-              response.data.refreshToken
-            );
+            .replaceTokens(response.data.token, response.data.refreshToken);
         }
         setSuccess("Profile info updated, but image upload failed.");
       }

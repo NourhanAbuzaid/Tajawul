@@ -21,7 +21,7 @@ const Editors = ({ editors }) => {
   return (
     <div>
       <div className={styles.container} onClick={handleEditorsClick}>
-        <span className={styles.important}>Edited By:</span>
+        <span className={styles.important}>All Contributes:</span>
         <AvatarGroup max={5}>
           {editors.map((editor) => (
             <Avatar key={editor.id} alt={editor.name} src={editor.url} />

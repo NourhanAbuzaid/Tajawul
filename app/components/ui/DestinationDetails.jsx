@@ -2,7 +2,6 @@ import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import VerifiedIcon from "@mui/icons-material/Verified";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import Divider from "@mui/material/Divider";
 import Avatar from "@mui/material/Avatar";
@@ -17,6 +16,7 @@ import EditTags from "@/components/ui/edit/EditTags";
 import GroupSize from "./tags/GroupSize";
 import Tag from "./tags/Tag";
 import DestinationIdHandler from "@/components/DestinationIdHandler";
+import DestinationInteractions from "./DestinationInteractions";
 
 export default async function DestinationDetails({ destinationId }) {
   await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -27,6 +27,7 @@ export default async function DestinationDetails({ destinationId }) {
   let groupSizes = [];
   let activities = [];
   let tags = [];
+  let contributersData = { users: [] };
 
   try {
     const { data: destinationData } = await axios.get(
@@ -36,6 +37,11 @@ export default async function DestinationDetails({ destinationId }) {
     const { data: attributesData } = await axios.get(
       `${baseUrl}/Destination/${destinationId}/attributes`
     );
+
+    const { data: contributersResponse } = await axios.get(
+      `${baseUrl}/Destination/${destinationId}/users?Relation=contribute`
+    );
+    contributersData = contributersResponse || { users: [] };
     console.log("Raw attributes response:", attributesData);
 
     destination = destinationData.destinations[0];
@@ -59,20 +65,8 @@ export default async function DestinationDetails({ destinationId }) {
     });
   } catch (error) {
     console.error("Failed to fetch destination details:", error);
+    contributersData = { users: [] };
   }
-
-  const fakeEditors = [
-    { id: 1, name: "Remy Sharp", url: "/static/images/avatar/1.jpg" },
-    { id: 2, name: "Travis Howard", url: "/static/images/avatar/2.jpg" },
-    { id: 3, name: "Cindy Baker", url: "/static/images/avatar/3.jpg" },
-    { id: 4, name: "Agnes Walker", url: "/static/images/avatar/4.jpg" },
-    { id: 5, name: "Trevor Henderson", url: "/static/images/avatar/5.jpg" },
-    { id: 6, name: "Remy Sharp", url: "/static/images/avatar/1.jpg" },
-    { id: 7, name: "Travis Howard", url: "/static/images/avatar/2.jpg" },
-    { id: 8, name: "Cindy Baker", url: "/static/images/avatar/3.jpg" },
-    { id: 9, name: "Agnes Walker", url: "/static/images/avatar/4.jpg" },
-    { id: 10, name: "Trevor Henderson", url: "/static/images/avatar/5.jpg" },
-  ];
 
   return (
     <div>
@@ -128,14 +122,7 @@ export default async function DestinationDetails({ destinationId }) {
               </div>
             </div>
             <div className={styles.buttomRightContainer}>
-              <button className={styles.saveButton}>
-                <FavoriteBorderIcon />
-                Add To Wishlist
-              </button>
-              <button className={styles.saveButton}>
-                <PersonAddAlt1Icon />
-                Follow
-              </button>
+              <DestinationInteractions destinationId={destinationId} />
             </div>
           </div>
         </div>
@@ -203,7 +190,10 @@ export default async function DestinationDetails({ destinationId }) {
             </div>
           </div>
           <div id="images" className={`${styles.section} ${styles.images}`}>
-            <ImageList images={destination?.images} />
+            <ImageList
+              coverImage={destination?.coverImage}
+              images={destination?.images}
+            />
           </div>
           <div id="posts" className={styles.section}>
             <h2>Posts</h2>
@@ -229,9 +219,10 @@ export default async function DestinationDetails({ destinationId }) {
             />
             {/* Destination Stats */}
             <div className={styles.statsContainer}>
-              <Stats type="Followers" count={destination?.followersCount} />
+              <Stats type="Wishes" count={destination?.wishesCount} />
+
               <Stats type="Visitors" count={destination?.visitorsCount} />
-              <Stats type="Events" count={destination?.eventsCount} />
+              <Stats type="Followers" count={destination?.followersCount} />
             </div>
             <Divider
               sx={{
@@ -282,7 +273,15 @@ export default async function DestinationDetails({ destinationId }) {
                 bgcolor: "var(--Neutrals-Light-Outline)",
               }}
             />
-            <Editors editors={fakeEditors} />
+            <Editors
+              editors={
+                contributersData?.users?.map((user) => ({
+                  id: user.id,
+                  name: user.name,
+                  url: user.profileImage,
+                })) || []
+              }
+            />
           </div>
           <div id="location" className={`${styles.section} ${styles.location}`}>
             <h2>Location</h2>

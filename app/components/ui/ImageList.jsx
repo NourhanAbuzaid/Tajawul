@@ -10,7 +10,9 @@ import API from "@/utils/api";
 import { useRouter } from "next/navigation";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 
-const ImageList = ({ images = [] }) => {
+const ImageList = ({ coverImage = null, images = [] }) => {
+  // Combine coverImage with other images (coverImage first if it exists)
+  const allImages = coverImage ? [coverImage, ...images] : [...images];
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -21,12 +23,12 @@ const ImageList = ({ images = [] }) => {
       : null;
 
   const handleNext = () => {
-    setSelectedIndex((prevIndex) => (prevIndex + 1) % images.length);
+    setSelectedIndex((prevIndex) => (prevIndex + 1) % allImages.length);
   };
 
   const handlePrev = () => {
     setSelectedIndex(
-      (prevIndex) => (prevIndex - 1 + images.length) % images.length
+      (prevIndex) => (prevIndex - 1 + allImages.length) % allImages.length
     );
   };
 
@@ -61,7 +63,7 @@ const ImageList = ({ images = [] }) => {
     }
   };
 
-  if (images.length === 0) {
+  if (allImages.length === 0) {
     return (
       <div className={styles.emptyContainer}>
         <div className={styles.emptyIllustration}>
@@ -120,10 +122,15 @@ const ImageList = ({ images = [] }) => {
         </button>
         <div className={styles.mainImage}>
           <Image
-            src={images[selectedIndex]}
-            alt="Selected"
+            src={allImages[selectedIndex]}
+            alt={
+              selectedIndex === 0 && coverImage
+                ? "Cover image"
+                : `Image ${selectedIndex}`
+            }
             layout="fill"
             objectFit="cover"
+            priority={selectedIndex === 0} // Prioritize loading cover image
           />
         </div>
         <button onClick={handleNext} className={styles.arrowRight}>
@@ -131,15 +138,20 @@ const ImageList = ({ images = [] }) => {
         </button>
       </div>
       <div className={styles.thumbnailWrapper}>
-        {images.map((image, index) => (
+        {allImages.map((image, index) => (
           <div key={index} className={styles.thumbnail}>
             <Image
               src={image}
-              alt={`Thumbnail ${index}`}
+              alt={
+                index === 0 && coverImage
+                  ? "Cover thumbnail"
+                  : `Thumbnail ${index}`
+              }
               layout="fill"
               objectFit="cover"
               className={index === selectedIndex ? styles.active : ""}
               onClick={() => setSelectedIndex(index)}
+              priority={index === 0} // Prioritize loading cover thumbnail
             />
           </div>
         ))}

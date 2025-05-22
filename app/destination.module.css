@@ -145,9 +145,10 @@
   border: 1px solid var(--Green-Hover);
   color: var(--Green-Dark);
 }
-.saveButton:active {
+.activeButton {
   background: var(--Green-Hover);
   color: var(--Neutrals-Background);
+  border: 1px solid var(--Green-Hover);
 }
 
 .buttomRightContainer {
