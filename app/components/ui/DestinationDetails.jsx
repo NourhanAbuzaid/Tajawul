@@ -2,7 +2,6 @@ import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import VerifiedIcon from "@mui/icons-material/Verified";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import Divider from "@mui/material/Divider";
 import Avatar from "@mui/material/Avatar";
@@ -17,6 +16,7 @@ import EditTags from "@/components/ui/edit/EditTags";
 import GroupSize from "./tags/GroupSize";
 import Tag from "./tags/Tag";
 import DestinationIdHandler from "@/components/DestinationIdHandler";
+import DestinationInteractions from "./DestinationInteractions";
 
 export default async function DestinationDetails({ destinationId }) {
   await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -122,14 +122,7 @@ export default async function DestinationDetails({ destinationId }) {
               </div>
             </div>
             <div className={styles.buttomRightContainer}>
-              <button className={styles.saveButton}>
-                <FavoriteBorderIcon />
-                Add To Wishlist
-              </button>
-              <button className={styles.saveButton}>
-                <PersonAddAlt1Icon />
-                Follow
-              </button>
+              <DestinationInteractions destinationId={destinationId} />
             </div>
           </div>
         </div>
@@ -226,9 +219,10 @@ export default async function DestinationDetails({ destinationId }) {
             />
             {/* Destination Stats */}
             <div className={styles.statsContainer}>
-              <Stats type="Followers" count={destination?.followersCount} />
-              <Stats type="Visitors" count={destination?.visitorsCount} />
               <Stats type="Wishes" count={destination?.wishesCount} />
+
+              <Stats type="Visitors" count={destination?.visitorsCount} />
+              <Stats type="Followers" count={destination?.followersCount} />
             </div>
             <Divider
               sx={{
