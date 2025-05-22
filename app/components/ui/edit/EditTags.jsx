@@ -15,7 +15,8 @@ export default function EditTags({ destinationId }) {
   const [showPopup, setShowPopup] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [fetchingData, setFetchingData] = useState(false); // New state for GET request loading
+  const [fetchingData, setFetchingData] = useState(false);
+  const [fetchingOptions, setFetchingOptions] = useState(false); // New state for options loading
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [groupSize, setGroupSize] = useState([]);
@@ -24,6 +25,44 @@ export default function EditTags({ destinationId }) {
   const [deletedGroupSizes, setDeletedGroupSizes] = useState([]);
   const [deletedTags, setDeletedTags] = useState([]);
   const [deletedActivities, setDeletedActivities] = useState([]);
+
+  // New state for options
+  const [tagsOptions, setTagsOptions] = useState([]);
+  const [activitiesOptions, setActivitiesOptions] = useState([]);
+
+  // Fetch options when component mounts
+  useEffect(() => {
+    const fetchOptions = async () => {
+      setFetchingOptions(true);
+      try {
+        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+        const [tagsResponse, activitiesResponse] = await Promise.all([
+          axios.get(`${baseUrl}/tags`),
+          axios.get(`${baseUrl}/activities`),
+        ]);
+
+        // Process the responses to match the expected format
+        const processOptions = (items) => {
+          return (
+            items?.map((item) => ({
+              label: item.name,
+              value: item.name,
+            })) || []
+          );
+        };
+
+        setTagsOptions(processOptions(tagsResponse.data));
+        setActivitiesOptions(processOptions(activitiesResponse.data));
+      } catch (err) {
+        console.error("Failed to fetch options:", err);
+        setError("Failed to load tag options. Please try again later.");
+      } finally {
+        setFetchingOptions(false);
+      }
+    };
+
+    fetchOptions();
+  }, []);
 
   const handleOpenPopup = async () => {
     setFetchingData(true);
@@ -64,26 +103,6 @@ export default function EditTags({ destinationId }) {
       value: "Big Group",
       icon: groupSizeIcons["big-group"],
     },
-  ];
-
-  const tagsOptions = [
-    { value: "historic", label: "Historic" },
-    { value: "modern", label: "Modern" },
-    { value: "scenic", label: "Scenic" },
-    { value: "urban", label: "Urban" },
-    { value: "rural", label: "Rural" },
-    { value: "luxury", label: "Luxury" },
-    { value: "budget", label: "Budget" },
-  ];
-
-  const activitiesOptions = [
-    { value: "hiking", label: "Hiking" },
-    { value: "swimming", label: "Swimming" },
-    { value: "sightseeing", label: "Sightseeing" },
-    { value: "shopping", label: "Shopping" },
-    { value: "dining", label: "Dining" },
-    { value: "photography", label: "Photography" },
-    { value: "adventure", label: "Adventure" },
   ];
 
   const handleGroupSizeChange = (e) => {
@@ -165,9 +184,9 @@ export default function EditTags({ destinationId }) {
       <button
         className={styles.editButton}
         onClick={handleOpenPopup}
-        disabled={fetchingData}
+        disabled={fetchingData || fetchingOptions}
       >
-        {fetchingData ? (
+        {fetchingData || fetchingOptions ? (
           "Loading..."
         ) : (
           <>
@@ -239,7 +258,7 @@ export default function EditTags({ destinationId }) {
                 type="button"
                 className={styles.submitButton}
                 onClick={currentStep === 1 ? handleNext : handleSubmit}
-                disabled={loading}
+                disabled={loading || fetchingOptions}
               >
                 {loading
                   ? "Saving..."

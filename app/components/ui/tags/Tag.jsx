@@ -11,6 +11,9 @@ import {
   DirectionsCar as TransportationIcon,
   Hotel as AccommodationIcon,
   Festival as EventsIcon,
+  Diamond as HiddenGemsIcon, // Added for Hidden Gems
+  LocationCity as UrbanIcon, // Added for Urban
+  PhotoCamera as PhotographyIcon, // Added for Photography
   HelpOutline as DefaultIcon, // Fallback icon
 } from "@mui/icons-material";
 
@@ -54,6 +57,12 @@ const Tag = ({ options = null }) => {
       return <AccommodationIcon className={styles.icon} />;
     if (lowerText.includes("event") || lowerText.includes("festival"))
       return <EventsIcon className={styles.icon} />;
+    if (lowerText.includes("hidden gem") || lowerText.includes("hidden gems"))
+      return <HiddenGemsIcon className={styles.icon} />;
+    if (lowerText.includes("urban"))
+      return <UrbanIcon className={styles.icon} />;
+    if (lowerText.includes("photography"))
+      return <PhotographyIcon className={styles.icon} />;
 
     return <DefaultIcon className={styles.icon} />;
   };
