@@ -234,7 +234,7 @@ export default async function DestinationDetails({ destinationId }) {
             <div className={styles.statsContainer}>
               <Stats type="Followers" count={destination?.followersCount} />
               <Stats type="Visitors" count={destination?.visitorsCount} />
-              <Stats type="Events" count={destination?.eventsCount} />
+              <Stats type="Wishes" count={destination?.wishesCount} />
             </div>
             <Divider
               sx={{
