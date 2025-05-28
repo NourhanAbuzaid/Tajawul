@@ -365,6 +365,12 @@
   width: 100%;
 }
 
+.locationContainer {
+  display: flex;
+  gap: 4px;
+  width: 100%;
+}
+
 /*Mobile Responsive*/
 @media (max-width: 768px) {
   .saveButton {

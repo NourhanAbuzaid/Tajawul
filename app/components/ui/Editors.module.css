@@ -51,6 +51,10 @@
   font-family: var(--font-body), system-ui, sans-serif;
 }
 
+.popupContent:focus {
+  outline: none; /* Remove default focus outline */
+}
+
 .popupContent h2 {
   font-size: 28px;
   color: var(--Neutrals-Black-Text, #221a14);
@@ -73,4 +77,8 @@
   overflow-y: auto; /* Enable vertical scrolling */
   width: 100%;
   padding-left: 64px;
+}
+
+.editorsClickable {
+  cursor: pointer;
 }

@@ -2,6 +2,7 @@ import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import VerifiedIcon from "@mui/icons-material/Verified";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 import Divider from "@mui/material/Divider";
 import Avatar from "@mui/material/Avatar";
 import Editors from "@/components/ui/Editors";
@@ -293,9 +294,13 @@ export default async function DestinationDetails({ destinationId }) {
           </div>
           <div id="location" className={`${styles.section} ${styles.location}`}>
             <h2>Location</h2>
-            <p>
-              {destination?.locations?.[0]?.address || "Location not available"}
-            </p>
+            <div className={styles.locationContainer}>
+              <LocationOnIcon sx={{ mt: "20px" }} />
+              <p>
+                {destination?.locations?.[0]?.address ||
+                  "Location not available"}
+              </p>
+            </div>
           </div>
 
           <div id="events" className={styles.section}>
