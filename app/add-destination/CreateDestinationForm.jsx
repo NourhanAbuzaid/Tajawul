@@ -74,6 +74,15 @@ export default function CreateDestinationForm() {
   const { roles } = useAuthStore();
   const router = useRouter();
 
+  const currentYear = new Date().getFullYear();
+  const yearOptions = Array.from(
+    { length: currentYear - 1000 + 1 },
+    (_, i) => ({
+      value: (currentYear - i).toString(),
+      label: (currentYear - i).toString(),
+    })
+  );
+
   const arabCountriesOptions = Object.keys(arabCountries).map((country) => ({
     value: country,
     label: country,
@@ -416,16 +425,17 @@ export default function CreateDestinationForm() {
           onChange={handleChange}
           errorMsg={errors.description}
         />
-        <Input
+        <Dropdown
           label="Establishment Year"
           id="establishedAt"
-          type="number"
-          min="1000"
-          max={new Date().getFullYear()}
+          required
           value={formData.establishedAt || ""}
           onChange={handleChange}
-          errorMsg={errors.establishedAt}
+          options={yearOptions}
           description="e.g. 1999"
+          errorMsg={errors.establishedAt}
+          placeholder="Select year"
+          sortDirection="descending" // Sort years from newest to oldest
         />
 
         <h2 className={styles.subheader}>Location Details</h2>

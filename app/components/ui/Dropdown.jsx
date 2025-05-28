@@ -14,6 +14,7 @@ export default function Dropdown({
   errorMsg,
   placeholder = "Select an option",
   disabled = false,
+  sortDirection = "ascending", // New prop with default value
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
@@ -25,10 +26,11 @@ export default function Dropdown({
     setSearchText(selectedOption ? selectedOption.label : "");
   }, [value, options]);
 
-  // Sort options alphabetically by label
-  const sortedOptions = [...options].sort((a, b) =>
-    a.label.localeCompare(b.label)
-  );
+  // Sort options alphabetically by label based on sortDirection
+  const sortedOptions = [...options].sort((a, b) => {
+    const comparison = a.label.localeCompare(b.label);
+    return sortDirection === "ascending" ? comparison : -comparison;
+  });
 
   const filteredOptions = sortedOptions.filter((opt) =>
     opt.label.toLowerCase().includes(searchText.toLowerCase())
