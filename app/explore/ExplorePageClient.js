@@ -74,7 +74,7 @@ export default function ExplorePageClient({ initialDestinations }) {
         } else {
           console.error("Error fetching destinations:", err);
           if (err.response?.status === 429) {
-            setError("Too many requests. Please wait a moment.");
+            setError("Please slow down! Too many requests.");
             setRateLimited(true);
             // Auto-reset after 5 seconds
             setTimeout(() => setRateLimited(false), 5000);
@@ -147,7 +147,9 @@ export default function ExplorePageClient({ initialDestinations }) {
             <TuneIcon sx={{ fontSize: "18px" }} /> Advanced Filter
           </button>
 
-          <button className={styles.sortSection}>Sorted by: Recommended</button>
+          <button className={styles.sortSection}>
+            Sorted by: Recently Added
+          </button>
         </div>
       </div>
       <div className={styles.destinationContainer}>
