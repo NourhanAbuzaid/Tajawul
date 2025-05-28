@@ -2,7 +2,6 @@ import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import VerifiedIcon from "@mui/icons-material/Verified";
-import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import Divider from "@mui/material/Divider";
 import Avatar from "@mui/material/Avatar";
 import Editors from "@/components/ui/Editors";
@@ -239,17 +238,26 @@ export default async function DestinationDetails({ destinationId }) {
             </div>
 
             {destination?.establishedAt && (
-              <span>
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
                 <Divider
                   sx={{
                     height: "1px",
                     width: "100%",
                     bgcolor: "var(--Neutrals-Light-Outline)",
+                    mb: "16px",
                   }}
                 />
-                <strong className={styles.important}>Established At:</strong>{" "}
-                {destination.establishedAt}
-              </span>
+                <span style={{ width: "100%", textAlign: "left" }}>
+                  <strong className={styles.important}>Established At:</strong>{" "}
+                  {destination.establishedAt}
+                </span>
+              </div>
             )}
           </div>
           <div
