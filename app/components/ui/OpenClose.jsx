@@ -21,8 +21,22 @@ const OpenClose = ({ openTime, closeTime, isOpen24Hours }) => {
   const now = new Date();
   const open = parseTime(openTime);
   const close = parseTime(closeTime);
-  const isOpen =
-    isOpen24Hours || (open && close && now >= open && now <= close);
+
+  // Handle next-day closing times (when close time is before open time)
+  let isOpen;
+  if (isOpen24Hours) {
+    isOpen = true;
+  } else if (open && close) {
+    if (close > open) {
+      // Normal case: closes same day
+      isOpen = now >= open && now <= close;
+    } else {
+      // Special case: closes next day (open overnight)
+      isOpen = now >= open || now <= close;
+    }
+  } else {
+    isOpen = false;
+  }
 
   return (
     <div className={styles.timeContainer}>
@@ -31,10 +45,8 @@ const OpenClose = ({ openTime, closeTime, isOpen24Hours }) => {
         {isOpen24Hours
           ? "Open 24 Hours"
           : isOpen
-          ? `Open until ${formatTime(closeTime)}, ${formatTime(
-              openTime
-            )} - ${formatTime(closeTime)}`
-          : "Closed Now"}
+          ? `Open until ${formatTime(closeTime)}`
+          : `Closed Now`}
       </div>
       {!isOpen24Hours && (
         <span>
