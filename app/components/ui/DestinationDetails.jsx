@@ -256,7 +256,7 @@ export default async function DestinationDetails({ destinationId }) {
                 />
                 <span style={{ width: "100%", textAlign: "left" }}>
                   <strong className={styles.important}>Established At:</strong>{" "}
-                  {destination.establishedAt}
+                  {new Date(destination.establishedAt).getFullYear()}
                 </span>
               </div>
             )}

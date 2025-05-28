@@ -281,7 +281,7 @@ export default function CreateDestinationForm() {
 
       // Add optional fields only if they have a value
       if (formData.establishedAt) {
-        formattedData.establishedAt = formData.establishedAt;
+        formattedData.establishedAt = `${formData.establishedAt}-01-01`;
       }
 
       if (formData.socialMediaLinks.length > 0) {
@@ -417,12 +417,15 @@ export default function CreateDestinationForm() {
           errorMsg={errors.description}
         />
         <Input
-          label="Established At"
+          label="Establishment Year"
           id="establishedAt"
-          type="date"
+          type="number"
+          min="1000"
+          max={new Date().getFullYear()}
           value={formData.establishedAt || ""}
           onChange={handleChange}
           errorMsg={errors.establishedAt}
+          description="e.g. 1999"
         />
 
         <h2 className={styles.subheader}>Location Details</h2>
