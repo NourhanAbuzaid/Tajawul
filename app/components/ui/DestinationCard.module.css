@@ -85,7 +85,7 @@
 .name {
   color: var(--Neutrals-Black-Text, #221a14);
   font-family: var(--font-heading), Georgia, serif;
-  font-size: 16px;
+  font-size: 15px;
   font-style: normal;
   font-weight: 700;
   text-align: left;
