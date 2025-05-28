@@ -65,10 +65,13 @@
   flex-shrink: 0;
 }
 
-.filterButton:hover,
-.sortSection:hover,
 .typeButton:hover {
   background-color: var(--Neutrals-Medium-Outline);
+}
+
+.filterButton:hover,
+.sortSection:hover {
+  background-color: var(--Beige-Very-Bright);
 }
 
 .destinationContainer {
