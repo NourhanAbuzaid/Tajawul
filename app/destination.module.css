@@ -121,6 +121,7 @@
 
 .saveButton {
   display: flex;
+  min-width: 120px;
   height: 40px;
   padding: 8px 20px;
   justify-content: center;

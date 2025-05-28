@@ -80,7 +80,14 @@ const DestinationInteractions = ({ destinationId }) => {
   }
 
   if (!accessToken) {
-    return <div className={styles.saveButton}>Sign in to interact</div>;
+    return (
+      <button
+        className={styles.saveButton}
+        onClick={() => (window.location.href = "/login")}
+      >
+        Sign in to interact
+      </button>
+    );
   }
 
   return (
