@@ -11,7 +11,6 @@ import EditIcon from "@mui/icons-material/Edit";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { groupSizeIcons } from "@/utils/tagIconsMapping";
 import Image from "next/image";
-import Link from "next/link";
 import useAuthStore from "@/store/authStore";
 
 export default function EditTags({ destinationId }) {

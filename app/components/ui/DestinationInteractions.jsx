@@ -11,6 +11,7 @@ import API from "@/utils/api";
 import useAuthStore from "@/store/authStore";
 import styles from "@/destination.module.css";
 import { SmolGreenLoading } from "./Loading";
+import Image from "next/image";
 
 const DestinationInteractions = ({ destinationId }) => {
   const [interactions, setInteractions] = useState({
@@ -19,7 +20,8 @@ const DestinationInteractions = ({ destinationId }) => {
     wish: false,
   });
   const [loading, setLoading] = useState(true);
-  const { accessToken } = useAuthStore();
+  const { accessToken, roles } = useAuthStore();
+  const [showProtectedPopup, setShowProtectedPopup] = useState(false);
 
   useEffect(() => {
     const fetchInteractionStatus = async () => {
@@ -48,6 +50,11 @@ const DestinationInteractions = ({ destinationId }) => {
   }, [destinationId, accessToken]);
 
   const handleInteraction = async (type) => {
+    if (!roles.includes("User")) {
+      setShowProtectedPopup(true);
+      return;
+    }
+
     try {
       const currentValue = interactions[type];
       setInteractions((prev) => ({ ...prev, [type]: !currentValue }));
@@ -121,6 +128,37 @@ const DestinationInteractions = ({ destinationId }) => {
         {interactions.follow ? <PersonRemoveAlt1Icon /> : <PersonAddAlt1Icon />}
         {interactions.follow ? "Following" : "Follow"}
       </button>
+
+      {showProtectedPopup && (
+        <div className={styles.popupOverlay}>
+          <div className={styles.popupContent}>
+            <button
+              className={styles.closeButton}
+              onClick={() => setShowProtectedPopup(false)}
+            >
+              ✕
+            </button>
+            <div className={styles.completedStep}>
+              <Image
+                src="/protected-feature.svg"
+                alt="Protected feature"
+                width={450}
+                height={350}
+                className={styles.completedImage}
+              />
+
+              <button
+                className={styles.ctaButton}
+                onClick={() =>
+                  (window.location.href = "/complete-your-profile")
+                }
+              >
+                Complete Your Profile to Access
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
