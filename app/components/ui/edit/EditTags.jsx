@@ -10,13 +10,18 @@ import axios from "axios";
 import EditIcon from "@mui/icons-material/Edit";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { groupSizeIcons } from "@/utils/tagIconsMapping";
+import Image from "next/image";
+import Link from "next/link";
+import useAuthStore from "@/store/authStore";
 
 export default function EditTags({ destinationId }) {
+  const { roles } = useAuthStore();
   const [showPopup, setShowPopup] = useState(false);
+  const [showProtectedPopup, setShowProtectedPopup] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [fetchingData, setFetchingData] = useState(false);
-  const [fetchingOptions, setFetchingOptions] = useState(false); // New state for options loading
+  const [fetchingOptions, setFetchingOptions] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [groupSize, setGroupSize] = useState([]);
@@ -25,12 +30,42 @@ export default function EditTags({ destinationId }) {
   const [deletedGroupSizes, setDeletedGroupSizes] = useState([]);
   const [deletedTags, setDeletedTags] = useState([]);
   const [deletedActivities, setDeletedActivities] = useState([]);
-
-  // New state for options
   const [tagsOptions, setTagsOptions] = useState([]);
   const [activitiesOptions, setActivitiesOptions] = useState([]);
 
-  // Fetch options when component mounts
+  const handleOpenPopup = async () => {
+    if (!roles.includes("User")) {
+      setShowProtectedPopup(true);
+      return;
+    }
+
+    setFetchingData(true);
+    setError("");
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+      const response = await axios.get(
+        `${baseUrl}/Destination/${destinationId}/attributes`
+      );
+      const data = response.data;
+
+      setGroupSize(data.groupSizes?.data?.map((item) => item.group) || []);
+      setTags(data.tags?.data?.map((item) => item.name) || []);
+      setActivities(data.activities?.data?.map((item) => item.name) || []);
+
+      setDeletedGroupSizes([]);
+      setDeletedTags([]);
+      setDeletedActivities([]);
+
+      setShowPopup(true);
+    } catch (err) {
+      console.error("Failed to fetch attributes:", err);
+      setError("Failed to fetch existing tags. Please try again.");
+    } finally {
+      setFetchingData(false);
+    }
+  };
+
+  // Rest of the component code remains the same...
   useEffect(() => {
     const fetchOptions = async () => {
       setFetchingOptions(true);
@@ -41,7 +76,6 @@ export default function EditTags({ destinationId }) {
           axios.get(`${baseUrl}/activities`),
         ]);
 
-        // Process the responses to match the expected format
         const processOptions = (items) => {
           return (
             items?.map((item) => ({
@@ -63,35 +97,6 @@ export default function EditTags({ destinationId }) {
 
     fetchOptions();
   }, []);
-
-  const handleOpenPopup = async () => {
-    setFetchingData(true);
-    setError("");
-    try {
-      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-      const response = await axios.get(
-        `${baseUrl}/Destination/${destinationId}/attributes`
-      );
-      const data = response.data;
-
-      setGroupSize(data.groupSizes?.data?.map((item) => item.group) || []);
-      setTags(data.tags?.data?.map((item) => item.name) || []);
-      setActivities(data.activities?.data?.map((item) => item.name) || []);
-
-      // Reset deleted items when fetching new data
-      setDeletedGroupSizes([]);
-      setDeletedTags([]);
-      setDeletedActivities([]);
-
-      // Only show popup after data is fetched
-      setShowPopup(true);
-    } catch (err) {
-      console.error("Failed to fetch attributes:", err);
-      setError("Failed to fetch existing tags. Please try again.");
-    } finally {
-      setFetchingData(false);
-    }
-  };
 
   const groupSizeOptions = [
     { label: "Solo", value: "Solo", icon: groupSizeIcons.solo },
@@ -143,7 +148,6 @@ export default function EditTags({ destinationId }) {
     setSuccess("");
 
     try {
-      // First delete removed attributes
       if (
         deletedGroupSizes.length > 0 ||
         deletedTags.length > 0 ||
@@ -158,7 +162,6 @@ export default function EditTags({ destinationId }) {
         });
       }
 
-      // Then add/update remaining attributes
       await API.post(`/Destination/${destinationId}/attributes`, {
         groupSizes: groupSize,
         tags: tags,
@@ -265,6 +268,37 @@ export default function EditTags({ destinationId }) {
                   : currentStep === 1
                   ? "Next"
                   : "Save Tags"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showProtectedPopup && (
+        <div className={styles.popupOverlay}>
+          <div className={styles.popupContent}>
+            <button
+              className={styles.closeButton}
+              onClick={() => setShowProtectedPopup(false)}
+            >
+              ✕
+            </button>
+            <div className={styles.completedStep}>
+              <Image
+                src="/protected-feature.svg"
+                alt="Protected feature"
+                width={450}
+                height={350}
+                className={styles.completedImage}
+              />
+
+              <button
+                className={styles.ctaButton}
+                onClick={() =>
+                  (window.location.href = "/complete-your-profile")
+                }
+              >
+                Complete Your Profile to Access
               </button>
             </div>
           </div>
