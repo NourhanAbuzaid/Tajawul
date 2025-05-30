@@ -12,6 +12,7 @@ import useAuthStore from "@/store/authStore";
 import styles from "@/destination.module.css";
 import { SmolGreenLoading } from "./Loading";
 import Image from "next/image";
+import useStatsStore from "@/store/statsStore"; // ✅ NEW: import Zustand store
 
 const DestinationInteractions = ({ destinationId }) => {
   const [interactions, setInteractions] = useState({
@@ -23,20 +24,18 @@ const DestinationInteractions = ({ destinationId }) => {
   const { accessToken, roles } = useAuthStore();
   const [showProtectedPopup, setShowProtectedPopup] = useState(false);
 
+  const { setWishesCount, setVisitorsCount, setFollowersCount } =
+    useStatsStore(); // ✅ NEW: get update functions
+
   useEffect(() => {
     const fetchInteractionStatus = async () => {
       try {
-        if (!accessToken) {
-          setLoading(false);
-          return;
-        }
-
         const response = await API.get(`/user/${destinationId}/status`);
         if (response.data) {
           setInteractions({
-            follow: response.data.follow || false,
-            visit: response.data.visit || false,
-            wish: response.data.wish || false,
+            follow: !!response.data.follow,
+            visit: !!response.data.visit,
+            wish: !!response.data.wish,
           });
         }
       } catch (error) {
@@ -46,7 +45,9 @@ const DestinationInteractions = ({ destinationId }) => {
       }
     };
 
-    fetchInteractionStatus();
+    if (accessToken) {
+      fetchInteractionStatus();
+    }
   }, [destinationId, accessToken]);
 
   const handleInteraction = async (type) => {
@@ -55,18 +56,25 @@ const DestinationInteractions = ({ destinationId }) => {
       return;
     }
 
-    try {
-      const currentValue = interactions[type];
-      setInteractions((prev) => ({ ...prev, [type]: !currentValue }));
+    const currentValue = interactions[type];
+    setInteractions((prev) => ({ ...prev, [type]: !currentValue }));
 
-      if (currentValue) {
-        await API.delete(`/user/${destinationId}/${type}`);
-      } else {
-        await API.post(`/user/${destinationId}/${type}`);
+    try {
+      const res = currentValue
+        ? await API.delete(`/user/${destinationId}/${type}`)
+        : await API.post(`/user/${destinationId}/${type}`);
+
+      if (res?.data) {
+        if (res.data.wishesCount !== undefined)
+          setWishesCount(res.data.wishesCount);
+        if (res.data.visitorsCount !== undefined)
+          setVisitorsCount(res.data.visitorsCount);
+        if (res.data.followersCount !== undefined)
+          setFollowersCount(res.data.followersCount);
       }
     } catch (error) {
       console.error(`Failed to update ${type} status:`, error);
-      setInteractions((prev) => ({ ...prev, [type]: !prev[type] }));
+      setInteractions((prev) => ({ ...prev, [type]: currentValue })); // revert on fail
     }
   };
 
@@ -146,7 +154,6 @@ const DestinationInteractions = ({ destinationId }) => {
                 height={350}
                 className={styles.completedImage}
               />
-
               <button
                 className={styles.ctaButton}
                 onClick={() =>

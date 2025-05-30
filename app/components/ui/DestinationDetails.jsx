@@ -17,6 +17,7 @@ import GroupSize from "./tags/GroupSize";
 import Tag from "./tags/Tag";
 import DestinationIdHandler from "@/components/DestinationIdHandler";
 import DestinationInteractions from "./DestinationInteractions";
+import StatsHydrator from "@/components/StatsHydrator";
 
 export default async function DestinationDetails({ destinationId }) {
   await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -219,10 +220,16 @@ export default async function DestinationDetails({ destinationId }) {
             />
             {/* Destination Stats */}
             <div className={styles.statsContainer}>
-              <Stats type="Wishes" count={destination?.wishesCount} />
+              {/* 🧪 Inject initializer component with server-side data */}
+              <StatsHydrator
+                wishesCount={destination?.wishesCount || 0}
+                visitorsCount={destination?.visitorsCount || 0}
+                followersCount={destination?.followersCount || 0}
+              />
 
-              <Stats type="Visitors" count={destination?.visitorsCount} />
-              <Stats type="Followers" count={destination?.followersCount} />
+              <Stats type="Wishes" />
+              <Stats type="Visitors" />
+              <Stats type="Followers" />
             </div>
             <Divider
               sx={{
