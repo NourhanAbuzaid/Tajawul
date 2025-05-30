@@ -2,7 +2,6 @@
 import { useState, useRef } from "react";
 import { Menu, MenuItem, Button, Box } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { FixedSizeList as List } from "react-window";
 
 export default function Dropdown({
   label,
@@ -20,7 +19,7 @@ export default function Dropdown({
   const dropdownRef = useRef(null);
   const open = Boolean(anchorEl);
 
-  // Sort options alphabetically by label based on sortDirection
+  // Sort options
   const sortedOptions = [...options].sort((a, b) => {
     const comparison = a.label.localeCompare(b.label);
     return sortDirection === "ascending" ? comparison : -comparison;
@@ -48,6 +47,7 @@ export default function Dropdown({
       sx={{ position: "relative", width: "100%", mb: "12px" }}
       ref={dropdownRef}
     >
+      {/* Label and description section */}
       <Box
         component="label"
         sx={{
@@ -90,7 +90,12 @@ export default function Dropdown({
         )}
       </Box>
 
+      {/* Button section */}
       <Button
+        id={id}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls={`${id}-menu`}
         onClick={handleClick}
         disabled={disabled}
         disableRipple
@@ -151,32 +156,36 @@ export default function Dropdown({
         />
       </Button>
 
+      {/* Menu with regular list items */}
       <Menu
+        id={`${id}-menu`}
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
         disableScrollLock
         MenuListProps={{
+          role: "listbox",
           "aria-labelledby": id,
           sx: {
-            maxHeight: 160,
+            padding: "0",
             width: "100%",
-            padding: "4px",
-            "& .MuiMenuItem-root": {
+            outline: "none",
+            maxHeight: "300px",
+            overflowY: "auto",
+            "&::-webkit-scrollbar": {
+              width: "10px",
+              backgroundColor: "#f5f5f5",
               borderRadius: "8px",
-              border: "1px solid #FFF",
-              padding: "8px 10px",
-              fontFamily: "var(--font-body), system-ui, sans-serif",
-              fontWeight: "500",
-              fontSize: "14px",
-              color: "var(--Neutrals-Medium-Outline)",
-              transition: "all 0.2s ease-in-out",
-              "&:hover, &.Mui-focusVisible": {
-                backgroundColor: "var(--Beige-Very-Bright)",
-                color: "var(--Neutrals-Black-Text)",
-                border: "1px solid var(--Neutrals-Light-Outline)",
-              },
             },
+            "&::-webkit-scrollbar-thumb": {
+              backgroundColor: "var(--Green-Hover)",
+              borderRadius: "8px",
+            },
+            "&::-webkit-scrollbar-thumb:hover": {
+              backgroundColor: "var(--Green-Perfect)",
+            },
+
+            scrollbarColor: "var(--Green-Hover) #f5f5f5",
           },
         }}
         PaperProps={{
@@ -189,8 +198,35 @@ export default function Dropdown({
           },
         }}
       >
-        {sortedOptions.map((option, index) => (
-          <MenuItem key={index} onClick={() => handleSelect(option.value)}>
+        {sortedOptions.map((option) => (
+          <MenuItem
+            key={option.value}
+            onClick={() => handleSelect(option.value)}
+            sx={{
+              borderRadius: "8px",
+              border: "1px solid #FFF",
+              padding: "10px 16px",
+              fontFamily: "var(--font-body), system-ui, sans-serif",
+              fontWeight: "500",
+              fontSize: "14px",
+              color: "var(--Neutrals-Medium-Outline)",
+              transition: "all 0.2s ease-in-out",
+              "&:hover": {
+                backgroundColor: "var(--Beige-Very-Bright)",
+                color: "var(--Neutrals-Black-Text)",
+                border: "1px solid var(--Neutrals-Light-Outline)",
+                fontWeight: "600",
+              },
+              // Add this new style for focus-visible
+              "&:focus-visible": {
+                backgroundColor: "var(--Beige-Very-Bright)",
+                color: "var(--Neutrals-Black-Text)",
+                border: "1px solid var(--Neutrals-Light-Outline)",
+                outline: "none",
+                fontWeight: "600",
+              },
+            }}
+          >
             {option.label}
           </MenuItem>
         ))}
