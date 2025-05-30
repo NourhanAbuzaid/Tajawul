@@ -6,6 +6,7 @@ import Textarea from "app/components/ui/Textarea";
 import Dropdown from "app/components/ui/Dropdown";
 import ErrorMessage from "app/components/ui/ErrorMessage";
 import SuccessMessage from "app/components/ui/SuccessMessage";
+import YearDropdown from "@/components/ui/YearDropdown";
 import Divider from "@mui/material/Divider";
 import { useState, useEffect, useCallback } from "react";
 import { addDestinationSchema, validateOpenCloseTime } from "./actions";
@@ -416,7 +417,7 @@ export default function CreateDestinationForm() {
             }))}
             errorMsg={errors.type}
           />
-          <Dropdown
+          <YearDropdown
             label="Establishment Year"
             id="establishedAt"
             value={formData.establishedAt || ""}
