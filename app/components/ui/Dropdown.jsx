@@ -12,7 +12,7 @@ export default function Dropdown({
   options,
   description,
   errorMsg,
-  placeholder = "Select an option",
+  placeholder = "Start typing to filter options…",
   disabled = false,
   sortDirection = "ascending", // New prop with default value
 }) {
