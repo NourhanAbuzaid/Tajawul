@@ -1,7 +1,8 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
-import styles from "./Dropdown.module.css";
+import { useState, useRef } from "react";
+import { Menu, MenuItem, Button, Box } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { FixedSizeList as List } from "react-window";
 
 export default function Dropdown({
   label,
@@ -12,19 +13,12 @@ export default function Dropdown({
   options,
   description,
   errorMsg,
-  placeholder = "Start typing to filter options…",
   disabled = false,
-  sortDirection = "ascending", // New prop with default value
+  sortDirection = "ascending",
 }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [searchText, setSearchText] = useState("");
+  const [anchorEl, setAnchorEl] = useState(null);
   const dropdownRef = useRef(null);
-
-  // ✅ Reset searchText when value changes (e.g., when the country is changed)
-  useEffect(() => {
-    const selectedOption = options.find((opt) => opt.value === value);
-    setSearchText(selectedOption ? selectedOption.label : "");
-  }, [value, options]);
+  const open = Boolean(anchorEl);
 
   // Sort options alphabetically by label based on sortDirection
   const sortedOptions = [...options].sort((a, b) => {
@@ -32,92 +26,190 @@ export default function Dropdown({
     return sortDirection === "ascending" ? comparison : -comparison;
   });
 
-  const filteredOptions = sortedOptions.filter((opt) =>
-    opt.label.toLowerCase().includes(searchText.toLowerCase())
-  );
+  const handleClick = (event) => {
+    if (!disabled) {
+      setAnchorEl(event.currentTarget);
+    }
+  };
 
-  const toggleDropdown = () => {
-    if (!disabled) setIsOpen((prev) => !prev);
+  const handleClose = () => {
+    setAnchorEl(null);
   };
 
   const handleSelect = (selectedValue) => {
     onChange({ target: { name: id, value: selectedValue } });
-    setSearchText(
-      options.find((opt) => opt.value === selectedValue)?.label || ""
-    );
-    setIsOpen(false);
+    handleClose();
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isOpen]);
+  const selectedLabel = options.find((opt) => opt.value === value)?.label || "";
 
   return (
-    <div className={styles.dropdownContainer} ref={dropdownRef}>
-      <label className={styles.dropdownLabel} htmlFor={id}>
-        {label} {required && <span className={styles.requiredMark}>*</span>}
-        {description && (
-          <span className={styles.dropdownDescription}>{description}</span>
-        )}
-      </label>
-
-      <div
-        className={`${styles.dropdownWrapper} ${isOpen ? styles.active : ""} ${
-          disabled ? styles.disabled : ""
-        }`}
-        onClick={toggleDropdown}
+    <Box
+      sx={{ position: "relative", width: "100%", mb: "12px" }}
+      ref={dropdownRef}
+    >
+      <Box
+        component="label"
+        sx={{
+          color: "var(--Neutrals-Black-Text, #221a14)",
+          fontFamily: "var(--font-heading), Georgia, serif",
+          fontSize: "16px",
+          fontWeight: "700",
+          lineHeight: "120%",
+          width: "100%",
+          textAlign: "left",
+          mb: "6px",
+          display: "block",
+        }}
+        htmlFor={id}
       >
-        <input
-          type="text"
-          className={styles.searchInput}
-          value={searchText}
-          onChange={(e) => {
-            if (!disabled) {
-              setSearchText(e.target.value);
-              setIsOpen(true);
-            }
+        {label}{" "}
+        {required && (
+          <span
+            style={{
+              color: "#ef4444",
+              fontFamily: "var(--font-body), system-ui, sans-serif",
+            }}
+          >
+            *
+          </span>
+        )}
+        {description && (
+          <span
+            style={{
+              fontFamily: "var(--font-body), system-ui, sans-serif",
+              fontSize: "0.875rem",
+              fontWeight: "400",
+              color: "var(--Neutrals-Medium-Outline)",
+              display: "block",
+              mt: "2px",
+            }}
+          >
+            {description}
+          </span>
+        )}
+      </Box>
+
+      <Button
+        onClick={handleClick}
+        disabled={disabled}
+        disableRipple
+        sx={{
+          position: "relative",
+          width: "100%",
+          height: "46px",
+          padding: "16px 20px",
+          borderRadius: "12px",
+          border: "1px solid var(--Neutrals-Light-Outline)",
+          backgroundColor: "#fff",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          cursor: "pointer",
+          transition: "border-color 0.2s ease",
+          textTransform: "none",
+          "&:hover": {
+            borderColor: "var(--Neutrals-Black-Text)",
+            backgroundColor: "#fff",
+          },
+          "&.Mui-disabled": {
+            backgroundColor: "#f0f0f0",
+            borderColor: "#ccc",
+            color: "#aaa",
+          },
+          "&:focus": {
+            outline: "none",
+          },
+          "&:focus-visible": {
+            outline: "2px solid var(--Neutrals-Black-Text)",
+            outlineOffset: "2px",
+          },
+          ...(open && {
+            border: "2px solid var(--Neutrals-Black-Text)",
+          }),
+        }}
+      >
+        <Box
+          sx={{
+            width: "100%",
+            fontFamily: "var(--font-body), system-ui, sans-serif",
+            fontSize: "14px",
+            textAlign: "left",
+            color: selectedLabel
+              ? "var(--Neutrals-Black-Text)"
+              : "var(--Neutrals-Medium-Outline)",
           }}
-          placeholder={placeholder}
-          autoComplete="off"
-          disabled={disabled}
-        />
-
+        >
+          {selectedLabel || "Select an option"}
+        </Box>
         <KeyboardArrowDownIcon
-          className={`${styles.dropdownIcon} ${isOpen ? styles.rotated : ""}`}
+          sx={{
+            transition: "transform 0.3s ease-in-out",
+            transform: open ? "rotate(180deg)" : "rotate(0)",
+            color: "var(--Neutrals-Medium-Outline)",
+          }}
         />
-      </div>
+      </Button>
 
-      {isOpen && (
-        <div className={styles.dropdownMenu}>
-          {filteredOptions.length > 0 ? (
-            filteredOptions.map((option, index) => (
-              <div
-                key={index}
-                className={styles.dropdownItem}
-                onClick={() => handleSelect(option.value)}
-              >
-                {option.label}
-              </div>
-            ))
-          ) : (
-            <div className={styles.noResults}>No results found</div>
-          )}
-        </div>
+      <Menu
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        disableScrollLock
+        MenuListProps={{
+          "aria-labelledby": id,
+          sx: {
+            maxHeight: 160,
+            width: "100%",
+            padding: "4px",
+            "& .MuiMenuItem-root": {
+              borderRadius: "8px",
+              border: "1px solid #FFF",
+              padding: "8px 10px",
+              fontFamily: "var(--font-body), system-ui, sans-serif",
+              fontWeight: "500",
+              fontSize: "14px",
+              color: "var(--Neutrals-Medium-Outline)",
+              transition: "all 0.2s ease-in-out",
+              "&:hover, &.Mui-focusVisible": {
+                backgroundColor: "var(--Beige-Very-Bright)",
+                color: "var(--Neutrals-Black-Text)",
+                border: "1px solid var(--Neutrals-Light-Outline)",
+              },
+            },
+          },
+        }}
+        PaperProps={{
+          sx: {
+            borderRadius: "12px",
+            border: "1px solid var(--Neutrals-Light-Outline)",
+            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+            marginTop: "4px",
+            width: dropdownRef.current?.clientWidth,
+          },
+        }}
+      >
+        {sortedOptions.map((option, index) => (
+          <MenuItem key={index} onClick={() => handleSelect(option.value)}>
+            {option.label}
+          </MenuItem>
+        ))}
+      </Menu>
+
+      {errorMsg && (
+        <Box
+          sx={{
+            textAlign: "left",
+            minHeight: "16px",
+            mt: "2px",
+            fontSize: "0.875rem",
+            color: "#ef4444",
+            fontFamily: "var(--font-body), system-ui, sans-serif",
+          }}
+        >
+          {errorMsg}
+        </Box>
       )}
-
-      {errorMsg && <div className={styles.dropdownError}>{errorMsg}</div>}
-    </div>
+    </Box>
   );
 }
