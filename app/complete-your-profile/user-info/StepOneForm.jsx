@@ -15,118 +15,11 @@ import languages from "@/data/languages.json";
 import API from "@/utils/api";
 import ErrorMessage from "app/components/ui/ErrorMessage";
 import SuccessMessage from "app/components/ui/SuccessMessage";
-import { Menu, MenuItem, Button, Box } from "@mui/material";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import Image from "next/image";
 import useAuthStore from "@/store/authStore";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { WhiteLoading } from "@/components/ui/Loading";
-
-const MaritalStatusDropdown = ({ value, onChange }) => {
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleSelect = (status) => {
-    onChange(status);
-    handleClose();
-  };
-
-  const options = ["Single", "Married"];
-
-  return (
-    <Box sx={{ position: "relative" }}>
-      <Button
-        onClick={handleClick}
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          gap: "8px",
-          padding: "16px 20px",
-          height: "46px",
-          border: "1px solid var(--Neutrals-Light-Outline)",
-          borderRadius: "12px",
-          marginTop: "4px",
-          marginBottom: "16px",
-          cursor: "pointer",
-          fontFamily: '"DM Sans"',
-          fontWeight: "500",
-          letterSpacing: "0",
-          color: value
-            ? "var(--Neutrals-Black-Text)"
-            : "var(--Neutrals-Medium-Outline)",
-          backgroundColor: "var(--Neutrals-Background)",
-          transition: "all 0.3s ease-in-out",
-          textTransform: "capitalize",
-          "&:hover": {
-            backgroundColor: "var(--Neutrals-Very-Bright)",
-          },
-          width: "100%",
-          justifyContent: "space-between",
-        }}
-      >
-        {value || "Select marital status"}
-        <KeyboardArrowDownIcon
-          sx={{
-            transition: "transform 0.3s ease-in-out",
-            transform: open ? "rotate(180deg)" : "rotate(0)",
-            fontSize: "18px",
-          }}
-        />
-      </Button>
-      <Menu
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        MenuListProps={{
-          "aria-labelledby": "basic-button",
-          sx: {
-            maxHeight: 400,
-            width: "200px",
-            padding: "4px",
-            "& .MuiMenuItem-root": {
-              borderRadius: "8px",
-              border: "1px solid #FFF",
-              padding: "8px 10px",
-              fontFamily: '"DM Sans"',
-              fontWeight: "500",
-              fontSize: "14px",
-              color: "var(--Neutrals-Medium-Outline)",
-              transition: "all 0.2s ease-in-out",
-              "&:hover, &.Mui-focusVisible": {
-                backgroundColor: "var(--Beige-Very-Bright)",
-                color: "var(--Neutrals-Black-Text)",
-                border: "1px solid var(--Neutrals-Light-Outline)",
-              },
-            },
-          },
-        }}
-        PaperProps={{
-          sx: {
-            borderRadius: "12px",
-            border: "1px solid var(--Neutrals-Light-Outline)",
-            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-            marginTop: "4px",
-          },
-        }}
-      >
-        {options.map((option) => (
-          <MenuItem key={option} onClick={() => handleSelect(option)}>
-            {option}
-          </MenuItem>
-        ))}
-      </Menu>
-    </Box>
-  );
-};
 
 // Utility function for debouncing
 const debounce = (func, delay) => {
@@ -553,17 +446,18 @@ export default function StepOneForm() {
             errorMsg={errors.birthDate}
           />
 
-          <div style={{ width: "100%" }}>
-            <label className={styles.label}>Marital Status</label>
-            <MaritalStatusDropdown
-              value={formData.maritalStatus}
-              onChange={(value) =>
-                setFormData((prev) => ({ ...prev, maritalStatus: value }))
-              }
-              errorMsg={errors.maritalStatus}
-            />
-          </div>
-
+          <Dropdown
+            label="Marital Status"
+            id="maritalStatus"
+            required
+            value={formData.maritalStatus}
+            onChange={handleChange}
+            options={[
+              { value: "Single", label: "Single" },
+              { value: "Married", label: "Married" },
+            ]}
+            errorMsg={errors.maritalStatus}
+          />
           <Dropdown
             label="Nationality"
             id="nationality"

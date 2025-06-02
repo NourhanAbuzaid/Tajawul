@@ -69,6 +69,7 @@ export default function Dropdown({
             style={{
               color: "#ef4444",
               fontFamily: "var(--font-body), system-ui, sans-serif",
+              letterSpacing: "0.01em",
             }}
           >
             *
@@ -78,6 +79,7 @@ export default function Dropdown({
           <span
             style={{
               fontFamily: "var(--font-body), system-ui, sans-serif",
+              letterSpacing: "0.01em",
               fontSize: "0.875rem",
               fontWeight: "400",
               color: "var(--Neutrals-Medium-Outline)",
@@ -140,6 +142,7 @@ export default function Dropdown({
             fontFamily: "var(--font-body), system-ui, sans-serif",
             fontSize: "14px",
             textAlign: "left",
+            letterSpacing: "0.01em",
             color: selectedLabel
               ? "var(--Neutrals-Black-Text)"
               : "var(--Neutrals-Medium-Outline)",
@@ -207,6 +210,7 @@ export default function Dropdown({
               border: "1px solid #FFF",
               padding: "10px 16px",
               fontFamily: "var(--font-body), system-ui, sans-serif",
+              letterSpacing: "0.01em",
               fontWeight: "500",
               fontSize: "14px",
               color: "var(--Neutrals-Medium-Outline)",
@@ -241,6 +245,7 @@ export default function Dropdown({
             fontSize: "0.875rem",
             color: "#ef4444",
             fontFamily: "var(--font-body), system-ui, sans-serif",
+            letterSpacing: "0.01em",
           }}
         >
           {errorMsg}
