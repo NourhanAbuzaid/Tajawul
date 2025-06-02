@@ -6,7 +6,6 @@ import Textarea from "app/components/ui/Textarea";
 import Dropdown from "app/components/ui/Dropdown";
 import ErrorMessage from "app/components/ui/ErrorMessage";
 import SuccessMessage from "app/components/ui/SuccessMessage";
-import YearDropdown from "@/components/ui/YearDropdown";
 import Divider from "@mui/material/Divider";
 import { useState, useEffect, useCallback } from "react";
 import { addDestinationSchema, validateOpenCloseTime } from "./actions";
@@ -74,15 +73,6 @@ export default function CreateDestinationForm() {
   const [cityClicked, setCityClicked] = useState(false);
   const { roles } = useAuthStore();
   const router = useRouter();
-
-  const currentYear = new Date().getFullYear();
-  const yearOptions = Array.from(
-    { length: currentYear - 1000 + 1 },
-    (_, i) => ({
-      value: (currentYear - i).toString(),
-      label: (currentYear - i).toString(),
-    })
-  );
 
   const arabCountriesOptions = Object.keys(arabCountries).map((country) => ({
     value: country,
@@ -417,15 +407,13 @@ export default function CreateDestinationForm() {
             }))}
             errorMsg={errors.type}
           />
-          <YearDropdown
+          <Input
             label="Establishment Year"
             id="establishedAt"
-            value={formData.establishedAt || ""}
+            type="text"
+            value={formData.establishedAt}
             onChange={handleChange}
-            options={yearOptions}
             errorMsg={errors.establishedAt}
-            placeholder="Select year"
-            sortDirection="descending" // Sort years from newest to oldest
           />
         </div>
 

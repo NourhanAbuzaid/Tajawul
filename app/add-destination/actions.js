@@ -41,12 +41,11 @@ export const addDestinationSchema = z.object({
     .refine(
       (value) => {
         if (!value) return true; // Optional field, skip validation if empty
-        const establishedDate = new Date(value);
-        const today = new Date();
-        return establishedDate <= today;
+        const year = parseInt(value);
+        return !isNaN(year) && year >= 1000 && year <= new Date().getFullYear();
       },
       {
-        message: "Established date cannot be in the future.",
+        message: "Must be a valid year between 1000 and current year",
       }
     ),
 
