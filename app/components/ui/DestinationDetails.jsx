@@ -191,10 +191,7 @@ export default async function DestinationDetails({ destinationId }) {
             </div>
           </div>
           <div id="images" className={`${styles.section} ${styles.images}`}>
-            <ImageList
-              coverImage={destination?.coverImage}
-              images={destination?.images}
-            />
+            <ImageList images={destination?.images} />
           </div>
           <div id="posts" className={styles.section}>
             <h2>Posts</h2>
