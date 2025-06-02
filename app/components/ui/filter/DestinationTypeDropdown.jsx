@@ -28,6 +28,9 @@ export default function DestinationTypeDropdown({
   // Get the icon component for the selected type
   const SelectedIcon = selectedType ? typeIconsMapping[selectedType] : null;
 
+  // Sort the types alphabetically
+  const sortedTypes = Object.keys(typeIconsMapping).sort();
+
   return (
     <Box sx={{ position: "relative" }}>
       <Button
@@ -105,7 +108,7 @@ export default function DestinationTypeDropdown({
             All
           </Box>
         </MenuItem>
-        {Object.keys(typeIconsMapping).map((type) => {
+        {sortedTypes.map((type) => {
           const IconComponent = typeIconsMapping[type];
           return (
             <MenuItem key={type} onClick={() => handleTypeSelect(type)}>
