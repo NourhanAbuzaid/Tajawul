@@ -1,66 +1,95 @@
 "use client";
 
 import * as React from "react";
-import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
-import { Circle } from "lucide-react";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
+import Box from "@mui/material/Box";
 
-const RadioGroup = React.forwardRef(({ style, ...props }, ref) => {
+const CustomRadioGroup = ({
+  label,
+  value,
+  onValueChange,
+  children,
+  style,
+  required,
+}) => {
   return (
-    <RadioGroupPrimitive.Root
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        gap: "12px",
-        ...style,
-      }}
-      {...props}
-      ref={ref}
-    />
-  );
-});
-RadioGroup.displayName = RadioGroupPrimitive.Root.displayName;
-
-const RadioGroupItem = React.forwardRef(({ style, ...props }, ref) => {
-  return (
-    <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-      <RadioGroupPrimitive.Item
-        ref={ref}
-        style={{
-          aspectRatio: "1 / 1",
-
-          height: "16px",
-          width: "16px",
-          borderRadius: "50%",
-          border: "1px solid currentColor",
-          color: "var(--Green-Perfect)",
-          backgroundColor: "transparent",
-          outline: "none",
-          opacity: props.disabled ? 0.5 : 1,
-          cursor: props.disabled ? "not-allowed" : "pointer",
-          ...style,
-        }}
-        {...props}
-      >
-        <RadioGroupPrimitive.Indicator
-          style={{
+    <FormControl style={style}>
+      {label && (
+        <FormLabel
+          sx={{
+            textAlign: "left",
+            fontFamily: "var(--font-heading), Georgia, serif",
+            fontWeight: 600,
+            color: "var(--Neutrals-Black-Text, #221a14)",
+            "&.Mui-focused": {
+              color: "var(--Neutrals-Black-Text, #221a14)",
+            },
             display: "flex",
             alignItems: "center",
-            justifyContent: "center",
+            gap: "4px",
           }}
         >
-          <Circle
-            style={{
-              height: "14px",
-              width: "14px",
-              fill: "var(--Green-Perfect)",
-            }}
-          />
-        </RadioGroupPrimitive.Indicator>
-      </RadioGroupPrimitive.Item>
-      <label>{props.children}</label>
-    </div>
+          {label}
+          {required && (
+            <Box
+              component="span"
+              sx={{
+                color: "#ef4444",
+                fontSize: "12px",
+                lineHeight: 1,
+              }}
+            >
+              *
+            </Box>
+          )}
+        </FormLabel>
+      )}
+      <RadioGroup
+        row
+        value={value}
+        onChange={(e) => onValueChange(e.target.value)}
+        sx={{
+          ".MuiFormControlLabel-label": {
+            fontFamily: "var(--font-body), system-ui, sans-serif",
+            color: "var(--Neutrals-Black-Text, #221a14)",
+          },
+        }}
+      >
+        {children}
+      </RadioGroup>
+    </FormControl>
   );
-});
-RadioGroupItem.displayName = RadioGroupPrimitive.Item.displayName;
+};
 
-export { RadioGroup, RadioGroupItem };
+const CustomRadio = ({ value, label, disabled, style }) => {
+  return (
+    <FormControlLabel
+      value={value}
+      control={
+        <Radio
+          sx={{
+            color: "var(--Green-Perfect)",
+            "&.Mui-checked": {
+              color: "var(--Green-Perfect)",
+            },
+            "&.Mui-disabled": {
+              opacity: 0.5,
+            },
+          }}
+          disabled={disabled}
+        />
+      }
+      label={label}
+      style={{
+        ...style,
+        marginRight: "16px", // Add some spacing between options
+      }}
+    />
+  );
+};
+
+export { CustomRadioGroup as RadioGroup, CustomRadio as RadioGroupItem };
