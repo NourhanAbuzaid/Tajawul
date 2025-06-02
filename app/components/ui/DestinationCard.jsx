@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import styles from "./DestinationCard.module.css";
 import Rating from "./Rating";
 import PriceRange from "./tags/PriceRange";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import PlaceIcon from "@mui/icons-material/Place";
 import Image from "next/image";
 
@@ -20,10 +19,6 @@ const DestinationCard = ({
 }) => {
   const [imageSrc, setImageSrc] = useState(image || "/fallback.jpg"); // Fallback image if image is empty
   const fallbackImage = "/fallback.jpg"; // Path to your fallback image
-
-  const handleWishlist = () => {
-    alert(`Added ${name} to wishlist!`);
-  };
 
   const handleImageError = () => {
     // If the image fails to load, set the fallback image
@@ -52,9 +47,6 @@ const DestinationCard = ({
         )}
         <div className={styles.topContainer}>
           <PriceRange priceRange={priceRange} />
-          <button className={styles.wishlistButton} onClick={handleWishlist}>
-            <FavoriteBorderIcon sx={{ color: "var(--Neutrals-Background)" }} />
-          </button>
         </div>
 
         <div className={styles.locationTag}>
