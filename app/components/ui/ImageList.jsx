@@ -34,13 +34,19 @@ const ImageList = ({ images = [] }) => {
     const files = event.target.files;
     if (!files || files.length === 0) return;
 
+    // Add validation here to ensure destinationId exists
+    if (!destinationId) {
+      setError("Destination ID is missing");
+      return;
+    }
+
     setLoading(true);
     setError("");
 
     try {
       const formData = new FormData();
       Array.from(files).forEach((file) => {
-        formData.append("Images", file);
+        formData.append("images", file); // Note lowercase 'images' to match API expectation
       });
 
       const response = await API.put(
@@ -50,7 +56,6 @@ const ImageList = ({ images = [] }) => {
       );
 
       if (response.status === 200) {
-        // Refresh the page to show the newly uploaded images
         router.refresh();
       }
     } catch (err) {
