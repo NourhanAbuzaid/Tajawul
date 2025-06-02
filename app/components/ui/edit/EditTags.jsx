@@ -118,7 +118,11 @@ export default function EditTags({ destinationId }) {
   };
 
   const handleTagsChange = (e) => {
-    setTags(e.target.value);
+    // Filter out any values that aren't in our options (new tags are handled by onAddNew)
+    const validValues = e.target.value.filter((val) =>
+      tagsOptions.some((opt) => opt.value === val)
+    );
+    setTags(validValues);
   };
 
   const handleTagsDelete = (e) => {
@@ -126,7 +130,11 @@ export default function EditTags({ destinationId }) {
   };
 
   const handleActivitiesChange = (e) => {
-    setActivities(e.target.value);
+    // Filter out any values that aren't in our options (new activities are handled by onAddNew)
+    const validValues = e.target.value.filter((val) =>
+      activitiesOptions.some((opt) => opt.value === val)
+    );
+    setActivities(validValues);
   };
 
   const handleActivitiesDelete = (e) => {
@@ -139,6 +147,24 @@ export default function EditTags({ destinationId }) {
 
   const handleBack = () => {
     setCurrentStep(1);
+  };
+
+  const handleAddNewTag = (newTag) => {
+    setTags((prev) => [...prev, newTag.value]);
+    // Also update the options to include the new tag
+    setTagsOptions((prev) => [
+      ...prev,
+      { label: newTag.value, value: newTag.value },
+    ]);
+  };
+
+  const handleAddNewActivity = (newActivity) => {
+    setActivities((prev) => [...prev, newActivity.value]);
+    // Also update the options to include the new activity
+    setActivitiesOptions((prev) => [
+      ...prev,
+      { label: newActivity.value, value: newActivity.value },
+    ]);
   };
 
   const handleSubmit = async () => {
@@ -223,6 +249,8 @@ export default function EditTags({ destinationId }) {
                     onChange={handleTagsChange}
                     onDelete={handleTagsDelete}
                     size="small"
+                    addNewText="+ Add Tag"
+                    onAddNew={handleAddNewTag}
                   />
                 </>
               ) : (
@@ -249,6 +277,8 @@ export default function EditTags({ destinationId }) {
                     onChange={handleActivitiesChange}
                     onDelete={handleActivitiesDelete}
                     size="small"
+                    addNewText="+ Add Activity"
+                    onAddNew={handleAddNewActivity}
                   />
                 </>
               )}

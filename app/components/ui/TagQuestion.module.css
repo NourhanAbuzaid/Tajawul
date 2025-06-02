@@ -201,3 +201,79 @@
   margin-top: 0.25rem;
   font-family: var(--font-body), system-ui, sans-serif;
 }
+
+/* Add these to your existing CSS */
+.addNewButton {
+  border: 1px dashed var(--Neutrals-Medium-Outline) !important;
+}
+
+.addNewButton:hover {
+  background-color: var(--Green-Very-Bright) !important;
+  color: var(--Green-Dark) !important;
+  border: 1px dashed var(--Green-Hover) !important;
+}
+
+.inputWithButtons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.addNewForm {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inputButtons {
+  display: flex;
+  gap: 8px;
+}
+
+.addNewInput {
+  align-items: center;
+  background-color: var(--Neutrals-Background);
+  border: 1px solid var(--Neutrals-Black-Text);
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 500;
+  color: var(--Neutrals-Black-Text, #221a14);
+  border-radius: 16px;
+  padding: 4px 12px;
+  font-size: 14px;
+  position: relative;
+}
+
+.addNewInput:focus {
+  outline: none;
+  border-color: var(--Green-Hover);
+}
+
+.addButton,
+.cancelButton {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background-color: var(--Neutrals-Background);
+  border: 1px solid var(--Neutrals-Black-Text);
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 500;
+  color: var(--Neutrals-Black-Text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.addButton:hover {
+  background-color: var(--Green-Very-Bright);
+  color: var(--Green-Dark);
+  border: 1px solid var(--Green-Hover);
+}
+
+.cancelButton:hover {
+  background-color: var(--Error-Background);
+  color: var(--Error-Text);
+  border: 1px solid var(--Error-Text);
+}
