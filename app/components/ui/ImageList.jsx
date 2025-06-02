@@ -10,9 +10,7 @@ import API from "@/utils/api";
 import { useRouter } from "next/navigation";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 
-const ImageList = ({ coverImage = null, images = [] }) => {
-  // Combine coverImage with other images (coverImage first if it exists)
-  const allImages = coverImage ? [coverImage, ...images] : [...images];
+const ImageList = ({ images = [] }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -23,12 +21,12 @@ const ImageList = ({ coverImage = null, images = [] }) => {
       : null;
 
   const handleNext = () => {
-    setSelectedIndex((prevIndex) => (prevIndex + 1) % allImages.length);
+    setSelectedIndex((prevIndex) => (prevIndex + 1) % images.length);
   };
 
   const handlePrev = () => {
     setSelectedIndex(
-      (prevIndex) => (prevIndex - 1 + allImages.length) % allImages.length
+      (prevIndex) => (prevIndex - 1 + images.length) % images.length
     );
   };
 
@@ -36,13 +34,19 @@ const ImageList = ({ coverImage = null, images = [] }) => {
     const files = event.target.files;
     if (!files || files.length === 0) return;
 
+    // Add validation here to ensure destinationId exists
+    if (!destinationId) {
+      setError("Destination ID is missing");
+      return;
+    }
+
     setLoading(true);
     setError("");
 
     try {
       const formData = new FormData();
       Array.from(files).forEach((file) => {
-        formData.append("Images", file);
+        formData.append("images", file); // Note lowercase 'images' to match API expectation
       });
 
       const response = await API.put(
@@ -52,7 +56,6 @@ const ImageList = ({ coverImage = null, images = [] }) => {
       );
 
       if (response.status === 200) {
-        // Refresh the page to show the newly uploaded images
         router.refresh();
       }
     } catch (err) {
@@ -63,7 +66,7 @@ const ImageList = ({ coverImage = null, images = [] }) => {
     }
   };
 
-  if (allImages.length === 0) {
+  if (images.length === 0) {
     return (
       <div className={styles.emptyContainer}>
         <div className={styles.emptyIllustration}>
@@ -122,15 +125,10 @@ const ImageList = ({ coverImage = null, images = [] }) => {
         </button>
         <div className={styles.mainImage}>
           <Image
-            src={allImages[selectedIndex]}
-            alt={
-              selectedIndex === 0 && coverImage
-                ? "Cover image"
-                : `Image ${selectedIndex}`
-            }
+            src={images[selectedIndex]}
+            alt="Selected"
             layout="fill"
             objectFit="cover"
-            priority={selectedIndex === 0} // Prioritize loading cover image
           />
         </div>
         <button onClick={handleNext} className={styles.arrowRight}>
@@ -138,20 +136,15 @@ const ImageList = ({ coverImage = null, images = [] }) => {
         </button>
       </div>
       <div className={styles.thumbnailWrapper}>
-        {allImages.map((image, index) => (
+        {images.map((image, index) => (
           <div key={index} className={styles.thumbnail}>
             <Image
               src={image}
-              alt={
-                index === 0 && coverImage
-                  ? "Cover thumbnail"
-                  : `Thumbnail ${index}`
-              }
+              alt={`Thumbnail ${index}`}
               layout="fill"
               objectFit="cover"
               className={index === selectedIndex ? styles.active : ""}
               onClick={() => setSelectedIndex(index)}
-              priority={index === 0} // Prioritize loading cover thumbnail
             />
           </div>
         ))}

@@ -281,7 +281,7 @@ export default function CreateDestinationForm() {
 
       // Add optional fields only if they have a value
       if (formData.establishedAt) {
-        formattedData.establishedAt = formData.establishedAt;
+        formattedData.establishedAt = `${formData.establishedAt}-01-01`;
       }
 
       if (formData.socialMediaLinks.length > 0) {
@@ -385,6 +385,15 @@ export default function CreateDestinationForm() {
           onChange={handleChange}
           errorMsg={errors.name}
         />
+
+        <Textarea
+          label="Description"
+          id="description"
+          required
+          value={formData.description}
+          onChange={handleChange}
+          errorMsg={errors.description}
+        />
         <div className={styles.formRow}>
           <Dropdown
             label="Destination Type"
@@ -398,32 +407,15 @@ export default function CreateDestinationForm() {
             }))}
             errorMsg={errors.type}
           />
-          <Dropdown
-            label="Country"
-            id="country"
-            required
-            value={formData.country}
+          <Input
+            label="Establishment Year"
+            id="establishedAt"
+            type="text"
+            value={formData.establishedAt}
             onChange={handleChange}
-            options={arabCountriesOptions}
-            errorMsg={errors.country}
+            errorMsg={errors.establishedAt}
           />
         </div>
-        <Textarea
-          label="Description"
-          id="description"
-          required
-          value={formData.description}
-          onChange={handleChange}
-          errorMsg={errors.description}
-        />
-        <Input
-          label="Established At"
-          id="establishedAt"
-          type="date"
-          value={formData.establishedAt || ""}
-          onChange={handleChange}
-          errorMsg={errors.establishedAt}
-        />
 
         <h2 className={styles.subheader}>Location Details</h2>
         <Divider
@@ -434,21 +426,32 @@ export default function CreateDestinationForm() {
             marginBottom: "20px",
           }}
         />
-        <Dropdown
-          label="City"
-          id="city"
-          required
-          value={formData.city}
-          onChange={handleChange}
-          options={cities}
-          errorMsg={
-            cityClicked && !formData.country
-              ? "Please Select a Country"
-              : errors.city
-          }
-          disabled={!formData.country || cities.length === 0}
-          onDropdownClick={() => setCityClicked(true)}
-        />
+        <div className={styles.formRow}>
+          <Dropdown
+            label="Country"
+            id="country"
+            required
+            value={formData.country}
+            onChange={handleChange}
+            options={arabCountriesOptions}
+            errorMsg={errors.country}
+          />
+          <Dropdown
+            label="City"
+            id="city"
+            required
+            value={formData.city}
+            onChange={handleChange}
+            options={cities}
+            errorMsg={
+              cityClicked && !formData.country
+                ? "Please Select a Country"
+                : errors.city
+            }
+            disabled={!formData.country || cities.length === 0}
+            onDropdownClick={() => setCityClicked(true)}
+          />
+        </div>
         <Input
           label="Address"
           id="address"
@@ -465,17 +468,6 @@ export default function CreateDestinationForm() {
         />
         <div className={styles.formRow}>
           <Input
-            label="Longitude"
-            id="longitude"
-            type="number"
-            step="any"
-            required
-            value={formData.locations?.[0]?.longitude || 0} // ✅ Prevents undefined access
-            onChange={(e) => handleLocationChange("longitude", e.target.value)}
-            errorMsg={errors.longitude}
-          />
-
-          <Input
             label="Latitude"
             id="latitude"
             type="number"
@@ -484,6 +476,16 @@ export default function CreateDestinationForm() {
             value={formData.locations?.[0]?.latitude || 0} // ✅ Prevents undefined access
             onChange={(e) => handleLocationChange("latitude", e.target.value)}
             errorMsg={errors.latitude}
+          />
+          <Input
+            label="Longitude"
+            id="longitude"
+            type="number"
+            step="any"
+            required
+            value={formData.locations?.[0]?.longitude || 0} // ✅ Prevents undefined access
+            onChange={(e) => handleLocationChange("longitude", e.target.value)}
+            errorMsg={errors.longitude}
           />
         </div>
 

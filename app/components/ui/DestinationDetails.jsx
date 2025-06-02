@@ -2,7 +2,7 @@ import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import VerifiedIcon from "@mui/icons-material/Verified";
-import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 import Divider from "@mui/material/Divider";
 import Avatar from "@mui/material/Avatar";
 import Editors from "@/components/ui/Editors";
@@ -17,6 +17,7 @@ import GroupSize from "./tags/GroupSize";
 import Tag from "./tags/Tag";
 import DestinationIdHandler from "@/components/DestinationIdHandler";
 import DestinationInteractions from "./DestinationInteractions";
+import StatsHydrator from "@/components/StatsHydrator";
 
 export default async function DestinationDetails({ destinationId }) {
   await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -190,10 +191,7 @@ export default async function DestinationDetails({ destinationId }) {
             </div>
           </div>
           <div id="images" className={`${styles.section} ${styles.images}`}>
-            <ImageList
-              coverImage={destination?.coverImage}
-              images={destination?.images}
-            />
+            <ImageList images={destination?.images} />
           </div>
           <div id="posts" className={styles.section}>
             <h2>Posts</h2>
@@ -219,10 +217,16 @@ export default async function DestinationDetails({ destinationId }) {
             />
             {/* Destination Stats */}
             <div className={styles.statsContainer}>
-              <Stats type="Wishes" count={destination?.wishesCount} />
+              {/* 🧪 Inject initializer component with server-side data */}
+              <StatsHydrator
+                wishesCount={destination?.wishesCount || 0}
+                visitorsCount={destination?.visitorsCount || 0}
+                followersCount={destination?.followersCount || 0}
+              />
 
-              <Stats type="Visitors" count={destination?.visitorsCount} />
-              <Stats type="Followers" count={destination?.followersCount} />
+              <Stats type="Wishes" />
+              <Stats type="Visitors" />
+              <Stats type="Followers" />
             </div>
             <Divider
               sx={{
@@ -239,17 +243,26 @@ export default async function DestinationDetails({ destinationId }) {
             </div>
 
             {destination?.establishedAt && (
-              <span>
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
                 <Divider
                   sx={{
                     height: "1px",
                     width: "100%",
                     bgcolor: "var(--Neutrals-Light-Outline)",
+                    mb: "16px",
                   }}
                 />
-                <strong className={styles.important}>Established At:</strong>{" "}
-                {destination.establishedAt}
-              </span>
+                <span style={{ width: "100%", textAlign: "left" }}>
+                  <strong className={styles.important}>Established At:</strong>{" "}
+                  {new Date(destination.establishedAt).getFullYear()}
+                </span>
+              </div>
             )}
           </div>
           <div
@@ -285,9 +298,13 @@ export default async function DestinationDetails({ destinationId }) {
           </div>
           <div id="location" className={`${styles.section} ${styles.location}`}>
             <h2>Location</h2>
-            <p>
-              {destination?.locations?.[0]?.address || "Location not available"}
-            </p>
+            <div className={styles.locationContainer}>
+              <LocationOnIcon sx={{ mt: "20px" }} />
+              <p>
+                {destination?.locations?.[0]?.address ||
+                  "Location not available"}
+              </p>
+            </div>
           </div>
 
           <div id="events" className={styles.section}>

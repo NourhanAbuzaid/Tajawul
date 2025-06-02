@@ -2,8 +2,9 @@
 import { useState, useRef } from "react";
 import { Menu, MenuItem, Button, Box } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { FixedSizeList as List } from "react-window";
 
-export default function Dropdown({
+export default function YearDropdown({
   label,
   id,
   required,
@@ -42,6 +43,43 @@ export default function Dropdown({
 
   const selectedLabel = options.find((opt) => opt.value === value)?.label || "";
 
+  // Virtualized list item renderer
+  const renderMenuItem = ({ index, style }) => {
+    const option = sortedOptions[index];
+    return (
+      <MenuItem
+        key={option.value}
+        onClick={() => handleSelect(option.value)}
+        sx={{
+          borderRadius: "8px",
+          border: "1px solid #FFF",
+          padding: "10px 16px",
+          fontFamily: "var(--font-body), system-ui, sans-serif",
+          fontWeight: "500",
+          fontSize: "14px",
+          color: "var(--Neutrals-Medium-Outline)",
+          transition: "all 0.2s ease-in-out",
+          "&:hover": {
+            backgroundColor: "var(--Beige-Very-Bright)",
+            color: "var(--Neutrals-Black-Text)",
+            border: "1px solid var(--Neutrals-Light-Outline)",
+            fontWeight: "600",
+          },
+          "&:focus-visible": {
+            backgroundColor: "var(--Beige-Very-Bright)",
+            color: "var(--Neutrals-Black-Text)",
+            border: "1px solid var(--Neutrals-Light-Outline)",
+            outline: "none",
+            fontWeight: "600",
+          },
+          ...style,
+        }}
+      >
+        {option.label}
+      </MenuItem>
+    );
+  };
+
   return (
     <Box
       sx={{ position: "relative", width: "100%", mb: "12px" }}
@@ -69,7 +107,6 @@ export default function Dropdown({
             style={{
               color: "#ef4444",
               fontFamily: "var(--font-body), system-ui, sans-serif",
-              letterSpacing: "0.01em",
             }}
           >
             *
@@ -79,7 +116,6 @@ export default function Dropdown({
           <span
             style={{
               fontFamily: "var(--font-body), system-ui, sans-serif",
-              letterSpacing: "0.01em",
               fontSize: "0.875rem",
               fontWeight: "400",
               color: "var(--Neutrals-Medium-Outline)",
@@ -142,7 +178,6 @@ export default function Dropdown({
             fontFamily: "var(--font-body), system-ui, sans-serif",
             fontSize: "14px",
             textAlign: "left",
-            letterSpacing: "0.01em",
             color: selectedLabel
               ? "var(--Neutrals-Black-Text)"
               : "var(--Neutrals-Medium-Outline)",
@@ -159,7 +194,7 @@ export default function Dropdown({
         />
       </Button>
 
-      {/* Menu with regular list items */}
+      {/* Menu with virtualized list */}
       <Menu
         id={`${id}-menu`}
         anchorEl={anchorEl}
@@ -173,8 +208,8 @@ export default function Dropdown({
             padding: "0",
             width: "100%",
             outline: "none",
-            maxHeight: "300px",
             overflowY: "auto",
+            overflowX: "hidden",
             "&::-webkit-scrollbar": {
               width: "10px",
               backgroundColor: "#f5f5f5",
@@ -198,42 +233,18 @@ export default function Dropdown({
             boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
             marginTop: "4px",
             width: dropdownRef.current?.clientWidth,
+            overflow: "hidden", // Hide overflow
           },
         }}
       >
-        {sortedOptions.map((option) => (
-          <MenuItem
-            key={option.value}
-            onClick={() => handleSelect(option.value)}
-            sx={{
-              borderRadius: "8px",
-              border: "1px solid #FFF",
-              padding: "10px 16px",
-              fontFamily: "var(--font-body), system-ui, sans-serif",
-              letterSpacing: "0.01em",
-              fontWeight: "500",
-              fontSize: "14px",
-              color: "var(--Neutrals-Medium-Outline)",
-              transition: "all 0.2s ease-in-out",
-              "&:hover": {
-                backgroundColor: "var(--Beige-Very-Bright)",
-                color: "var(--Neutrals-Black-Text)",
-                border: "1px solid var(--Neutrals-Light-Outline)",
-                fontWeight: "600",
-              },
-              // Add this new style for focus-visible
-              "&:focus-visible": {
-                backgroundColor: "var(--Beige-Very-Bright)",
-                color: "var(--Neutrals-Black-Text)",
-                border: "1px solid var(--Neutrals-Light-Outline)",
-                outline: "none",
-                fontWeight: "600",
-              },
-            }}
-          >
-            {option.label}
-          </MenuItem>
-        ))}
+        <List
+          height={Math.min(300, sortedOptions.length * 40)}
+          itemCount={sortedOptions.length}
+          itemSize={40}
+          width={dropdownRef.current?.clientWidth || "100%"}
+        >
+          {renderMenuItem}
+        </List>
       </Menu>
 
       {errorMsg && (
@@ -245,7 +256,6 @@ export default function Dropdown({
             fontSize: "0.875rem",
             color: "#ef4444",
             fontFamily: "var(--font-body), system-ui, sans-serif",
-            letterSpacing: "0.01em",
           }}
         >
           {errorMsg}
