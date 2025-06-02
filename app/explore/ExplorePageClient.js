@@ -152,6 +152,7 @@ export default function ExplorePageClient({ initialDestinations }) {
           </button>
         </div>
       </div>
+
       <div className={styles.destinationContainer}>
         {loading ? (
           <div
