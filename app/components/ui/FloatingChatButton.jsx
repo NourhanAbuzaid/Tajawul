@@ -17,7 +17,10 @@ export default function FloatingChatButton() {
   const textareaRef = useRef(null);
 
   const toggleChat = () => {
-    setIsOpen(!isOpen);
+    setIsOpen((prev) => {
+      if (prev) setIsHovered(false); // Reset hover when closing
+      return !prev;
+    });
   };
 
   const handleInputChange = (e) => {
@@ -35,7 +38,7 @@ export default function FloatingChatButton() {
       {isOpen ? (
         <div className={styles.chatContainer}>
           <div className={styles.chatHeader}>
-            <Link href="/chatRafiq">
+            <Link href="/chat">
               <div className={styles.chatLink}>
                 <LaunchIcon
                   className={styles.launchIcon}
