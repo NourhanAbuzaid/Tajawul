@@ -159,6 +159,7 @@
   padding: 20px;
 }
 
+/* Modify the existing inputWrapper and inputField styles */
 .inputWrapper {
   width: 100%;
   display: flex;
@@ -167,18 +168,41 @@
   border-radius: 50px;
   border: 1px solid var(--Green-Hover);
   box-shadow: 0px 0px 6px 2.5px rgba(97, 165, 155, 0.3);
+  min-height: 56px; /* Add min-height to maintain consistent size */
+  max-height: 200px; /* Prevent the input from growing too large */
+
+  overflow: hidden; /* Hide any overflow */
 }
 
 .inputField {
   flex: 1;
-  min-height: 56px;
+  min-height: 56px; /* Match wrapper min-height */
+  max-height: 200px; /* Match wrapper max-height */
   padding: 16px 24px;
+
   border: none;
   background: transparent;
   resize: none;
   outline: none;
   font-family: var(--font-body);
   font-size: 16px;
+  overflow-y: auto; /* Add scroll when content exceeds max-height */
+  box-sizing: border-box; /* Include padding in height calculations */
+}
+
+/* Add these new styles for better textarea behavior */
+.inputField::-webkit-scrollbar {
+  width: 4px;
+}
+
+.inputField::-webkit-scrollbar-thumb {
+  background: var(--Neutrals-Light-Outline);
+  border-radius: 2px;
+}
+
+.inputField:focus {
+  border: none;
+  box-shadow: none;
 }
 
 .sendIcon {

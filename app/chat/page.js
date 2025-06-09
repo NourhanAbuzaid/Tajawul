@@ -40,6 +40,12 @@ function Chat() {
     setInputValue("");
     setIsLoading(true);
 
+    // Reset textarea height
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = "56px"; // Reset to default height
+    }
+
     // Add user message
     const userMessage = { sender: "user", text: prompt };
     addMessage(userMessage);
