@@ -64,3 +64,130 @@
 .newChatButton:hover::before {
   opacity: 1;
 }
+
+/* Chat Content Styles */
+.chatContent {
+  flex: 1;
+  width: 100%;
+  padding: 32px 0px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.fallbackContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 24px;
+}
+
+.chatFallback {
+  color: var(--Neutrals-Medium-Outline);
+  font-family: var(--font-heading);
+  font-size: 20px;
+  text-align: center;
+  max-width: 400px;
+}
+
+/* Messages Container */
+.messagesContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding-bottom: 20px;
+}
+
+.messageWrapper {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  align-items: flex-start;
+}
+
+.botMessageWrapper {
+  justify-content: flex-start;
+}
+
+.userMessageWrapper {
+  justify-content: flex-end;
+}
+
+/* Message Bubbles */
+.message {
+  max-width: 70%;
+  padding: 10px 16px;
+  border-radius: 16px;
+  word-wrap: break-word;
+  text-align: left;
+}
+
+.userMessage {
+  background-color: var(--Green-Perfect);
+  color: white;
+}
+
+.botMessage {
+  background-color: var(--Neutrals-Background);
+  border: 1px solid var(--Neutrals-Light-Outline);
+  color: var(--Neutrals-Black-Text);
+}
+
+/* Bot Avatar */
+.botAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--Burgundy-Perfect);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid var(--Burgundy-Hover);
+}
+
+/* Input Area */
+.chatInput {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.inputWrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 50px;
+  border: 1px solid var(--Green-Hover);
+  box-shadow: 0px 0px 6px 2.5px rgba(97, 165, 155, 0.3);
+}
+
+.inputField {
+  flex: 1;
+  min-height: 56px;
+  padding: 16px 24px;
+  border: none;
+  background: transparent;
+  resize: none;
+  outline: none;
+  font-family: var(--font-body);
+  font-size: 16px;
+}
+
+.sendIcon {
+  margin-right: 16px;
+  color: var(--Green-Perfect);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.sendIcon:hover {
+  color: var(--Green-Hover);
+}
