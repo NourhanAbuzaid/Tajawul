@@ -180,10 +180,17 @@
   width: 100%;
   height: 100%;
   overflow-y: auto;
-
   display: flex;
   flex-direction: column;
   gap: 12px;
+
+  /* Hide scrollbar for WebKit (Chrome, Safari) */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.messagesContainer::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, and Opera */
 }
 
 .messageWrapper {

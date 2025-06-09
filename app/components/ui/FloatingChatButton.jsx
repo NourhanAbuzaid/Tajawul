@@ -8,6 +8,7 @@ import CustomChatIcon from "./CustomChatIcon";
 import LaunchIcon from "@mui/icons-material/Launch";
 import SendIcon from "@mui/icons-material/Send";
 import styles from "./FloatingChatButton.module.css";
+import useChatStore from "@/store/chatStore";
 import Link from "next/link";
 import API from "@/utils/api";
 
@@ -17,6 +18,13 @@ export default function FloatingChatButton() {
   const [inputValue, setInputValue] = useState("");
   const [messages, setMessages] = useState([]);
   const [hasSentFirstMessage, setHasSentFirstMessage] = useState(false);
+  const {
+    chatId,
+    setChatId,
+    addMessage,
+    setMessages: setGlobalMessages, // ✅ renamed to avoid conflict
+  } = useChatStore();
+
   const textareaRef = useRef(null);
 
   const toggleChat = () => {
@@ -42,43 +50,50 @@ export default function FloatingChatButton() {
     const prompt = inputValue.trim();
     setInputValue("");
 
-    // Add user message to chat
-    setMessages((prev) => [...prev, { sender: "user", text: prompt }]);
+    // Add user message to UI and store
+    const userMessage = { sender: "user", text: prompt };
+    setMessages((prev) => [...prev, userMessage]); // local state
+    addMessage(userMessage); // global Zustand store
 
     try {
-      // Only send to API for the first message
+      let response;
+
       if (!hasSentFirstMessage) {
-        const response = await API.post("/Chats", {
-          prompt: prompt,
-        });
+        // First message: create a new chat session
+        response = await API.post("/Chats", { prompt });
 
-        // Extract the first message response from the API
-        const botResponse =
-          response.data.messages[0]?.response ||
-          "I couldn't generate a response. Please try again.";
+        const { chatId: newChatId, messages } = response.data;
+        const botMessage = messages[0]?.response || "No response received.";
 
-        // Add bot response to chat
-        setMessages((prev) => [...prev, { sender: "bot", text: botResponse }]);
+        // Store chatId globally
+        setChatId(newChatId);
+
+        // Add bot response to state and global store
+        const botResponse = { sender: "bot", text: botMessage };
+        setMessages((prev) => [...prev, botResponse]); // local state
+        addMessage(botResponse); // global state
+        setGlobalMessages([userMessage, botResponse]); // update all messages in Zustand
+
         setHasSentFirstMessage(true);
       } else {
-        // For subsequent messages, just show a placeholder
-        setMessages((prev) => [
-          ...prev,
-          {
-            sender: "bot",
-            text: "Thanks for your message! Please visit the full chat for more interactions.",
-          },
-        ]);
+        // Subsequent messages: continue the chat
+        response = await API.post("/prompt", { chatId, prompt });
+
+        const botMessage =
+          response.data?.response || "No response received from the bot.";
+
+        const botResponse = { sender: "bot", text: botMessage };
+        setMessages((prev) => [...prev, botResponse]); // local state
+        addMessage(botResponse); // global state
       }
     } catch (error) {
       console.error("Error sending message:", error);
-      setMessages((prev) => [
-        ...prev,
-        {
-          sender: "bot",
-          text: "Sorry, I couldn't process your request. Please try again later.",
-        },
-      ]);
+      const errorMessage = {
+        sender: "bot",
+        text: "Sorry, I couldn't process your request. Please try again later.",
+      };
+      setMessages((prev) => [...prev, errorMessage]); // local state
+      addMessage(errorMessage); // global state
     }
   };
 
