@@ -2,7 +2,6 @@ import "./globals.css";
 import { AnimatePresence } from "framer-motion";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { dmSans, merriweather } from "./fonts";
-import FloatingChatButton from "@/components/ui/FloatingChatButton";
 
 export const metadata = {
   title: "Tajawul",
@@ -15,7 +14,6 @@ export default function RootLayout({ children }) {
       <body>
         <AnimatePresence mode="wait">{children}</AnimatePresence>
         <SpeedInsights />
-        <FloatingChatButton />
       </body>
     </html>
   );

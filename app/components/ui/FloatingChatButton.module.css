@@ -1,15 +1,14 @@
-/* app/components/ui/FloatingChatButton.module.css */
 .container {
   position: fixed;
-  right: 22px;
-  bottom: 14px;
   z-index: 1000;
+  right: 22px;
+  bottom: 22px;
 }
 
 .fabButton {
   position: fixed;
-  right: 22px;
-  bottom: 22px;
+  right: 32px;
+  bottom: 32px;
   width: 82px;
   height: 82px;
   border-radius: 50px !important;
@@ -36,7 +35,7 @@
 .chatContainer {
   display: flex;
   width: 369px;
-  height: 400px;
+  height: 420px;
   padding: 14px 14px;
   flex-direction: column;
   justify-content: space-between;
