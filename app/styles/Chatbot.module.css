@@ -170,7 +170,6 @@
   box-shadow: 0px 0px 6px 2.5px rgba(97, 165, 155, 0.3);
   min-height: 56px; /* Add min-height to maintain consistent size */
   max-height: 200px; /* Prevent the input from growing too large */
-
   overflow: hidden; /* Hide any overflow */
 }
 
@@ -178,8 +177,7 @@
   flex: 1;
   min-height: 56px; /* Match wrapper min-height */
   max-height: 200px; /* Match wrapper max-height */
-  padding: 16px 24px;
-
+  padding: 16px 32px;
   border: none;
   background: transparent;
   resize: none;
@@ -206,7 +204,7 @@
 }
 
 .sendIcon {
-  margin-right: 16px;
+  margin-right: 32px;
   color: var(--Green-Perfect);
   cursor: pointer;
   transition: color 0.2s;
