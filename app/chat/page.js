@@ -8,6 +8,7 @@ import CustomChatIcon from "@/components/ui/CustomChatIcon";
 import styles from "@/styles/Chatbot.module.css";
 import useChatStore from "@/store/chatStore";
 import { useState, useRef, useEffect } from "react";
+import ChatLoading from "@/components/ui/ChatLoading";
 import API from "@/utils/api";
 
 function Chat() {
@@ -146,6 +147,20 @@ function Chat() {
                     </div>
                   </div>
                 ))}
+
+                {isLoading && (
+                  <div
+                    className={`${styles.messageWrapper} ${styles.botMessageWrapper}`}
+                  >
+                    <div className={styles.botAvatar}>
+                      <CustomChatIcon size={28} isActive={true} />
+                    </div>
+                    <div className={`${styles.message} ${styles.botMessage}`}>
+                      <ChatLoading />
+                    </div>
+                  </div>
+                )}
+
                 <div ref={messagesEndRef} />
               </div>
             )}
