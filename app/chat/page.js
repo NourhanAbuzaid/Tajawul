@@ -16,6 +16,8 @@ function Chat() {
     useChatStore();
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+  const [displayedBotText, setDisplayedBotText] = useState("");
   const textareaRef = useRef(null);
   const messagesEndRef = useRef(null);
 
@@ -59,11 +61,24 @@ function Chat() {
         const { chatId: newChatId, messages: apiMessages } = response.data;
         setChatId(newChatId);
 
-        const botMessage = {
-          sender: "bot",
-          text: apiMessages[0]?.response || "No response received",
-        };
-        addMessage(botMessage);
+        const fullText = apiMessages[0]?.response || "No response received";
+        setIsTyping(true);
+        setDisplayedBotText(""); // Start with empty string
+
+        let i = -1; // Start from the first character
+        const interval = setInterval(() => {
+          setDisplayedBotText((prev) => prev + fullText.charAt(i));
+          i++;
+          if (i >= fullText.length) {
+            clearInterval(interval);
+            setIsTyping(false);
+            addMessage({
+              sender: "bot",
+              text: fullText,
+            });
+            setDisplayedBotText("");
+          }
+        }, 40); // you can adjust typing speed here
       } else {
         // Continue existing chat
         response = await API.post("/prompt", { chatId, prompt });
@@ -157,6 +172,20 @@ function Chat() {
                     </div>
                     <div className={`${styles.message} ${styles.botMessage}`}>
                       <ChatLoading />
+                    </div>
+                  </div>
+                )}
+                {isTyping && (
+                  <div
+                    className={`${styles.messageWrapper} ${styles.botMessageWrapper}`}
+                  >
+                    <div className={styles.botAvatar}>
+                      <CustomChatIcon size={28} isActive={true} />
+                    </div>
+                    <div
+                      className={`${styles.message} ${styles.botMessage} ${styles.typewriterCursor}`}
+                    >
+                      {displayedBotText}
                     </div>
                   </div>
                 )}

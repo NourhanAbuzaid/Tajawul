@@ -125,6 +125,8 @@
   border-radius: 16px;
   word-wrap: break-word;
   text-align: left;
+  display: flex;
+  align-items: center;
 }
 
 .userMessage {
@@ -136,8 +138,7 @@
   background-color: var(--Neutrals-Background);
   border: 1px solid var(--Neutrals-Light-Outline);
   color: var(--Neutrals-Black-Text);
-  display: flex;
-  align-items: center;
+  justify-content: flex-start;
   min-height: 43px;
 }
 
@@ -256,4 +257,19 @@
     transform: scale(1);
     opacity: 1;
   }
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.typewriterCursor::after {
+  content: "|";
+  animation: blink 1s step-start infinite;
 }
