@@ -122,13 +122,26 @@ export default function FloatingChatButton() {
                 {messages.map((message, index) => (
                   <div
                     key={index}
-                    className={`${styles.message} ${
+                    className={`${styles.messageWrapper} ${
                       message.sender === "user"
-                        ? styles.userMessage
-                        : styles.botMessage
+                        ? styles.userMessageWrapper
+                        : styles.botMessageWrapper
                     }`}
                   >
-                    {message.text}
+                    {message.sender === "bot" && (
+                      <div className={styles.botAvatar}>
+                        <CustomChatIcon size={24} isActive={true} />
+                      </div>
+                    )}
+                    <div
+                      className={`${styles.message} ${
+                        message.sender === "user"
+                          ? styles.userMessage
+                          : styles.botMessage
+                      }`}
+                    >
+                      {message.text}
+                    </div>
                   </div>
                 ))}
               </div>
