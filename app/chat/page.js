@@ -82,7 +82,7 @@ function Chat() {
         }, 40); // you can adjust typing speed here
       } else {
         // Continue existing chat
-        response = await API.post("/prompt", { chatId, prompt });
+        response = await API.post("/Chats/prompt", { chatId, prompt });
         const botMessage = {
           sender: "bot",
           text: response.data?.response || "No response received",
