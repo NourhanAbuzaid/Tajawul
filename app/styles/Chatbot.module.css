@@ -307,7 +307,7 @@
 
 .chatCard:hover {
   border: 1px solid var(--Neutrals-Light-Outline, #d5c3b5);
-  background: var(--Beige-Perfect, #f3ddbb);
+  background: var(--Beige-Hover);
 }
 
 .activeChatCard {
@@ -330,16 +330,12 @@
   gap: 12px;
 }
 
-.chatCardTitle:hover {
-  color: var(--Neutrals-Black-Text, #221a14) !important;
-}
-
 .chatCardPrompt {
   color: var(--Neutrals-Black-Text, #221a14);
   font-family: "DM Sans";
   font-size: 16px;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 100%; /* 16px */
   margin: 0;
   white-space: nowrap;
@@ -355,6 +351,34 @@
 }
 
 .chatCardIcon {
-  color: var(--Neutrals-Light-Outline);
+  color: var(--Neutrals-Medium-Outline);
   margin: 4px 0px 0px 0px !important;
+}
+
+.deleteIcon {
+  color: var(--Neutrals-Medium-Outline);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.deleteIcon:hover {
+  color: var(--Error-Text) !important;
+}
+
+.activeIcon {
+  color: var(--Green-Dark) !important;
+}
+
+.activeText {
+  color: var(--Green-Dark) !important;
+}
+
+/* If you want to change the delete icon to green when active */
+.deleteIcon.activeIcon {
+  color: var(--Green-Dark);
+}
+
+.activeChatCard:hover {
+  background: var(--Green-Very-Bright);
+  border: 1px solid var(--Green-Hover);
 }
