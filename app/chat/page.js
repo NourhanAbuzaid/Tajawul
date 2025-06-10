@@ -9,6 +9,7 @@ import styles from "@/styles/Chatbot.module.css";
 import useChatStore from "@/store/chatStore";
 import { useState, useRef, useEffect } from "react";
 import ChatLoading from "@/components/ui/ChatLoading";
+import ChatHistory from "@/components/ui/ChatHistory";
 import API from "@/utils/api";
 
 function Chat() {
@@ -119,7 +120,7 @@ function Chat() {
           <button className={styles.newChatButton} onClick={handleNewChat}>
             <AddIcon /> New Chat
           </button>
-          {/* Chat history sidebar would go here */}
+          <ChatHistory />
         </div>
 
         <div className={styles.chatInputColumn}>

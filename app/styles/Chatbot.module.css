@@ -273,3 +273,88 @@
   content: "|";
   animation: blink 1s step-start infinite;
 }
+
+/* Chat History List */
+.chatHistoryList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  overflow-y: auto;
+  max-height: calc(100vh - 200px);
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.chatHistoryList::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, and Opera */
+}
+
+/* Chat Card */
+.chatCard {
+  display: flex;
+  flex-direction: row;
+  padding: 8px 16px;
+  align-items: center;
+  gap: 12px;
+  align-self: stretch;
+  border-radius: 12px;
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.chatCard:hover {
+  border: 1px solid var(--Neutrals-Light-Outline, #d5c3b5);
+  background: var(--Beige-Perfect, #f3ddbb);
+}
+
+.activeChatCard {
+  background: var(--Green-Very-Bright);
+  border: 1px solid var(--Green-Hover);
+}
+
+.chatCardContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+  width: 100%;
+}
+
+.chatCardTitle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.chatCardTitle:hover {
+  color: var(--Neutrals-Black-Text, #221a14) !important;
+}
+
+.chatCardPrompt {
+  color: var(--Neutrals-Black-Text, #221a14);
+  font-family: "DM Sans";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 100%; /* 16px */
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chatCardDate {
+  color: var(--Neutrals-Medium-Outline);
+  font-family: var(--font-body);
+  font-size: 12px;
+  margin: 0;
+}
+
+.chatCardIcon {
+  color: var(--Neutrals-Light-Outline);
+  margin: 4px 0px 0px 0px !important;
+}
