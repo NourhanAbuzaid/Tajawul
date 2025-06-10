@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
@@ -11,21 +11,29 @@ import styles from "./FloatingChatButton.module.css";
 import useChatStore from "@/store/chatStore";
 import Link from "next/link";
 import API from "@/utils/api";
+import ChatLoading from "./ChatLoading";
 
 export default function FloatingChatButton() {
   const [isOpen, setIsOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [messages, setMessages] = useState([]);
-  const [hasSentFirstMessage, setHasSentFirstMessage] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+  const [displayedBotText, setDisplayedBotText] = useState("");
   const {
     chatId,
     setChatId,
     addMessage,
-    setMessages: setGlobalMessages, // ✅ renamed to avoid conflict
+    setMessages: setGlobalMessages,
   } = useChatStore();
-
+  const messagesEndRef = useRef(null);
   const textareaRef = useRef(null);
+
+  // Auto-scroll to bottom when messages change
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   const toggleChat = () => {
     setIsOpen((prev) => {
@@ -45,10 +53,17 @@ export default function FloatingChatButton() {
   };
 
   const handleSendMessage = async () => {
-    if (!inputValue.trim()) return;
+    if (!inputValue.trim() || isLoading) return;
 
     const prompt = inputValue.trim();
     setInputValue("");
+    setIsLoading(true);
+
+    // Reset textarea height
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = "48px"; // Reset to default height
+    }
 
     // Add user message to UI and store
     const userMessage = { sender: "user", text: prompt };
@@ -57,34 +72,43 @@ export default function FloatingChatButton() {
 
     try {
       let response;
-
-      if (!hasSentFirstMessage) {
-        // First message: create a new chat session
+      if (!chatId) {
+        // First message - create new chat
         response = await API.post("/Chats", { prompt });
-
-        const { chatId: newChatId, messages } = response.data;
-        const botMessage = messages[0]?.response || "No response received.";
-
-        // Store chatId globally
+        const { chatId: newChatId, messages: apiMessages } = response.data;
         setChatId(newChatId);
 
-        // Add bot response to state and global store
-        const botResponse = { sender: "bot", text: botMessage };
-        setMessages((prev) => [...prev, botResponse]); // local state
-        addMessage(botResponse); // global state
-        setGlobalMessages([userMessage, botResponse]); // update all messages in Zustand
+        const fullText = apiMessages[0]?.response || "No response received";
+        setIsTyping(true);
+        setDisplayedBotText(""); // Start with empty string
 
-        setHasSentFirstMessage(true);
+        // Typewriter effect
+        let i = -1; // Start from the first character
+        const interval = setInterval(() => {
+          setDisplayedBotText((prev) => prev + fullText.charAt(i));
+          i++;
+          if (i >= fullText.length) {
+            clearInterval(interval);
+            setIsTyping(false);
+            const botMessage = {
+              sender: "bot",
+              text: fullText,
+            };
+            setMessages((prev) => [...prev, botMessage]); // local state
+            addMessage(botMessage); // global state
+            setGlobalMessages([userMessage, botMessage]); // update all messages in Zustand
+            setDisplayedBotText("");
+          }
+        }, 40); // Adjust typing speed here
       } else {
-        // Subsequent messages: continue the chat
-        response = await API.post("/prompt", { chatId, prompt });
-
-        const botMessage =
-          response.data?.response || "No response received from the bot.";
-
-        const botResponse = { sender: "bot", text: botMessage };
-        setMessages((prev) => [...prev, botResponse]); // local state
-        addMessage(botResponse); // global state
+        // Continue existing chat
+        response = await API.post("/Chats/prompt", { chatId, prompt });
+        const botMessage = {
+          sender: "bot",
+          text: response.data?.response || "No response received",
+        };
+        setMessages((prev) => [...prev, botMessage]); // local state
+        addMessage(botMessage); // global state
       }
     } catch (error) {
       console.error("Error sending message:", error);
@@ -94,6 +118,8 @@ export default function FloatingChatButton() {
       };
       setMessages((prev) => [...prev, errorMessage]); // local state
       addMessage(errorMessage); // global state
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -159,6 +185,33 @@ export default function FloatingChatButton() {
                     </div>
                   </div>
                 ))}
+                {isLoading && (
+                  <div
+                    className={`${styles.messageWrapper} ${styles.botMessageWrapper}`}
+                  >
+                    <div className={styles.botAvatar}>
+                      <CustomChatIcon size={24} isActive={true} />
+                    </div>
+                    <div className={`${styles.message} ${styles.botMessage}`}>
+                      <ChatLoading />
+                    </div>
+                  </div>
+                )}
+                {isTyping && (
+                  <div
+                    className={`${styles.messageWrapper} ${styles.botMessageWrapper}`}
+                  >
+                    <div className={styles.botAvatar}>
+                      <CustomChatIcon size={24} isActive={true} />
+                    </div>
+                    <div
+                      className={`${styles.message} ${styles.botMessage} ${styles.typewriterCursor}`}
+                    >
+                      {displayedBotText}
+                    </div>
+                  </div>
+                )}
+                <div ref={messagesEndRef} />
               </div>
             )}
           </div>
@@ -172,11 +225,17 @@ export default function FloatingChatButton() {
                 placeholder="Ask anything..."
                 className={styles.inputField}
                 rows={1}
-                style={{ resize: "none", overflow: "hidden" }}
+                disabled={isLoading}
               />
               <SendIcon
                 className={styles.sendIcon}
                 onClick={handleSendMessage}
+                sx={{
+                  color: isLoading
+                    ? "var(--Neutrals-Light-Outline)"
+                    : "var(--Green-Perfect)",
+                  cursor: isLoading ? "not-allowed" : "pointer",
+                }}
               />
             </div>
           </div>
