@@ -46,8 +46,7 @@ const ChatCard = ({ chat, isActive, onClick, onDelete }) => {
 };
 
 const ChatHistory = () => {
-  const { chatId } = useChatStore();
-  const [chats, setChats] = useState([]);
+  const { chatId, chatDates, setChatsWithDates } = useChatStore();
   const [loading, setLoading] = useState(true);
   const { setChatId, setMessages } = useChatStore();
   const [deleteId, setDeleteId] = useState(null);
@@ -58,7 +57,7 @@ const ChatHistory = () => {
     const fetchChats = async () => {
       try {
         const response = await API.get("/Chats");
-        setChats(response.data);
+        setChatsWithDates(response.data);
       } catch (error) {
         console.error("Error fetching chats:", error);
       } finally {
@@ -67,11 +66,10 @@ const ChatHistory = () => {
     };
 
     fetchChats();
-  }, []);
+  }, [setChatsWithDates]);
 
   const handleChatClick = (chat) => {
     setChatId(chat.chatId);
-    // Convert API messages to our format
     const formattedMessages = chat.messages.map((msg) => ({
       sender: "user",
       text: msg.prompt,
@@ -94,7 +92,9 @@ const ChatHistory = () => {
     setIsDeleting(true);
     try {
       await API.delete("/Chats", { data: { chatId: deleteId } });
-      setChats((prev) => prev.filter((c) => c.chatId !== deleteId));
+      // Refetch chats to update the list
+      const response = await API.get("/Chats");
+      setChatsWithDates(response.data);
       if (chatId === deleteId) {
         setChatId(null);
         setMessages([]);
@@ -115,14 +115,19 @@ const ChatHistory = () => {
   return (
     <>
       <div className={styles.chatHistoryList}>
-        {chats.map((chat) => (
-          <ChatCard
-            key={chat.chatId}
-            chat={chat}
-            isActive={chatId === chat.chatId}
-            onClick={() => handleChatClick(chat)}
-            onDelete={handleDelete}
-          />
+        {Object.entries(chatDates).map(([category, chats]) => (
+          <div key={category} className={styles.chatDateGroup}>
+            <div className={styles.chatDateCategory}>{category}</div>
+            {chats.map((chat) => (
+              <ChatCard
+                key={chat.chatId}
+                chat={chat}
+                isActive={chatId === chat.chatId}
+                onClick={() => handleChatClick(chat)}
+                onDelete={handleDelete}
+              />
+            ))}
+          </div>
         ))}
       </div>
       {showConfirm && (

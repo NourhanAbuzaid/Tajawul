@@ -7,6 +7,7 @@ const useChatStore = create((set) => ({
     typeof window !== "undefined"
       ? JSON.parse(localStorage.getItem("chatMessages") || "[]")
       : [],
+  chatDates: {}, // New field to store dates for chats
 
   // Set the entire chat state (chatId and messages)
   setChat: (chatId, messages) => {
@@ -48,6 +49,58 @@ const useChatStore = create((set) => ({
     const messages = useChatStore.getState().messages;
     return messages.length > 0 ? messages[messages.length - 1] : null;
   },
+
+  // Set chats with dates
+  setChatsWithDates: (chats) => {
+    // Sort chats by date (newest first)
+    const sortedChats = [...chats].sort((a, b) => {
+      const dateA = new Date(a.messages[0]?.createdAt || 0);
+      const dateB = new Date(b.messages[0]?.createdAt || 0);
+      return dateB - dateA;
+    });
+
+    // Group chats by date category
+    const groupedDates = {};
+    sortedChats.forEach((chat) => {
+      const date = new Date(chat.messages[0]?.createdAt);
+      const category = getDateCategory(date);
+      if (!groupedDates[category]) {
+        groupedDates[category] = [];
+      }
+      groupedDates[category].push(chat);
+    });
+
+    set({ chatDates: groupedDates });
+  },
 }));
+
+// Helper function to categorize dates
+function getDateCategory(date) {
+  if (!date) return "Other";
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  const lastWeek = new Date(today);
+  lastWeek.setDate(lastWeek.getDate() - 7);
+
+  const inputDate = new Date(date);
+  inputDate.setHours(0, 0, 0, 0);
+
+  if (inputDate.getTime() === today.getTime()) {
+    return "Today";
+  } else if (inputDate.getTime() === yesterday.getTime()) {
+    return "Yesterday";
+  } else if (inputDate > lastWeek) {
+    return "Last Week";
+  } else {
+    return `${inputDate.getFullYear()}-${String(
+      inputDate.getMonth() + 1
+    ).padStart(2, "0")}`;
+  }
+}
 
 export default useChatStore;

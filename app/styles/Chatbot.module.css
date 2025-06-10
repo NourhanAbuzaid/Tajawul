@@ -382,3 +382,19 @@
   background: var(--Green-Very-Bright);
   border: 1px solid var(--Green-Hover);
 }
+
+/* Chat Date Group Styles */
+.chatDateGroup {
+  margin-bottom: 16px;
+}
+
+.chatDateCategory {
+  color: var(--Neutrals-Medium-Outline);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 8px 0;
+  padding: 0 16px;
+}
