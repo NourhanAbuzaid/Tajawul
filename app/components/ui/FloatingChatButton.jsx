@@ -9,11 +9,13 @@ import LaunchIcon from "@mui/icons-material/Launch";
 import SendIcon from "@mui/icons-material/Send";
 import styles from "./FloatingChatButton.module.css";
 import useChatStore from "@/store/chatStore";
+import useAuthStore from "@/store/authStore"; // Import the auth store
 import Link from "next/link";
 import API from "@/utils/api";
 import ChatLoading from "./ChatLoading";
 
 export default function FloatingChatButton() {
+  const { accessToken } = useAuthStore(); // Get the access token
   const [isOpen, setIsOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [inputValue, setInputValue] = useState("");
@@ -29,6 +31,11 @@ export default function FloatingChatButton() {
   } = useChatStore();
   const messagesEndRef = useRef(null);
   const textareaRef = useRef(null);
+
+  // Don't render anything if user is not authenticated
+  if (!accessToken) {
+    return null;
+  }
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
