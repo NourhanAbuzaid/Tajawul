@@ -11,9 +11,10 @@ import { useState, useRef, useEffect } from "react";
 import ChatLoading from "@/components/ui/ChatLoading";
 import ChatHistory from "@/components/ui/ChatHistory";
 import API from "@/utils/api";
+import { useRouter } from "next/navigation";
 
 function Chat() {
-  const { chatId, messages, setChatId, addMessage, setMessages } =
+  const { chatId, messages, setChatId, addMessage, setMessages, clearChat } =
     useChatStore();
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -21,11 +22,32 @@ function Chat() {
   const [displayedBotText, setDisplayedBotText] = useState("");
   const textareaRef = useRef(null);
   const messagesEndRef = useRef(null);
+  const router = useRouter();
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  // Clear chat data when component unmounts
+  useEffect(() => {
+    return () => {
+      clearChat();
+    };
+  }, [clearChat]);
+
+  // Alternatively, you can clear the chat when the route changes
+  useEffect(() => {
+    const handleRouteChange = () => {
+      clearChat();
+    };
+
+    router.events?.on("routeChangeStart", handleRouteChange);
+
+    return () => {
+      router.events?.off("routeChangeStart", handleRouteChange);
+    };
+  }, [clearChat, router.events]);
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
