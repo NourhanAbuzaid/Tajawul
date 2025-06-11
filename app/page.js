@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import useAuthStore from "@/store/authStore";
 import withAuth from "@/utils/withAuth"; // Import the withAuth HOC
 import SearchBar from "@/components/ui/SearchBar";
+import FloatingChatButton from "@/components/ui/FloatingChatButton"; // Import the floating chat button component
 
 function Home() {
   const [showPopup, setShowPopup] = useState(false);
@@ -38,6 +39,7 @@ function Home() {
       <NavBar />
 
       <div className={styles.container}>
+        <FloatingChatButton />
         <main>
           {/* Hero Section */}
           <section className={styles.heroSection}>
