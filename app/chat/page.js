@@ -61,43 +61,45 @@ function Chat() {
         response = await API.post("/Chats", { prompt });
         const { chatId: newChatId, messages: apiMessages } = response.data;
         setChatId(newChatId);
-
-        const fullText = apiMessages[0]?.response || "No response received";
-        setIsTyping(true);
-        setDisplayedBotText(""); // Start with empty string
-
-        let i = -1; // Start from the first character
-        const interval = setInterval(() => {
-          setDisplayedBotText((prev) => prev + fullText.charAt(i));
-          i++;
-          if (i >= fullText.length) {
-            clearInterval(interval);
-            setIsTyping(false);
-            addMessage({
-              sender: "bot",
-              text: fullText,
-            });
-            setDisplayedBotText("");
-          }
-        }, 40); // you can adjust typing speed here
+        handleTypewriterEffect(
+          apiMessages[0]?.response || "No response received"
+        );
       } else {
         // Continue existing chat
         response = await API.post("/Chats/prompt", { chatId, prompt });
-        const botMessage = {
-          sender: "bot",
-          text: response.data?.response || "No response received",
-        };
-        addMessage(botMessage);
+        handleTypewriterEffect(
+          response.data?.response || "No response received"
+        );
       }
     } catch (error) {
       console.error("Error sending message:", error);
-      addMessage({
-        sender: "bot",
-        text: "Sorry, I couldn't process your request. Please try again later.",
-      });
+      handleTypewriterEffect(
+        "Sorry, I couldn't process your request. Please try again later."
+      );
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // Helper function to handle the typewriter effect
+  const handleTypewriterEffect = (fullText) => {
+    setIsTyping(true);
+    setDisplayedBotText(""); // Start with empty string
+
+    let i = -1; // Start from the first character
+    const interval = setInterval(() => {
+      setDisplayedBotText((prev) => prev + fullText.charAt(i));
+      i++;
+      if (i >= fullText.length) {
+        clearInterval(interval);
+        setIsTyping(false);
+        addMessage({
+          sender: "bot",
+          text: fullText,
+        });
+        setDisplayedBotText("");
+      }
+    }, 40); // you can adjust typing speed here
   };
 
   const handleKeyDown = (e) => {
