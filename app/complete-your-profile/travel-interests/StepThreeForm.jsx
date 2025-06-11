@@ -42,7 +42,7 @@ const groupSizeOptions = [
   { label: "Group", value: "group", icon: groupSizeIcons.group },
   {
     label: "Big Group",
-    value: "big-group",
+    value: "big group",
     icon: groupSizeIcons["big-group"],
   },
 ];
