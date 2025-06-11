@@ -140,7 +140,7 @@ export default function FloatingChatButton() {
       {isOpen ? (
         <div className={styles.chatContainer}>
           <div className={styles.chatHeader}>
-            <Link href="/chat">
+            <Link href="/chat-rafiq">
               <div className={styles.chatLink}>
                 <LaunchIcon
                   className={styles.launchIcon}
