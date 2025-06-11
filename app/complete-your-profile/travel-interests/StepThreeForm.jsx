@@ -13,6 +13,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { GreenLoading } from "@/components/ui/Loading";
 import { WhiteLoading } from "@/components/ui/Loading";
+import Divider from "@mui/material/Divider";
 
 // Import local JSON files
 import tagsData from "@/data/tags.json";
@@ -31,7 +32,7 @@ const durationOptions = [
 const budgetOptions = [
   { label: "$ Low", value: "low" },
   { label: "$$ Mid-range", value: "mid" },
-  { label: "$$$$ Luxury", value: "luxury" },
+  { label: "$$$ Luxury", value: "luxury" },
 ];
 
 const groupSizeOptions = [
@@ -224,6 +225,14 @@ export default function StepThreeForm() {
           required
           maxSelections={10}
         />
+        <Divider
+          sx={{
+            height: "1px",
+            width: "100%",
+            bgcolor: "var(--Neautrals-Medium-Outline)",
+            marginBottom: "20px",
+          }}
+        />
         <InterestsTagQuestion
           question="Which destinations are you most interested in?"
           description="Choose 1-10 destination types you'd like to visit"
@@ -232,6 +241,14 @@ export default function StepThreeForm() {
           onChange={handleTagChange("destinationTypes")}
           required
           maxSelections={10}
+        />
+        <Divider
+          sx={{
+            height: "1px",
+            width: "100%",
+            bgcolor: "var(--Neautrals-Medium-Outline)",
+            marginBottom: "20px",
+          }}
         />
         <InterestsTagQuestion
           question="What activities do you enjoy while traveling?"
@@ -242,6 +259,14 @@ export default function StepThreeForm() {
           required
           maxSelections={10}
         />
+        <Divider
+          sx={{
+            height: "1px",
+            width: "100%",
+            bgcolor: "var(--Neautrals-Medium-Outline)",
+            marginBottom: "20px",
+          }}
+        />
         <InterestsTagQuestion
           question="How long do your trips usually last?"
           description="Select 1-3 typical durations for your trips"
@@ -251,6 +276,14 @@ export default function StepThreeForm() {
           required
           maxSelections={3}
         />
+        <Divider
+          sx={{
+            height: "1px",
+            width: "100%",
+            bgcolor: "var(--Neautrals-Medium-Outline)",
+            marginBottom: "20px",
+          }}
+        />
         <InterestsTagQuestion
           question="What's your usual travel budget?"
           description="Select one price range that fits your typical spending"
@@ -259,6 +292,14 @@ export default function StepThreeForm() {
           onChange={handleTagChange("priceRanges")}
           required
           maxSelections={1}
+        />
+        <Divider
+          sx={{
+            height: "1px",
+            width: "100%",
+            bgcolor: "var(--Neautrals-Medium-Outline)",
+            marginBottom: "20px",
+          }}
         />
         <InterestsTagQuestion
           question="Who do you usually travel with?"
