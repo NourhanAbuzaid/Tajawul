@@ -42,7 +42,7 @@
 
 /* Fallback for gradient text (if needed) */
 .luxury span {
-  background: -webkit-linear-gradient(-93deg, #ffe597 -8.59%, #b1900d 124.74%);
+  background: -webkit-linear-gradient(-93deg, #ffebae -8.59%, #e0b919 124.74%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
