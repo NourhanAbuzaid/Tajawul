@@ -59,12 +59,15 @@ const processJsonData = (data) => {
   return [];
 };
 
-// Convert string array to options format
+// Convert string array to options format, sorted alphabetically
 const convertToOptions = (items) => {
-  return items.map((item) => ({
-    label: item,
-    value: item,
-  }));
+  return items
+    .slice() // copy to avoid mutating original
+    .sort((a, b) => a.localeCompare(b))
+    .map((item) => ({
+      label: item,
+      value: item,
+    }));
 };
 
 export default function StepThreeForm() {
