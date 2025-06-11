@@ -196,7 +196,7 @@
 
 .selectionLimitMessage {
   display: block;
-  color: var(--Error-Text);
+  color: var(--Mid-Stroke);
   font-size: 0.875rem;
   margin-top: 0.25rem;
   font-family: var(--font-body), system-ui, sans-serif;
