@@ -13,6 +13,7 @@ import ImageList from "@/components/ui/ImageList";
 import styles from "@/destination.module.css";
 import PriceRange from "./tags/PriceRange";
 import EditTags from "@/components/ui/edit/EditTags";
+import WriteReview from "@/components/ui/edit/WriteReview";
 import GroupSize from "./tags/GroupSize";
 import Tag from "./tags/Tag";
 import DestinationIdHandler from "@/components/DestinationIdHandler";
@@ -372,7 +373,7 @@ export default async function DestinationDetails({ destinationId }) {
           </div>
           <div id="reviews" className={styles.section}>
             <h2>Reviews</h2>
-            <p>Reviews will be here</p>
+            <WriteReview destinationId={destinationId} />
           </div>
         </div>
       </div>
