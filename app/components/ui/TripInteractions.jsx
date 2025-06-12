@@ -11,16 +11,25 @@ import API from "@/utils/api";
 import useAuthStore from "@/store/authStore";
 import styles from "@/trip.module.css";
 import { SmolGreenLoading } from "./Loading";
+import Image from "next/image";
+import useTripInteractionsStore from "app/store/TripInteractionsStore";
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 
-const TripInteractions = ({ tripId }) => {
+
+const TripInteractions = ({ tripId, onCoverUpdate }) => {
   const [interactions, setInteractions] = useState({
     favorite: false,
     wish: false,
     clone: false
   });
   const [loading, setLoading] = useState(true);
-  const { accessToken } = useAuthStore();
+  const { accessToken, roles } = useAuthStore();
   const [showCoverUpload, setShowCoverUpload] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [showProtectedPopup, setShowProtectedPopup] = useState(false);
+
+  const { setFavoritesCount, setWishesCount, setClonesCount } = useTripInteractionsStore();
 
   useEffect(() => {
     const fetchInteractionStatus = async () => {
@@ -49,24 +58,69 @@ const TripInteractions = ({ tripId }) => {
   }, [tripId, accessToken]);
 
   const handleInteraction = async (type) => {
-    try {
-      const currentValue = interactions[type];
-      setInteractions((prev) => ({ ...prev, [type]: !currentValue }));
+    if (!roles.includes("User")) {
+      setShowProtectedPopup(true);
+      return;
+    }
 
-      if (currentValue) {
-        await API.delete(`/user/trip/${tripId}/${type}`);
-      } else {
-        await API.post(`/user/trip/${tripId}/${type}`);
+    const currentValue = interactions[type];
+    setInteractions((prev) => ({ ...prev, [type]: !currentValue }));
+
+    try {
+      const res = currentValue
+        ? await API.delete(`/user/trip/${tripId}/${type}`)
+        : await API.post(`/user/trip/${tripId}/${type}`);
+
+      if (res?.data) {
+        if (res.data.favoritesCount !== undefined)
+          setFavoritesCount(res.data.favoritesCount);
+        if (res.data.wishesCount !== undefined)
+          setWishesCount(res.data.wishesCount);
+        if (res.data.clonesCount !== undefined)
+          setClonesCount(res.data.clonesCount);
       }
     } catch (error) {
       console.error(`Failed to update ${type} status:`, error);
-      setInteractions((prev) => ({ ...prev, [type]: !prev[type] }));
+      setInteractions((prev) => ({ ...prev, [type]: currentValue }));
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+    }
+  };
+
+  const handleUpload = async () => {
+    if (!selectedFile) return;
+    
+    try {
+      setUploading(true);
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+
+      const response = await API.post(`/Trip/${tripId}/coverImage`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      if (response.data) {
+        onCoverUpdate(response.data.coverImage);
+        setShowCoverUpload(false);
+        setSelectedFile(null);
+      }
+    } catch (error) {
+      console.error("Failed to upload cover image:", error);
+    } finally {
+      setUploading(false);
     }
   };
 
   if (loading) {
     return (
-      <div className={styles.buttomRightContainer}>
+      <>
         <button className={styles.saveButton}>
           <SmolGreenLoading />
         </button>
@@ -76,30 +130,33 @@ const TripInteractions = ({ tripId }) => {
         <button className={styles.saveButton}>
           <SmolGreenLoading />
         </button>
-      </div>
+      </>
     );
   }
 
   if (!accessToken) {
     return (
-      <div className={styles.buttomRightContainer}>
-        <div className={styles.saveButton}>Sign in to interact</div>
-      </div>
+      <button
+        className={styles.saveButton}
+        onClick={() => (window.location.href = "/login")}
+      >
+        Sign in to interact
+      </button>
     );
   }
 
-  return (
+return (
+  <>
     <div className={styles.buttomRightContainer}>
-      {/* Camera Icon Button */}
-      <button
-        className={styles.cameraButton}
+      {/* Camera button moved to the left */}
+      <button 
+        className={`${styles.saveButton} ${styles.cameraButton}`}
         onClick={() => setShowCoverUpload(true)}
-        aria-label="Change cover photo"
       >
-        <CameraAltIcon fontSize="small" />
+        <CameraAltIcon />
       </button>
 
-      {/* Favorite Button */}
+      {/* Other interaction buttons */}
       <button
         className={`${styles.saveButton} ${
           interactions.favorite ? styles.activeButton : ""
@@ -110,7 +167,6 @@ const TripInteractions = ({ tripId }) => {
         {interactions.favorite ? "Favorited" : "Favorite"}
       </button>
 
-      {/* Wish Button */}
       <button
         className={`${styles.saveButton} ${
           interactions.wish ? styles.activeButton : ""
@@ -121,7 +177,6 @@ const TripInteractions = ({ tripId }) => {
         {interactions.wish ? "Wished" : "Wish"}
       </button>
 
-      {/* Clone Button */}
       <button
         className={`${styles.saveButton} ${
           interactions.clone ? styles.activeButton : ""
@@ -132,6 +187,92 @@ const TripInteractions = ({ tripId }) => {
         Clone
       </button>
     </div>
+
+    {showCoverUpload && (
+      <div className={styles.popupOverlay}>
+        <div className={styles.popupContainer}>
+          <h2>Update Cover Image</h2>
+          <p className={styles.popupDescription}>
+            Accepted formats: JPG, JPEG, PNG, WEBP<br />
+            Maximum file size: 2MB
+          </p>
+          
+          <div className={styles.uploadArea}>
+            <input
+              type="file"
+              id="cover-upload"
+              accept="image/*"
+              onChange={handleFileChange}
+              className={styles.fileInput}
+            />
+            <label htmlFor="cover-upload" className={styles.uploadCoverButton}>
+              <AddPhotoAlternateIcon />
+              {selectedFile ? "Change Image" : "Upload Cover"}
+            </label>
+          </div>
+          
+          {selectedFile && (
+            <div className={styles.previewContainer}>
+              <img 
+                src={URL.createObjectURL(selectedFile)} 
+                alt="Preview" 
+                className={styles.imagePreview}
+              />
+            </div>
+          )}
+          
+          <div className={styles.popupButtons}>
+            <button 
+              className={styles.popupCancelButton}
+              onClick={() => {
+                setShowCoverUpload(false);
+                setSelectedFile(null);
+              }}
+            >
+              Cancel
+            </button>
+            <button 
+              className={styles.popupConfirmButton}
+              onClick={handleUpload}
+              disabled={!selectedFile || uploading}
+            >
+              {uploading ? "Uploading..." : "Upload"}
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
+
+      {showProtectedPopup && (
+        <div className={styles.popupOverlay}>
+          <div className={styles.popupContent}>
+            <button
+              className={styles.closeButton}
+              onClick={() => setShowProtectedPopup(false)}
+            >
+              ✕
+            </button>
+            <div className={styles.completedStep}>
+              <Image
+                src="/protected-feature.svg"
+                alt="Protected feature"
+                width={450}
+                height={350}
+                className={styles.completedImage}
+              />
+              <button
+                className={styles.ctaButton}
+                onClick={() =>
+                  (window.location.href = "/complete-your-profile")
+                }
+              >
+                Complete Your Profile to Access
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

@@ -396,29 +396,324 @@
 }
 
 /* ///////////////////////////////////////////////// */
-/* Add to trip.module.css */
-.cameraButton {
+
+.buttomRightContainer {
   display: flex;
-  height: 40px;
+  gap: 8px;
+  /* Add this to ensure items are displayed left-to-right */
+  flex-direction: row;
+}
+
+/* Optional: If you want the camera button to have a different style */
+.buttomRightContainer .cameraButton {
+  padding: 0;
   width: 40px;
-  padding: 8px;
+  border-radius: 50%;
+  order: -1; /* This ensures it appears first */
+  margin-right: 8px; /* Add some spacing between camera and other buttons */
+}
+/* //////////////////////////////////////// */
+/* Popup styles */
+/* Popup styles */
+/* Popup styles */
+.popupOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
   justify-content: center;
   align-items: center;
-  gap: 8px;
-  border-radius: 24px;
-  background: var(--Neutrals-Background, #fffbf4);
+  z-index: 1000;
+}
+
+.popupContainer {
+  background-color: var(--Neutrals-Background, #fffbf4);
+  padding: 24px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.popupContainer h3 {
+  margin-top: 0;
   color: var(--Neutrals-Black-Text, #221a14);
-  border: 1.5px solid var(--Neutrals-Light-Outline, #d5c3b5);
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.popupContent {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.fileInput {
+  display: none;
+}
+
+.uploadButton {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: var(--Neutrals-Light-Outline, #d5c3b5);
+  color: var(--Neutrals-Black-Text, #221a14);
+  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  text-align: center;
+  transition: all 0.2s ease;
 }
 
-.cameraButton:hover {
-  background: var(--Green-Very-Bright);
-  border: 1.5px solid var(--Green-Hover);
+.uploadButton:hover {
+  background-color: var(--Neutrals-Medium-Outline, #c0b0a3);
+}
+
+.previewContainer {
+  width: 100%;
+  max-height: 300px;
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid var(--Neutrals-Light-Outline, #d5c3b5);
+}
+
+.imagePreview {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.popupActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.cancelButton {
+  padding: 10px 20px;
+  background-color: transparent;
+  color: var(--Neutrals-Black-Text, #221a14);
+  border: 1px solid var(--Neutrals-Light-Outline, #d5c3b5);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cancelButton:hover {
+  background-color: var(--Neutrals-Light-Outline, #d5c3b5);
+}
+
+.uploadButtonAction {
+  padding: 10px 20px;
+  background-color: var(--Green-Very-Bright);
   color: var(--Green-Dark);
+  border: 1px solid var(--Green-Hover);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.cameraButton svg {
-  font-size: 20px;
+.uploadButtonAction:hover:not(:disabled) {
+  background-color: var(--Green-Hover);
+  color: var(--Neutrals-Background);
+}
+
+.uploadButtonAction:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.popupContainer h3 {
+  margin-top: 0;
+  color: var(--Neutrals-Black-Text, #221a14);
+  font-size: 24px;
+  margin-bottom: 12px;
+  font-weight: 700;
+}
+
+.uploadInstructions {
+  color: var(--Neutrals-Medium-Text, #837468);
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 14px;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.popupContent {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.uploadButton {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: var(--Neutrals-Light-Outline, #d5c3b5);
+  color: var(--Neutrals-Black-Text, #221a14);
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  width: fit-content;
+}
+
+.uploadButton:hover {
+  background-color: var(--Neutrals-Medium-Outline, #c0b0a3);
+}
+
+.previewContainer {
+  width: 100%;
+  max-height: 300px;
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid var(--Neutrals-Light-Outline, #d5c3b5);
+}
+
+.imagePreview {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.popupActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+.popupContainer {
+  background-color: var(--Neutrals-Background, #fffbf4);
+  padding: 32px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  text-align: center;
+}
+
+.popupContainer h2 {
+  color: var(--Neutrals-Black-Text, #221a14);
+  font-family: var(--font-heading), Georgia, serif;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.popupDescription {
+  color: var(--Blue-Perfect);
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 14px;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.uploadArea {
+  margin-bottom: 24px;
+}
+
+.uploadButton {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: var(--Neutrals-Light-Outline, #d5c3b5);
+  color: var(--Neutrals-Black-Text, #221a14);
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.uploadButton:hover {
+  background-color: var(--Neutrals-Medium-Outline, #c0b0a3);
+}
+
+.previewContainer {
+  width: 100%;
+  max-height: 300px;
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid var(--Neutrals-Light-Outline, #d5c3b5);
+  margin-bottom: 24px;
+}
+
+.imagePreview {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.popupActions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* Add this to your trip.module.css file */
+.popupButtons {
+    margin-top: 40px;
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    justify-content: center;
+}
+
+.popupCancelButton {
+    flex: 1;
+    background: #f5f5f5;
+    color: #333;
+    border: none;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: var(--font-heading);
+    transition: all 0.2s ease;
+}
+
+.popupCancelButton:hover {
+    background: #e0e0e0;
+}
+
+.popupConfirmButton {
+    flex: 1;
+    background: linear-gradient(268deg, rgb(37, 63, 59) 23.52%, rgb(92, 156, 146) 136.03%);
+    color: rgb(255, 255, 255);
+    border: none;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: var(--font-heading);
+    transition: all 0.2s ease;
+}
+
+.popupConfirmButton:hover {
+    opacity: 0.9;
+}
+
+.popupConfirmButton:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.uploadCoverButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--Neutrals-Black-Text);
+    color: var(--Neutrals-Background);
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    width: fit-content;
+    margin: 0 auto;
+}
+
+.uploadCoverButton:hover {
+    background: var(--Neutrals-Dark-Outline);
 }
