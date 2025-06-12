@@ -33,7 +33,7 @@ const Tag = ({ options = null }) => {
 
   // Function to get icon based on text content
   const getIconForTag = (text) => {
-    if (!text) return <DefaultIcon className={styles.icon} />;
+    if (!text) return;
 
     const lowerText = text.toLowerCase();
 
@@ -64,7 +64,7 @@ const Tag = ({ options = null }) => {
     if (lowerText.includes("photography"))
       return <PhotographyIcon className={styles.icon} />;
 
-    return <DefaultIcon className={styles.icon} />;
+    return;
   };
 
   // Capitalize first letter of each word

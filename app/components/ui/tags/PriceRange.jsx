@@ -10,7 +10,7 @@ const PriceRange = ({ priceRange }) => {
       case "mid":
         return { text: "$$ Mid-Range", className: styles.mid };
       case "luxury":
-        return { text: "$$$$ Luxury", className: styles.luxury };
+        return { text: "$$$ Luxury", className: styles.luxury };
       default:
         return null;
     }

@@ -1,0 +1,35 @@
+.container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 120%;
+}
+
+.same {
+  color: #10a833; /* Green for same country */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 120%;
+}
+
+.different {
+  color: #d70000; /* Red for different countries */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 120%;
+}
