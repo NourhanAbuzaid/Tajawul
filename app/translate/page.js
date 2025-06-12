@@ -5,10 +5,10 @@ import styles from "@/styles/Translate.module.css";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import HistoryIcon from "@mui/icons-material/History";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import TranslationDropdown from "@/components/ui/MUIdropdown/TranslationDropdown";
 import API from "@/utils/api";
-import useAuthStore from "@/store/authStore";
 import withAuth from "@/utils/withAuth";
 
 function Translate() {
@@ -20,6 +20,9 @@ function Translate() {
   const [translatedText, setTranslatedText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [showCopied, setShowCopied] = useState(false);
+  const [translationId, setTranslationId] = useState("");
 
   const handleFromLanguageSelect = (languageName, languageCode) => {
     setFromLanguage(languageName);
@@ -55,15 +58,11 @@ function Translate() {
       });
 
       setTranslatedText(response.data.translatedText);
+      setIsFavorite(response.data.isFavorite || false);
+      setTranslationId(response.data.translationId); // Store the translationId
     } catch (error) {
       console.error("Translation error:", error);
       setError("Translation failed. Please try again.");
-
-      // Handle unauthorized error (token expired)
-      if (error.response?.status === 401) {
-        useAuthStore.getState().clearAuth();
-        window.location.href = "/login";
-      }
     } finally {
       setIsLoading(false);
     }
@@ -73,6 +72,34 @@ function Translate() {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleTranslate();
+    }
+  };
+
+  const handleCopy = () => {
+    if (!translatedText) return;
+
+    navigator.clipboard
+      .writeText(translatedText)
+      .then(() => {
+        setShowCopied(true);
+        setTimeout(() => setShowCopied(false), 2000);
+      })
+      .catch((err) => {
+        console.error("Failed to copy text: ", err);
+      });
+  };
+  const toggleFavorite = async () => {
+    if (!translationId) return;
+
+    try {
+      const response = await API.patch("/Translation/toggle-favorite", {
+        translationItemId: translationId,
+      });
+
+      setIsFavorite(response.data.isFavorite);
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
+      setError("Failed to update favorite status");
     }
   };
 
@@ -135,6 +162,33 @@ function Translate() {
               placeholder="Translated text appears here."
               value={translatedText}
             ></textarea>
+            <div className={styles.textareaButtons}>
+              <button
+                className={styles.copyButton}
+                onClick={handleCopy}
+                disabled={!translatedText}
+                aria-label="Copy translation"
+              >
+                <ContentCopyIcon fontSize="small" />
+                {showCopied && (
+                  <span className={styles.copiedText}>Copied!</span>
+                )}
+              </button>
+              <button
+                className={styles.favoriteButton}
+                onClick={toggleFavorite}
+                disabled={!translatedText}
+                aria-label={
+                  isFavorite ? "Remove from favorites" : "Add to favorites"
+                }
+              >
+                {isFavorite ? (
+                  <FavoriteIcon fontSize="small" color="error" />
+                ) : (
+                  <FavoriteBorderIcon fontSize="small" />
+                )}
+              </button>
+            </div>
           </div>
           <div className={styles.translateButtonContainer}></div>
         </div>
