@@ -10,6 +10,18 @@ import TranslationDropdown from "@/components/ui/MUIdropdown/TranslationDropdown
 export default function Translate() {
   const [fromLanguage, setFromLanguage] = useState("Choose Language");
   const [toLanguage, setToLanguage] = useState("Choose Language");
+  const [fromLanguageCode, setFromLanguageCode] = useState("");
+  const [toLanguageCode, setToLanguageCode] = useState("");
+
+  const handleFromLanguageSelect = (languageName, languageCode) => {
+    setFromLanguage(languageName);
+    setFromLanguageCode(languageCode);
+  };
+
+  const handleToLanguageSelect = (languageName, languageCode) => {
+    setToLanguage(languageName);
+    setToLanguageCode(languageCode);
+  };
 
   return (
     <div className={styles.container}>
@@ -29,7 +41,7 @@ export default function Translate() {
             <span className={styles.chooseLanguageText}> From:</span>
             <TranslationDropdown
               selectedLanguage={fromLanguage}
-              onLanguageSelect={setFromLanguage}
+              onLanguageSelect={handleFromLanguageSelect}
             />
           </div>
           <div className={styles.translateInputContainer}>
@@ -47,7 +59,7 @@ export default function Translate() {
             <span className={styles.chooseLanguageText}> To:</span>
             <TranslationDropdown
               selectedLanguage={toLanguage}
-              onLanguageSelect={setToLanguage}
+              onLanguageSelect={handleToLanguageSelect}
             />
           </div>
           <div className={styles.translateOutputContainer}>
