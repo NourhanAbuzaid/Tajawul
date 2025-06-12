@@ -13,6 +13,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { GreenLoading } from "@/components/ui/Loading";
 import { WhiteLoading } from "@/components/ui/Loading";
+import Divider from "@mui/material/Divider";
+
+// Import local JSON files
+import tagsData from "@/data/tags.json";
+import destinationTypesData from "@/data/destinationTypes.json";
+import activitiesData from "@/data/activities.json";
 
 const durationOptions = [
   { label: "Day", value: "Day" },
@@ -26,7 +32,7 @@ const durationOptions = [
 const budgetOptions = [
   { label: "$ Low", value: "low" },
   { label: "$$ Mid-range", value: "mid" },
-  { label: "$$$$ Luxury", value: "luxury" },
+  { label: "$$$ Luxury", value: "luxury" },
 ];
 
 const groupSizeOptions = [
@@ -36,10 +42,34 @@ const groupSizeOptions = [
   { label: "Group", value: "group", icon: groupSizeIcons.group },
   {
     label: "Big Group",
-    value: "big-group",
+    value: "big group",
     icon: groupSizeIcons["big-group"],
   },
 ];
+
+// Helper function to process JSON data
+const processJsonData = (data) => {
+  // If data is an array, return it directly
+  if (Array.isArray(data)) return data;
+  // If data has an 'activities' property that's an array (like your example)
+  if (data.activities && Array.isArray(data.activities)) return data.activities;
+  if (data.tags && Array.isArray(data.tags)) return data.tags;
+  if (data.destinations && Array.isArray(data.destinations))
+    return data.destinations;
+  // Fallback to empty array
+  return [];
+};
+
+// Convert string array to options format, sorted alphabetically
+const convertToOptions = (items) => {
+  return items
+    .slice() // copy to avoid mutating original
+    .sort((a, b) => a.localeCompare(b))
+    .map((item) => ({
+      label: item,
+      value: item,
+    }));
+};
 
 export default function StepThreeForm() {
   const [selectedTags, setSelectedTags] = useState({
@@ -50,16 +80,12 @@ export default function StepThreeForm() {
     priceRanges: [],
     groupSizes: [],
   });
-  const [tagsOptions, setTagsOptions] = useState([]);
-  const [destinationTypesOptions, setDestinationTypesOptions] = useState([]);
-  const [activitiesOptions, setActivitiesOptions] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
-  const [loadError, setLoadError] = useState(null); // Renamed from error
-  const [submitError, setSubmitError] = useState(null); // New state for submission errors
+  const [loadError, setLoadError] = useState(null);
+  const [submitError, setSubmitError] = useState(null);
   const [success, setSuccess] = useState("");
 
-  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const router = useRouter();
   const { roles, addRole } = useAuthStore();
 
@@ -69,43 +95,30 @@ export default function StepThreeForm() {
     }
   }, [roles, router]);
 
+  // Process the JSON data on component mount
   useEffect(() => {
-    const fetchOptions = async () => {
-      try {
-        // Fetch all options in parallel
-        const [tagsResponse, destinationTypesResponse, activitiesResponse] =
-          await Promise.all([
-            axios.get(`${baseUrl}/tags`),
-            axios.get(`${baseUrl}/destination-types`),
-            axios.get(`${baseUrl}/activities`),
-          ]);
+    try {
+      // Process each JSON file according to its structure
+      const tagsOptions = convertToOptions(processJsonData(tagsData));
+      const destinationTypesOptions = convertToOptions(
+        processJsonData(destinationTypesData)
+      );
+      const activitiesOptions = convertToOptions(
+        processJsonData(activitiesData)
+      );
 
-        // Process the responses to match the expected format
-        const processOptions = (items) => {
-          return (
-            items?.map((item) => ({
-              label: item.name,
-              value: item.name,
-            })) || []
-          );
-        };
-
-        setTagsOptions(processOptions(tagsResponse.data));
-        setDestinationTypesOptions(
-          processOptions(destinationTypesResponse.data)
-        );
-        setActivitiesOptions(processOptions(activitiesResponse.data));
-
-        setIsLoading(false);
-      } catch (err) {
-        console.error("Failed to fetch options:", err);
-        setLoadError(err);
-        setIsLoading(false);
-      }
-    };
-
-    fetchOptions();
-  }, [baseUrl]);
+      // Store the processed options in state
+      setSelectedTags((prev) => ({
+        ...prev,
+        tagsOptions,
+        destinationTypesOptions,
+        activitiesOptions,
+      }));
+    } catch (err) {
+      console.error("Failed to process options:", err);
+      setLoadError(err);
+    }
+  }, []);
 
   const handleTagChange = (field) => (selectedValues) => {
     setSelectedTags((prev) => ({
@@ -146,7 +159,6 @@ export default function StepThreeForm() {
           "Travel preferences saved successfully! Redirecting..."
       );
 
-      // Add this redirect after 2 seconds
       setTimeout(() => {
         router.push("/complete-your-profile");
       }, 2000);
@@ -160,7 +172,6 @@ export default function StepThreeForm() {
     }
   };
 
-  // Show completion message if user has already completed this step
   if (roles.includes("Person") && roles.includes("CompletedInterestInfo")) {
     return (
       <div className={styles.container}>
@@ -187,7 +198,6 @@ export default function StepThreeForm() {
     );
   }
 
-  if (isLoading) return <GreenLoading />;
   if (loadError && !submitLoading) {
     return <div>Error loading options. Please try again later.</div>;
   }
@@ -209,29 +219,53 @@ export default function StepThreeForm() {
         <InterestsTagQuestion
           question="What types of travel experiences excite you the most?"
           description="Select 1-10 options that best match your travel preferences"
-          options={tagsOptions}
+          options={convertToOptions(processJsonData(tagsData))}
           selectedValues={selectedTags.tags}
           onChange={handleTagChange("tags")}
           required
           maxSelections={10}
         />
+        <Divider
+          sx={{
+            height: "1px",
+            width: "100%",
+            bgcolor: "var(--Neautrals-Medium-Outline)",
+            marginBottom: "20px",
+          }}
+        />
         <InterestsTagQuestion
           question="Which destinations are you most interested in?"
           description="Choose 1-10 destination types you'd like to visit"
-          options={destinationTypesOptions}
+          options={convertToOptions(processJsonData(destinationTypesData))}
           selectedValues={selectedTags.destinationTypes}
           onChange={handleTagChange("destinationTypes")}
           required
           maxSelections={10}
         />
+        <Divider
+          sx={{
+            height: "1px",
+            width: "100%",
+            bgcolor: "var(--Neautrals-Medium-Outline)",
+            marginBottom: "20px",
+          }}
+        />
         <InterestsTagQuestion
           question="What activities do you enjoy while traveling?"
           description="Pick 1-10 activities that make your trips memorable"
-          options={activitiesOptions}
+          options={convertToOptions(processJsonData(activitiesData))}
           selectedValues={selectedTags.activities}
           onChange={handleTagChange("activities")}
           required
           maxSelections={10}
+        />
+        <Divider
+          sx={{
+            height: "1px",
+            width: "100%",
+            bgcolor: "var(--Neautrals-Medium-Outline)",
+            marginBottom: "20px",
+          }}
         />
         <InterestsTagQuestion
           question="How long do your trips usually last?"
@@ -242,6 +276,14 @@ export default function StepThreeForm() {
           required
           maxSelections={3}
         />
+        <Divider
+          sx={{
+            height: "1px",
+            width: "100%",
+            bgcolor: "var(--Neautrals-Medium-Outline)",
+            marginBottom: "20px",
+          }}
+        />
         <InterestsTagQuestion
           question="What's your usual travel budget?"
           description="Select one price range that fits your typical spending"
@@ -250,6 +292,14 @@ export default function StepThreeForm() {
           onChange={handleTagChange("priceRanges")}
           required
           maxSelections={1}
+        />
+        <Divider
+          sx={{
+            height: "1px",
+            width: "100%",
+            bgcolor: "var(--Neautrals-Medium-Outline)",
+            marginBottom: "20px",
+          }}
         />
         <InterestsTagQuestion
           question="Who do you usually travel with?"

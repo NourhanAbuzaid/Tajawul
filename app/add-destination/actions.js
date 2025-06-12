@@ -1,7 +1,14 @@
 import { z } from "zod";
 
 export const addDestinationSchema = z.object({
-  name: z.string().min(3, "Name must be at least 3 characters long").max(100),
+  name: z
+    .string()
+    .min(3, "Name must be at least 3 characters long")
+    .max(100)
+    .regex(
+      /^[a-zA-Z0-9 _-]+$/,
+      "Please use only letters, numbers, spaces, underscores (_), or hyphens (-)."
+    ),
   description: z
     .string()
     .min(10, "Description must be at least 10 characters long")
@@ -41,11 +48,14 @@ export const addDestinationSchema = z.object({
     .refine(
       (value) => {
         if (!value) return true; // Optional field, skip validation if empty
+        // Check for exactly 4 digits with no spaces
+        if (!/^\d{4}$/.test(value)) return false;
         const year = parseInt(value);
         return !isNaN(year) && year >= 1000 && year <= new Date().getFullYear();
       },
       {
-        message: "Must be a valid year between 1000 and current year",
+        message:
+          "Please enter a valid 4-digit year (1000 to current year), with no spaces.",
       }
     ),
 

@@ -78,6 +78,29 @@
   display: flex;
   flex-wrap: wrap;
   margin-top: 4px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+/* For Webkit browsers (Chrome, Safari, Edge) */
+.optionsContainer::-webkit-scrollbar {
+  width: 10px;
+}
+
+.optionsContainer::-webkit-scrollbar-track {
+  background: #daede5;
+  border-radius: 4px;
+}
+
+.optionsContainer::-webkit-scrollbar-thumb {
+  background-color: var(--Green-Hover);
+  border-radius: 20px;
+  border: 1px solid transparent;
+  background-clip: content-box;
+}
+
+.optionsContainer::-webkit-scrollbar-thumb:hover {
+  background-color: var(--Green-Perfect);
 }
 
 .iconContainer {
@@ -196,7 +219,7 @@
 
 .selectionLimitMessage {
   display: block;
-  color: var(--Error-Text);
+  color: var(--Mid-Stroke);
   font-size: 0.875rem;
   margin-top: 0.25rem;
   font-family: var(--font-body), system-ui, sans-serif;
