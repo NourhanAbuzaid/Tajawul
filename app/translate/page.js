@@ -22,6 +22,7 @@ function Translate() {
   const [error, setError] = useState("");
   const [isFavorite, setIsFavorite] = useState(false);
   const [showCopied, setShowCopied] = useState(false);
+  const [showFavorited, setShowFavorited] = useState(false); // New state for favorite feedback
   const [translationId, setTranslationId] = useState("");
 
   const handleFromLanguageSelect = (languageName, languageCode) => {
@@ -88,15 +89,15 @@ function Translate() {
         console.error("Failed to copy text: ", err);
       });
   };
+
   const toggleFavorite = async () => {
     if (!translationId) return;
 
     try {
-      const response = await API.patch("/Translation/toggle-favorite", {
+      await API.patch("/Translation/toggle-favorite", {
         translationItemId: translationId,
       });
-
-      setIsFavorite(response.data.isFavorite);
+      setIsFavorite((prev) => !prev);
     } catch (error) {
       console.error("Error toggling favorite:", error);
       setError("Failed to update favorite status");
@@ -169,13 +170,15 @@ function Translate() {
                 disabled={!translatedText}
                 aria-label="Copy translation"
               >
-                <ContentCopyIcon fontSize="small" />
                 {showCopied && (
                   <span className={styles.copiedText}>Copied!</span>
                 )}
+                <ContentCopyIcon sx={{ fontSize: 20 }} />
               </button>
               <button
-                className={styles.favoriteButton}
+                className={`${styles.favoriteButton} ${
+                  isFavorite ? styles.favoriteActive : ""
+                }`}
                 onClick={toggleFavorite}
                 disabled={!translatedText}
                 aria-label={
@@ -183,9 +186,20 @@ function Translate() {
                 }
               >
                 {isFavorite ? (
-                  <FavoriteIcon fontSize="small" color="error" />
+                  <FavoriteIcon
+                    sx={{
+                      fontSize: 20,
+                      color: "var(--Green-Hover)",
+                      transition: "color 0.3s ease",
+                    }}
+                  />
                 ) : (
-                  <FavoriteBorderIcon fontSize="small" />
+                  <FavoriteBorderIcon
+                    sx={{
+                      fontSize: 20,
+                      transition: "color 0.3s ease",
+                    }}
+                  />
                 )}
               </button>
             </div>
