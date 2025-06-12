@@ -18,6 +18,12 @@ import Tag from "./tags/Tag";
 import DestinationIdHandler from "@/components/DestinationIdHandler";
 import DestinationInteractions from "./DestinationInteractions";
 import StatsHydrator from "@/components/StatsHydrator";
+import PhoneIcon from "@mui/icons-material/Phone";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import XIcon from "@mui/icons-material/X";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import LanguageIcon from "@mui/icons-material/Language";
 
 export default async function DestinationDetails({ destinationId }) {
   await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -130,18 +136,71 @@ export default async function DestinationDetails({ destinationId }) {
       </div>
       {/* Secondary Nav Bar */}
       <div className={styles.secondaryNavBar}>
-        <Link className={styles.navItem} href="#posts" scroll={false}>
-          Posts
-        </Link>
-        <Link className={styles.navItem} href="#reviews" scroll={false}>
-          Reviews
-        </Link>
-        <Link className={styles.navItem} href="#location" scroll={false}>
-          Location
-        </Link>
-        <Link className={styles.navItem} href="#events" scroll={false}>
-          Events
-        </Link>
+        <div className={styles.navContainer}>
+          <Link className={styles.navItem} href="#posts" scroll={false}>
+            Posts
+          </Link>
+          <Link className={styles.navItem} href="#reviews" scroll={false}>
+            Reviews
+          </Link>
+          <Link className={styles.navItem} href="#location" scroll={false}>
+            Location
+          </Link>
+          <Link className={styles.navItem} href="#events" scroll={false}>
+            Events
+          </Link>
+        </div>
+        <div className={styles.contactContainer}>
+          {/* Website */}
+          {destination?.contactInfo?.find((c) => c.type === "Website") && (
+            <Link
+              href={
+                destination.contactInfo.find((c) => c.type === "Website").value
+              }
+              target="_blank"
+              rel="noopener noreferrer"
+              passHref
+            >
+              <LanguageIcon />
+            </Link>
+          )}
+
+          {/* Social Media */}
+          {destination?.socialMediaLinks?.map((social) => {
+            const platform = social.platform.toLowerCase();
+            return (
+              <Link
+                key={social.url}
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                passHref
+              >
+                {platform.includes("facebook") && <FacebookIcon />}
+                {(platform.includes("twitter") || platform.includes("x")) && (
+                  <XIcon />
+                )}
+                {(platform.includes("instgram") ||
+                  platform.includes("instagram")) && <InstagramIcon />}
+                {platform.includes("linkedin") && <LinkedInIcon />}
+              </Link>
+            );
+          })}
+
+          {/* Phone - Note: Link doesn't work well with tel: links, so we'll keep it as <a> */}
+          {destination?.contactInfo?.find((c) => c.type === "Phone") && (
+            <a
+              href={`tel:${
+                destination.contactInfo.find((c) => c.type === "Phone").value
+              }`}
+            >
+              <PhoneIcon />
+              <span>
+                {destination.contactInfo.find((c) => c.type === "Phone").value}
+              </span>
+            </a>
+          )}
+        </div>
       </div>
       <div className={styles.mainContent}>
         {/* Left Column */}
