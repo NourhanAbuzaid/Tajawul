@@ -253,9 +253,9 @@ export default async function DestinationDetails({ destinationId }) {
           <div id="images" className={`${styles.section} ${styles.images}`}>
             <ImageList images={destination?.images} />
           </div>
-          <div id="posts" className={styles.section}>
-            <h2>Posts</h2>
-            <p>Posts will be here</p>
+          <div id="reviews" className={styles.section}>
+            <h2>Reviews</h2>
+            <WriteReview destinationId={destinationId} />
           </div>
         </div>
 
@@ -370,10 +370,6 @@ export default async function DestinationDetails({ destinationId }) {
           <div id="events" className={styles.section}>
             <h2>Upcoming Events</h2>
             <p>Events will be here</p>
-          </div>
-          <div id="reviews" className={styles.section}>
-            <h2>Reviews</h2>
-            <WriteReview destinationId={destinationId} />
           </div>
         </div>
       </div>
