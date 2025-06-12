@@ -137,18 +137,18 @@ export default async function DestinationDetails({ destinationId }) {
       {/* Secondary Nav Bar */}
       <div className={styles.secondaryNavBar}>
         <div className={styles.navContainer}>
-          <Link className={styles.navItem} href="#posts" scroll={false}>
+          <a href="#posts" className={styles.navItem}>
             Posts
-          </Link>
-          <Link className={styles.navItem} href="#reviews" scroll={false}>
+          </a>
+          <a href="#reviews" className={styles.navItem}>
             Reviews
-          </Link>
-          <Link className={styles.navItem} href="#location" scroll={false}>
+          </a>
+          <a href="#location" className={styles.navItem}>
             Location
-          </Link>
-          <Link className={styles.navItem} href="#events" scroll={false}>
+          </a>
+          <a href="#events" className={styles.navItem}>
             Events
-          </Link>
+          </a>
         </div>
         <div className={styles.contactContainer}>
           {/* Website */}
