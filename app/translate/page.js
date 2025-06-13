@@ -335,7 +335,17 @@ function Translate() {
                   <div className={styles.itemActions}>
                     <button
                       className={styles.favoriteButton}
-                      onClick={() => toggleFavorite(item.translationId)}
+                      onClick={async () => {
+                        try {
+                          await API.patch("/Translation/toggle-favorite", {
+                            translationItemId: item.translationId,
+                          });
+                          toggleFavorite(item.translationId);
+                        } catch (error) {
+                          console.error("Error toggling favorite:", error);
+                          setError("Failed to update favorite status");
+                        }
+                      }}
                       aria-label={
                         item.isFavorite
                           ? "Remove from favorites"
