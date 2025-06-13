@@ -9,25 +9,44 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import DeleteIcon from "@mui/icons-material/Delete";
 import TranslationDropdown from "@/components/ui/MUIdropdown/TranslationDropdown";
-import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 import API from "@/utils/api";
 import withAuth from "@/utils/withAuth";
+import useTranslationStore from "@/store/translationStore";
 
 function Translate() {
+  const {
+    currentTranslation,
+    historyItems,
+    historyDates,
+    setCurrentTranslation,
+    clearCurrentTranslation,
+    setHistoryItems,
+    addToHistory,
+    removeFromHistory,
+    clearHistory,
+    toggleFavorite,
+    groupHistoryByDate,
+  } = useTranslationStore();
+
   const [fromLanguage, setFromLanguage] = useState("Choose Language");
   const [toLanguage, setToLanguage] = useState("Choose Language");
   const [fromLanguageCode, setFromLanguageCode] = useState("");
   const [toLanguageCode, setToLanguageCode] = useState("");
   const [sourceText, setSourceText] = useState("");
-  const [translatedText, setTranslatedText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [isFavorite, setIsFavorite] = useState(false);
   const [showCopied, setShowCopied] = useState(false);
-  const [translationId, setTranslationId] = useState("");
   const [showHistory, setShowHistory] = useState(false);
-  const [historyItems, setHistoryItems] = useState([]);
   const [historyLoading, setHistoryLoading] = useState(false);
+
+  // Initialize from current translation if exists
+  useEffect(() => {
+    if (currentTranslation) {
+      setSourceText(currentTranslation.sourceText);
+      setFromLanguageCode(currentTranslation.inputLanguage);
+      setToLanguageCode(currentTranslation.outputLanguage);
+    }
+  }, [currentTranslation]);
 
   const handleFromLanguageSelect = (languageName, languageCode) => {
     setFromLanguage(languageName);
@@ -62,9 +81,9 @@ function Translate() {
         outputLanguage: toLanguageCode,
       });
 
-      setTranslatedText(response.data.translatedText);
-      setIsFavorite(response.data.isFavorite || false);
-      setTranslationId(response.data.translationId); // Store the translationId
+      const translation = response.data;
+      setCurrentTranslation(translation);
+      addToHistory(translation);
     } catch (error) {
       console.error("Translation error:", error);
       setError("Translation failed. Please try again.");
@@ -81,10 +100,10 @@ function Translate() {
   };
 
   const handleCopy = () => {
-    if (!translatedText) return;
+    if (!currentTranslation?.translatedText) return;
 
     navigator.clipboard
-      .writeText(translatedText)
+      .writeText(currentTranslation.translatedText)
       .then(() => {
         setShowCopied(true);
         setTimeout(() => setShowCopied(false), 2000);
@@ -94,14 +113,14 @@ function Translate() {
       });
   };
 
-  const toggleFavorite = async () => {
-    if (!translationId) return;
+  const handleToggleFavorite = async () => {
+    if (!currentTranslation?.translationId) return;
 
     try {
       await API.patch("/Translation/toggle-favorite", {
-        translationItemId: translationId,
+        translationItemId: currentTranslation.translationId,
       });
-      setIsFavorite((prev) => !prev);
+      toggleFavorite(currentTranslation.translationId);
     } catch (error) {
       console.error("Error toggling favorite:", error);
       setError("Failed to update favorite status");
@@ -120,6 +139,7 @@ function Translate() {
     try {
       const response = await API.get("/Translation?SortDescending=true");
       setHistoryItems(response.data);
+      groupHistoryByDate();
     } catch (error) {
       console.error("Error fetching history:", error);
       setError("Failed to load history");
@@ -132,13 +152,23 @@ function Translate() {
     setShowHistory(!showHistory);
   };
 
-  const clearHistory = async () => {
+  const handleClearHistory = async () => {
     try {
       await API.delete("/Translation");
-      setHistoryItems([]);
+      clearHistory();
     } catch (error) {
       console.error("Error clearing history:", error);
       setError("Failed to clear history");
+    }
+  };
+
+  const handleDeleteHistoryItem = async (translationId) => {
+    try {
+      await API.delete(`/Translation/${translationId}`);
+      removeFromHistory(translationId);
+    } catch (error) {
+      console.error("Error deleting history item:", error);
+      setError("Failed to delete history item");
     }
   };
 
@@ -204,13 +234,13 @@ function Translate() {
               readOnly
               className={styles.translateInput}
               placeholder="Translated text appears here."
-              value={translatedText}
+              value={currentTranslation?.translatedText || ""}
             ></textarea>
             <div className={styles.textareaButtons}>
               <button
                 className={styles.copyButton}
                 onClick={handleCopy}
-                disabled={!translatedText}
+                disabled={!currentTranslation?.translatedText}
                 aria-label="Copy translation"
               >
                 {showCopied && (
@@ -220,15 +250,19 @@ function Translate() {
               </button>
               <button
                 className={`${styles.favoriteTextareaButton} ${
-                  isFavorite ? styles.favoriteTextareaActive : ""
+                  currentTranslation?.isFavorite
+                    ? styles.favoriteTextareaActive
+                    : ""
                 }`}
-                onClick={toggleFavorite}
-                disabled={!translatedText}
+                onClick={handleToggleFavorite}
+                disabled={!currentTranslation?.translatedText}
                 aria-label={
-                  isFavorite ? "Remove from favorites" : "Add to favorites"
+                  currentTranslation?.isFavorite
+                    ? "Remove from favorites"
+                    : "Add to favorites"
                 }
               >
-                {isFavorite ? (
+                {currentTranslation?.isFavorite ? (
                   <FavoriteIcon
                     sx={{
                       fontSize: 20,
@@ -260,7 +294,10 @@ function Translate() {
                   1-{historyItems.length} of {historyItems.length} phrases
                 </span>
               </div>
-              <button className={styles.clearButton} onClick={clearHistory}>
+              <button
+                className={styles.clearButton}
+                onClick={handleClearHistory}
+              >
                 Clear all History
               </button>
             </div>
@@ -295,14 +332,21 @@ function Translate() {
                       }
                     >
                       {item.isFavorite ? (
-                        <FavoriteIcon fontSize="small" />
+                        <FavoriteIcon
+                          sx={{
+                            fontSize: "20px",
+                            color: "var(--Green-Hover)",
+                          }}
+                        />
                       ) : (
                         <FavoriteBorderIcon fontSize="small" />
                       )}
                     </button>
                     <button
                       className={styles.deleteButton}
-                      onClick={() => deleteHistoryItem(item.translationId)}
+                      onClick={() =>
+                        handleDeleteHistoryItem(item.translationId)
+                      }
                       aria-label="Delete translation"
                     >
                       <DeleteIcon fontSize="small" />
