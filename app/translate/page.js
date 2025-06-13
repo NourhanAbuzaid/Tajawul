@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "@/styles/Translate.module.css";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -22,8 +22,10 @@ function Translate() {
   const [error, setError] = useState("");
   const [isFavorite, setIsFavorite] = useState(false);
   const [showCopied, setShowCopied] = useState(false);
-  const [showFavorited, setShowFavorited] = useState(false); // New state for favorite feedback
   const [translationId, setTranslationId] = useState("");
+  const [showHistory, setShowHistory] = useState(false);
+  const [historyItems, setHistoryItems] = useState([]);
+  const [historyLoading, setHistoryLoading] = useState(false);
 
   const handleFromLanguageSelect = (languageName, languageCode) => {
     setFromLanguage(languageName);
@@ -104,6 +106,40 @@ function Translate() {
     }
   };
 
+  // Fetch history when showHistory changes
+  useEffect(() => {
+    if (showHistory) {
+      fetchHistory();
+    }
+  }, [showHistory]);
+
+  const fetchHistory = async () => {
+    setHistoryLoading(true);
+    try {
+      const response = await API.get("/Translation?SortDescending=true");
+      setHistoryItems(response.data);
+    } catch (error) {
+      console.error("Error fetching history:", error);
+      setError("Failed to load history");
+    } finally {
+      setHistoryLoading(false);
+    }
+  };
+
+  const toggleHistory = () => {
+    setShowHistory(!showHistory);
+  };
+
+  const clearHistory = async () => {
+    try {
+      await API.delete("/Translation");
+      setHistoryItems([]);
+    } catch (error) {
+      console.error("Error clearing history:", error);
+      setError("Failed to clear history");
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.buttonsContainer}>
@@ -111,7 +147,12 @@ function Translate() {
           <FavoriteBorderIcon />
           Favorites
         </button>
-        <button className={styles.actionsButton}>
+        <button
+          className={`${styles.actionsButton} ${
+            showHistory ? styles.activeButton : ""
+          }`}
+          onClick={toggleHistory}
+        >
           <HistoryIcon />
           History
         </button>
@@ -207,6 +248,51 @@ function Translate() {
           <div className={styles.translateButtonContainer}></div>
         </div>
       </div>
+      {showHistory && (
+        <div className={styles.historyContainer}>
+          <div className={styles.historyHeader}>
+            <h1>History</h1>
+            <div className={styles.historyControls}>
+              <div className={styles.historyPagination}>
+                <span>
+                  1-{historyItems.length} of {historyItems.length} phrases
+                </span>
+              </div>
+              <button className={styles.clearButton} onClick={clearHistory}>
+                Clear all History
+              </button>
+            </div>
+          </div>
+
+          {historyLoading ? (
+            <div className={styles.loading}>Loading history...</div>
+          ) : (
+            <div className={styles.historyContent}>
+              <div className={styles.historyHeaderRow}>
+                <div className={styles.historyCell}>From → To</div>
+                <div className={styles.historyCell}>Original Text</div>
+                <div className={styles.historyCell}>Translated Text</div>
+                <div className={styles.historyCell}>Date</div>
+              </div>
+
+              {historyItems.map((item) => (
+                <div key={item.translationId} className={styles.historyRow}>
+                  <div className={styles.historyCell}>
+                    {item.inputLanguage} → {item.outputLanguage}
+                  </div>
+                  <div className={styles.historyCell}>{item.sourceText}</div>
+                  <div className={styles.historyCell}>
+                    {item.translatedText}
+                  </div>
+                  <div className={styles.historyCell}>
+                    {new Date(item.createdAt).toLocaleString()}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
