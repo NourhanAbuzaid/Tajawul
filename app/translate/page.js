@@ -17,7 +17,6 @@ function Translate() {
   const {
     currentTranslation,
     historyItems,
-    historyDates,
     setCurrentTranslation,
     clearCurrentTranslation,
     setHistoryItems,
@@ -73,6 +72,7 @@ function Translate() {
 
     setError("");
     setIsLoading(true);
+    clearCurrentTranslation(); // Clear current translation before new request
 
     try {
       const response = await API.post("/Translation", {
@@ -91,6 +91,13 @@ function Translate() {
       setIsLoading(false);
     }
   };
+
+  // Cleanup effect when leaving the page
+  useEffect(() => {
+    return () => {
+      clearCurrentTranslation(); // Clear when component unmounts
+    };
+  }, [clearCurrentTranslation]);
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -137,7 +144,9 @@ function Translate() {
   const fetchHistory = async () => {
     setHistoryLoading(true);
     try {
-      const response = await API.get("/Translation?SortDescending=true");
+      const response = await API.get(
+        "/Translation?PageNumber=1&PageSize=20&SortDescending=true"
+      );
       setHistoryItems(response.data);
       groupHistoryByDate();
     } catch (error) {
