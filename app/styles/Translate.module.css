@@ -490,7 +490,58 @@
 .arrowText {
   font-size: 14px;
   color: var(--Green-Hover);
-  font-weight: 500;
+  font-weight: 600;
   margin: 4px;
   align-self: center;
+}
+
+/* Favorites Container - similar to history */
+.favoritesContainer {
+  width: 100%;
+  background: var(--Neutrals-Background);
+  border-radius: 24px;
+}
+
+.favoritesHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.favoritesHeader h1 {
+  color: var(--Neutrals-Black-Text);
+  font-family: var(--font-heading), Georgia, serif;
+  margin: 0;
+}
+
+.favoritesControls {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.favoritesGrid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+  margin-bottom: 22px;
+}
+
+.favoritesItem {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px;
+  border-radius: 12px;
+  width: 100%;
+  align-items: flex-start;
+  border: 1px solid var(--Neutrals-Light-Outline);
+  background: var(--Neutrals-Background);
+  transition: all 0.2s ease;
+}
+
+.favoritesItem:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }

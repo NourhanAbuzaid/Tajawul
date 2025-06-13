@@ -37,6 +37,9 @@ function Translate() {
   const [showCopied, setShowCopied] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [historyLoading, setHistoryLoading] = useState(false);
+  const [showFavorites, setShowFavorites] = useState(false);
+  const [favoritesLoading, setFavoritesLoading] = useState(false);
+  const [favoritesItems, setFavoritesItems] = useState([]);
 
   // Initialize from current translation if exists
   useEffect(() => {
@@ -183,11 +186,35 @@ function Translate() {
     }
   };
 
+  const fetchFavorites = async () => {
+    setFavoritesLoading(true);
+    try {
+      const response = await API.get(
+        "/Translation/favorites?PageNumber=1&PageSize=20&SortDescending=true"
+      );
+      setFavoritesItems(response.data);
+    } catch (error) {
+      console.error("Error fetching favorites:", error);
+      setError("Failed to load favorites");
+    } finally {
+      setFavoritesLoading(false);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.buttonsContainer}>
-        <button className={styles.actionsButton}>
-          <FavoriteBorderIcon />
+        <button
+          className={`${styles.actionsButton} ${
+            showFavorites ? styles.activeButton : ""
+          }`}
+          onClick={() => {
+            setShowFavorites(!showFavorites);
+            if (!showFavorites) fetchFavorites();
+            setShowHistory(false);
+          }}
+        >
+          <FavoriteIcon />
           Favorites
         </button>
         <button
@@ -295,6 +322,77 @@ function Translate() {
           <div className={styles.translateButtonContainer}></div>
         </div>
       </div>
+      {showFavorites && (
+        <div className={styles.favoritesContainer}>
+          <div className={styles.favoritesHeader}>
+            <h1>Favorites</h1>
+            <div className={styles.favoritesControls}>
+              <div className={styles.favoritesPagination}>
+                <span>
+                  1-{favoritesItems.length} of {favoritesItems.length} Phrases
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {favoritesLoading ? (
+            <div className={styles.loading}>Loading favorites...</div>
+          ) : (
+            <div className={styles.favoritesGrid}>
+              {favoritesItems.map((item) => (
+                <div key={item.translationId} className={styles.favoritesItem}>
+                  <div className={styles.itemContent}>
+                    <span className={styles.languageTag}>
+                      {item.inputLanguage} → {item.outputLanguage}
+                    </span>
+                    <div className={styles.textPair}>
+                      <p className={styles.sourceText}>{item.sourceText}</p>
+                      <p className={styles.arrowText}> → </p>
+                      <p className={styles.translatedText}>
+                        {item.translatedText}
+                      </p>
+                    </div>
+                  </div>
+                  <div className={styles.itemActions}>
+                    <button
+                      className={styles.favoriteButton}
+                      onClick={async () => {
+                        try {
+                          await API.patch("/Translation/toggle-favorite", {
+                            translationItemId: item.translationId,
+                          });
+                          toggleFavorite(item.translationId);
+                          fetchFavorites(); // Refresh favorites list
+                        } catch (error) {
+                          console.error("Error toggling favorite:", error);
+                          setError("Failed to update favorite status");
+                        }
+                      }}
+                      aria-label="Remove from favorites"
+                    >
+                      <FavoriteIcon
+                        sx={{
+                          fontSize: "20px",
+                          color: "var(--Green-Hover)",
+                        }}
+                      />
+                    </button>
+                    <button
+                      className={styles.deleteButton}
+                      onClick={() =>
+                        handleDeleteHistoryItem(item.translationId)
+                      }
+                      aria-label="Delete translation"
+                    >
+                      <DeleteIcon fontSize="small" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
       {showHistory && (
         <div className={styles.historyContainer}>
           <div className={styles.historyHeader}>
@@ -302,7 +400,7 @@ function Translate() {
             <div className={styles.historyControls}>
               <div className={styles.historyPagination}>
                 <span>
-                  1-{historyItems.length} of {historyItems.length} phrases
+                  1-{historyItems.length} of {historyItems.length} Phrases
                 </span>
               </div>
               <button
