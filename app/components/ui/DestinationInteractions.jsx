@@ -30,7 +30,9 @@ const DestinationInteractions = ({ destinationId }) => {
   useEffect(() => {
     const fetchInteractionStatus = async () => {
       try {
-        const response = await API.get(`/user/${destinationId}/status`);
+        const response = await API.get(
+          `/user/${destinationId}/destinationStatus`
+        );
         if (response.data) {
           setInteractions({
             follow: !!response.data.follow,
