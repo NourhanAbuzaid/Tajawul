@@ -7,6 +7,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import HistoryIcon from "@mui/icons-material/History";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import ErrorMessage from "@/components/ui/ErrorMessage";
+import DeleteIcon from "@mui/icons-material/Delete";
 import TranslationDropdown from "@/components/ui/MUIdropdown/TranslationDropdown";
 import API from "@/utils/api";
 import withAuth from "@/utils/withAuth";
@@ -267,25 +268,43 @@ function Translate() {
           {historyLoading ? (
             <div className={styles.loading}>Loading history...</div>
           ) : (
-            <div className={styles.historyContent}>
-              <div className={styles.historyHeaderRow}>
-                <div className={styles.historyCell}>From → To</div>
-                <div className={styles.historyCell}>Original Text</div>
-                <div className={styles.historyCell}>Translated Text</div>
-                <div className={styles.historyCell}>Date</div>
-              </div>
-
+            <div className={styles.historyGrid}>
               {historyItems.map((item) => (
-                <div key={item.translationId} className={styles.historyRow}>
-                  <div className={styles.historyCell}>
-                    {item.inputLanguage} → {item.outputLanguage}
+                <div key={item.translationId} className={styles.historyItem}>
+                  <div className={styles.itemContent}>
+                    <span className={styles.languageTag}>
+                      {item.inputLanguage} → {item.outputLanguage}
+                    </span>
+                    <div className={styles.textPair}>
+                      <p className={styles.sourceText}>{item.sourceText}</p>
+                      <p className={styles.translatedText}>
+                        {item.translatedText}
+                      </p>
+                    </div>
                   </div>
-                  <div className={styles.historyCell}>{item.sourceText}</div>
-                  <div className={styles.historyCell}>
-                    {item.translatedText}
-                  </div>
-                  <div className={styles.historyCell}>
-                    {new Date(item.createdAt).toLocaleString()}
+                  <div className={styles.itemActions}>
+                    <button
+                      className={styles.favoriteButton}
+                      onClick={() => toggleFavorite(item.translationId)}
+                      aria-label={
+                        item.isFavorite
+                          ? "Remove from favorites"
+                          : "Add to favorites"
+                      }
+                    >
+                      {item.isFavorite ? (
+                        <FavoriteIcon fontSize="small" />
+                      ) : (
+                        <FavoriteBorderIcon fontSize="small" />
+                      )}
+                    </button>
+                    <button
+                      className={styles.deleteButton}
+                      onClick={() => deleteHistoryItem(item.translationId)}
+                      aria-label="Delete translation"
+                    >
+                      <DeleteIcon fontSize="small" />
+                    </button>
                   </div>
                 </div>
               ))}
