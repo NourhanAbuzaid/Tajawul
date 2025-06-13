@@ -173,7 +173,9 @@ function Translate() {
 
   const handleDeleteHistoryItem = async (translationId) => {
     try {
-      await API.delete(`/Translation/${translationId}`);
+      await API.delete(`/Translation/translation-item`, {
+        data: { translationItemId: translationId },
+      });
       removeFromHistory(translationId);
     } catch (error) {
       console.error("Error deleting history item:", error);
