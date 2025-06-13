@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Menu, MenuItem, Button, Box } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import LanguageIcon from "@mui/icons-material/Language";
-import languages from "@/data/languages.json";
+import languages from "@/data/frontend_translation_languages.json";
 
 export default function TranslationDropdown({
   selectedLanguage,
@@ -23,8 +23,9 @@ export default function TranslationDropdown({
     setAnchorEl(null);
   };
 
-  const handleLanguageSelect = (language) => {
-    onLanguageSelect(language);
+  const handleLanguageSelect = (languageName) => {
+    const languageCode = languages[languageName];
+    onLanguageSelect(languageName, languageCode);
     handleClose();
   };
 
@@ -123,17 +124,19 @@ export default function TranslationDropdown({
           },
         }}
       >
-        {languages.map((language) => (
-          <MenuItem
-            key={language.alpha2}
-            selected={language.English === selectedLanguage}
-            onClick={() => handleLanguageSelect(language.English)}
-          >
-            <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              {language.English}
-            </Box>
-          </MenuItem>
-        ))}
+        {Object.keys(languages)
+          .sort((a, b) => a.localeCompare(b))
+          .map((languageName) => (
+            <MenuItem
+              key={languages[languageName]}
+              selected={languageName === selectedLanguage}
+              onClick={() => handleLanguageSelect(languageName)}
+            >
+              <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                {languageName}
+              </Box>
+            </MenuItem>
+          ))}
       </Menu>
     </Box>
   );
