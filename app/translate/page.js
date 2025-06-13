@@ -9,6 +9,7 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import DeleteIcon from "@mui/icons-material/Delete";
 import TranslationDropdown from "@/components/ui/MUIdropdown/TranslationDropdown";
+import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 import API from "@/utils/api";
 import withAuth from "@/utils/withAuth";
 
@@ -218,8 +219,8 @@ function Translate() {
                 <ContentCopyIcon sx={{ fontSize: 20 }} />
               </button>
               <button
-                className={`${styles.favoriteButton} ${
-                  isFavorite ? styles.favoriteActive : ""
+                className={`${styles.favoriteTextareaButton} ${
+                  isFavorite ? styles.favoriteTextareaActive : ""
                 }`}
                 onClick={toggleFavorite}
                 disabled={!translatedText}
@@ -277,6 +278,7 @@ function Translate() {
                     </span>
                     <div className={styles.textPair}>
                       <p className={styles.sourceText}>{item.sourceText}</p>
+                      <p className={styles.arrowText}> → </p>
                       <p className={styles.translatedText}>
                         {item.translatedText}
                       </p>

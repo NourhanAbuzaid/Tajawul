@@ -134,32 +134,7 @@
   gap: 8px;
 }
 
-.favoriteButton {
-  background: var(--Neutrals-Background);
-  border: 1px solid var(--Neutrals-Light-Outline);
-  color: var(--Neutrals-Medium-Outline);
-  border-radius: 50px;
-  padding: 8px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-}
-
-.favoriteButton:hover {
-  background: var(--Beige-Hover);
-  color: var(--Neutrals-Black-Text);
-  border: 1px solid var(--Neutrals-Black-Text);
-}
-
-.favoriteButton.favoriteActive {
-  background: var(--Green-Very-Bright);
-  color: var(--Green-Hover);
-  border: 1px solid var(--Green-Hover);
-}
-
-.favoriteButton:disabled {
+.favoriteTextareaButton:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
@@ -186,6 +161,31 @@
 .copyButton:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.favoriteTextareaButton {
+  background: var(--Neutrals-Background);
+  border: 1px solid var(--Neutrals-Light-Outline);
+  color: var(--Neutrals-Medium-Outline);
+  border-radius: 50px;
+  padding: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.favoriteTextareaButton:hover {
+  background: var(--Beige-Hover);
+  color: var(--Neutrals-Black-Text);
+  border: 1px solid var(--Neutrals-Black-Text);
+}
+
+.favoriteTextareaActive {
+  background: var(--Green-Very-Bright);
+  color: var(--Green-Hover);
+  border: 1px solid var(--Green-Hover);
 }
 
 .copiedText {
@@ -277,13 +277,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .historyHeader h1 {
   color: var(--Neutrals-Black-Text);
   font-family: var(--font-heading), Georgia, serif;
-
   margin: 0;
 }
 
@@ -315,13 +314,6 @@
   padding: 20px;
   text-align: center;
   color: var(--Neutrals-Medium-Outline);
-}
-
-.historyGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px;
-  width: 100%;
 }
 
 .historyItem {
@@ -375,12 +367,6 @@
   letter-spacing: 0.5px;
 }
 
-.textPair {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
 .sourceText {
   margin: 0;
   font-size: 14px;
@@ -405,15 +391,17 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 8px;
   width: 100%;
+  margin-bottom: 22px;
 }
 
 .historyItem {
   display: flex;
-  gap: 12px;
+  justify-content: space-between;
   padding: 16px;
   border-radius: 12px;
+  width: 100%;
   align-items: flex-start;
   border: 1px solid var(--Neutrals-Light-Outline);
   background: var(--Neutrals-Background);
@@ -486,14 +474,24 @@
 }
 
 .sourceText {
-  margin: 0;
+  margin: 4px;
   font-size: 14px;
   color: var(--Neutrals-Black-Text);
+  font-weight: 500;
 }
 
 .translatedText {
-  margin: 0;
+  margin: 4px;
   font-size: 14px;
-  color: var(--Neutrals-Medium-Outline);
-  font-style: italic;
+  color: var(--Neutrals-Black-Text);
+  font-weight: 500;
+  text-align: left;
+}
+
+.arrowText {
+  font-size: 14px;
+  color: var(--Green-Hover);
+  font-weight: 500;
+  margin: 4px;
+  align-self: center;
 }
