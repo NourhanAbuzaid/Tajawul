@@ -10,13 +10,13 @@ export default function Review({ review }) {
       <div className={styles.reviewHeader}>
         <div className={styles.userDetails}>
           <Avatar
-            src={review.user?.profileImage}
-            alt={review.user?.name}
+            src={review.creator?.[2]} // Using creator array for image
+            alt={review.creator?.[1]} // Using creator array for name
             sx={{ width: 40, height: 40 }}
           />
           <div className={styles.userInfo}>
             <span className={styles.userName}>
-              {review.user?.name || "Anonymous"}
+              {review.creator?.[1] || "Anonymous"}
             </span>
             <span className={styles.reviewDate}>
               {format(new Date(review.date), "MMM d, yyyy")}
