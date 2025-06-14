@@ -13,6 +13,32 @@ import { groupSizeIcons } from "@/utils/tagIconsMapping";
 import Image from "next/image";
 import useAuthStore from "@/store/authStore";
 
+// Import local JSON files
+import tagsData from "@/data/tags.json";
+import activitiesData from "@/data/activities.json";
+
+// Helper function to process JSON data
+const processJsonData = (data) => {
+  // If data is an array, return it directly
+  if (Array.isArray(data)) return data;
+  // If data has an 'activities' property that's an array
+  if (data.activities && Array.isArray(data.activities)) return data.activities;
+  if (data.tags && Array.isArray(data.tags)) return data.tags;
+  // Fallback to empty array
+  return [];
+};
+
+// Convert string array to options format, sorted alphabetically
+const convertToOptions = (items) => {
+  return items
+    .slice() // copy to avoid mutating original
+    .sort((a, b) => a.localeCompare(b))
+    .map((item) => ({
+      label: item,
+      value: item,
+    }));
+};
+
 export default function EditTags({ destinationId }) {
   const { roles } = useAuthStore();
   const [showPopup, setShowPopup] = useState(false);
@@ -20,7 +46,6 @@ export default function EditTags({ destinationId }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [fetchingData, setFetchingData] = useState(false);
-  const [fetchingOptions, setFetchingOptions] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [groupSize, setGroupSize] = useState([]);
@@ -31,6 +56,24 @@ export default function EditTags({ destinationId }) {
   const [deletedActivities, setDeletedActivities] = useState([]);
   const [tagsOptions, setTagsOptions] = useState([]);
   const [activitiesOptions, setActivitiesOptions] = useState([]);
+
+  // Process the JSON data on component mount
+  useEffect(() => {
+    try {
+      // Process each JSON file according to its structure
+      const tagsOptions = convertToOptions(processJsonData(tagsData));
+      const activitiesOptions = convertToOptions(
+        processJsonData(activitiesData)
+      );
+
+      // Store the processed options in state
+      setTagsOptions(tagsOptions);
+      setActivitiesOptions(activitiesOptions);
+    } catch (err) {
+      console.error("Failed to process options:", err);
+      setError("Failed to load tag options. Please try again later.");
+    }
+  }, []);
 
   const handleOpenPopup = async () => {
     if (!roles.includes("User")) {
@@ -63,39 +106,6 @@ export default function EditTags({ destinationId }) {
       setFetchingData(false);
     }
   };
-
-  // Rest of the component code remains the same...
-  useEffect(() => {
-    const fetchOptions = async () => {
-      setFetchingOptions(true);
-      try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-        const [tagsResponse, activitiesResponse] = await Promise.all([
-          axios.get(`${baseUrl}/tags`),
-          axios.get(`${baseUrl}/activities`),
-        ]);
-
-        const processOptions = (items) => {
-          return (
-            items?.map((item) => ({
-              label: item.name,
-              value: item.name,
-            })) || []
-          );
-        };
-
-        setTagsOptions(processOptions(tagsResponse.data));
-        setActivitiesOptions(processOptions(activitiesResponse.data));
-      } catch (err) {
-        console.error("Failed to fetch options:", err);
-        setError("Failed to load tag options. Please try again later.");
-      } finally {
-        setFetchingOptions(false);
-      }
-    };
-
-    fetchOptions();
-  }, []);
 
   const groupSizeOptions = [
     { label: "Solo", value: "Solo", icon: groupSizeIcons.solo },
@@ -212,9 +222,9 @@ export default function EditTags({ destinationId }) {
       <button
         className={styles.editButton}
         onClick={handleOpenPopup}
-        disabled={fetchingData || fetchingOptions}
+        disabled={fetchingData}
       >
-        {fetchingData || fetchingOptions ? (
+        {fetchingData ? (
           "Loading..."
         ) : (
           <>
@@ -290,7 +300,7 @@ export default function EditTags({ destinationId }) {
                 type="button"
                 className={styles.submitButton}
                 onClick={currentStep === 1 ? handleNext : handleSubmit}
-                disabled={loading || fetchingOptions}
+                disabled={loading}
               >
                 {loading
                   ? "Saving..."
