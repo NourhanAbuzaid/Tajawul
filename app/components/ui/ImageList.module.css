@@ -175,3 +175,36 @@
   transform: none;
   box-shadow: none;
 }
+
+.uploadButtonContainer {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 10;
+}
+
+.smolUploadButton {
+  display: flex;
+  height: 32px;
+  padding: 4px 20px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: 8px;
+  background: var(--Neutrals-Black-Text, #221a14);
+  color: var(--Neutrals-Background, #fffbf4);
+  border: none;
+  font-family: "DM Sans";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+.smolUploadButton:hover {
+  background: var(--Neutrals-Medium-Outline);
+}
+.smolUploadIcon {
+  font-size: 1.2rem !important;
+}
