@@ -10,6 +10,7 @@ import withAuth from "@/utils/withAuth"; // Import the withAuth HOC
 import SearchBar from "@/components/ui/SearchBar";
 import FloatingChatButton from "@/components/ui/FloatingChatButton"; // Import the floating chat button component
 import RecommendedDest from "@/components/ui/Recommendation/RecommendedDest";
+import TopRatingDest from "@/components/ui/Recommendation/TopRatingDest";
 
 function Home() {
   const [showPopup, setShowPopup] = useState(false);
@@ -66,6 +67,7 @@ function Home() {
           {/* Content Section */}
           <section className={styles.contentSection}>
             <RecommendedDest />
+            <TopRatingDest />
           </section>
         </main>
       </div>
