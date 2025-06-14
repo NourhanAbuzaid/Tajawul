@@ -18,6 +18,16 @@ import destinationTypes from "@/data/destinationTypes.json";
 import Image from "next/image";
 import Link from "next/link";
 
+import dynamic from "next/dynamic";
+
+const LocationPicker = dynamic(
+  () => import("@/components/map/LocationPicker"),
+  {
+    ssr: false,
+    loading: () => <p>Loading map...</p>,
+  }
+);
+
 // Debounce utility function to limit the number of calls to saveToLocalStorage
 const debounce = (func, delay) => {
   let timeout;
@@ -427,67 +437,98 @@ export default function CreateDestinationForm() {
             marginBottom: "20px",
           }}
         />
-        <div className={styles.formRow}>
-          <Dropdown
-            label="Country"
-            id="country"
-            required
-            value={formData.country}
-            onChange={handleChange}
-            options={arabCountriesOptions}
-            errorMsg={errors.country}
-          />
-          <Dropdown
-            label="City"
-            id="city"
-            required
-            value={formData.city}
-            onChange={handleChange}
-            options={cities}
-            errorMsg={
-              cityClicked && !formData.country
-                ? "Please Select a Country"
-                : errors.city
-            }
-            disabled={!formData.country || cities.length === 0}
-            onDropdownClick={() => setCityClicked(true)}
-          />
-        </div>
-        <Input
-          label="Address"
-          id="address"
-          type="text"
+        <Dropdown
+          label="City"
+          id="city"
           required
-          value={formData.locations[0].address}
-          onChange={(e) =>
-            setFormData((prev) => ({
-              ...prev,
-              locations: [{ ...prev.locations[0], address: e.target.value }],
-            }))
+          value={formData.city}
+          onChange={handleChange}
+          options={cities}
+          errorMsg={
+            cityClicked && !formData.country
+              ? "Please Select a Country"
+              : errors.city
           }
-          errorMsg={errors.address}
+          disabled={!formData.country || cities.length === 0}
+          onDropdownClick={() => setCityClicked(true)}
         />
         <div className={styles.formRow}>
           <Input
-            label="Latitude"
-            id="latitude"
-            type="number"
-            step="any"
+            label="Address"
+            id="address"
+            type="text"
             required
-            value={formData.locations?.[0]?.latitude || 0} // ✅ Prevents undefined access
-            onChange={(e) => handleLocationChange("latitude", e.target.value)}
-            errorMsg={errors.latitude}
+            value={formData.locations[0]?.address || ""}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                locations: [{ ...prev.locations[0], address: e.target.value }],
+              }))
+            }
+            errorMsg={errors.address}
           />
-          <Input
-            label="Longitude"
-            id="longitude"
-            type="number"
-            step="any"
-            required
-            value={formData.locations?.[0]?.longitude || 0} // ✅ Prevents undefined access
-            onChange={(e) => handleLocationChange("longitude", e.target.value)}
-            errorMsg={errors.longitude}
-          />
+        </div>
+        <div className={styles.coordinatesContainer}>
+          <div className={styles.longitudeField}>
+            <Input
+              label="Latitude"
+              id="latitude"
+              type="number"
+              step="any"
+              required
+              value={formData.locations[0]?.latitude || 0}
+              onChange={(e) => {
+                setFormData((prev) => ({
+                  ...prev,
+                  locations: [
+                    { ...prev.locations[0], latitude: e.target.value },
+                  ],
+                }));
+              }}
+              errorMsg={errors.latitude}
+            />
+          </div>
+
+          <div className={styles.latitudeField}>
+            <Input
+              label="Longitude"
+              id="longitude"
+              type="number"
+              step="any"
+              required
+              value={formData.locations[0]?.longitude || 0}
+              onChange={(e) => {
+                setFormData((prev) => ({
+                  ...prev,
+                  locations: [
+                    { ...prev.locations[0], longitude: e.target.value },
+                  ],
+                }));
+              }}
+              errorMsg={errors.longitude}
+            />
+            <LocationPicker
+              onLocationSelect={(location) => {
+                setFormData((prev) => ({
+                  ...prev,
+                  locations: [
+                    {
+                      ...prev.locations[0],
+                      longitude: location.lng,
+                      latitude: location.lat,
+                      address:
+                        location.address || prev.locations[0]?.address || "",
+                    },
+                  ],
+                }));
+              }}
+              initialLocation={{
+                lng: formData.locations[0]?.longitude || 0,
+                lat: formData.locations[0]?.latitude || 0,
+                address: formData.locations[0]?.address || "",
+              }}
+            />
+          </div>
         </div>
 
         <h2 className={styles.subheader}>Operating Hours & Pricing</h2>
