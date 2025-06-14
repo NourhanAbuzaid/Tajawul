@@ -147,7 +147,7 @@ const ImageList = ({ images = [] }) => {
               ) : (
                 <>
                   <CloudUploadIcon className={styles.smolUploadIcon} />
-                  Upload More Images
+                  Upload Images
                 </>
               )}
             </label>
