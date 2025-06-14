@@ -198,9 +198,7 @@ export default function NavBar() {
               <Link href="/profile" className={styles.dropdownItem}>
                 Profile
               </Link>
-              <Link href="/settings" className={styles.dropdownItem}>
-                Settings
-              </Link>
+
               <LogoutButton className={styles.dropdownItem} />
             </div>
           </div>
