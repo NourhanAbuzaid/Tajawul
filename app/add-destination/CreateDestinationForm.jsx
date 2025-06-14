@@ -261,7 +261,7 @@ export default function CreateDestinationForm() {
       const formattedData = {
         name: formData.name,
         type: formData.type,
-        description: sanitizedDescription, // Use sanitized description
+        description: sanitizedDescription,
         priceRange: formData.priceRange,
         country: formData.country,
         city: formData.city,
@@ -281,7 +281,8 @@ export default function CreateDestinationForm() {
 
       // Add optional fields only if they have a value
       if (formData.establishedAt) {
-        formattedData.establishedAt = `${formData.establishedAt}-01-01`;
+        // Trim the establishedAt value before using it
+        formattedData.establishedAt = `${formData.establishedAt.trim()}-01-01`;
       }
 
       if (formData.socialMediaLinks.length > 0) {

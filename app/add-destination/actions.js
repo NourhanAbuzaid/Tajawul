@@ -48,14 +48,11 @@ export const addDestinationSchema = z.object({
     .refine(
       (value) => {
         if (!value) return true; // Optional field, skip validation if empty
-        // Check for exactly 4 digits with no spaces
-        if (!/^\d{4}$/.test(value)) return false;
         const year = parseInt(value);
         return !isNaN(year) && year >= 1000 && year <= new Date().getFullYear();
       },
       {
-        message:
-          "Please enter a valid 4-digit year (1000 to current year), with no spaces.",
+        message: "Please enter a valid year between 1000 and current year",
       }
     ),
 
