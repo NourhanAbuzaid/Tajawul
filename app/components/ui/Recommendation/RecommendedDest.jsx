@@ -98,7 +98,6 @@ const RecommendedDest = () => {
                     </div>
                     <div className={styles.rating}>
                       <Rating average={destination.averageRating} />
-                      <span>{destination.reviewsCount}</span>
                     </div>
                   </div>
                 </div>
