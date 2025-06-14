@@ -58,6 +58,10 @@ const RecommendedDest = () => {
       <h2 className={styles.recommendedTitle}>
         Recommended Destinations For You
       </h2>
+      <p className={styles.recommendedSubtitle}>
+        Handpicked just for you — these destinations match your travel style and
+        interests, making every journey feel more personal and unforgettable.
+      </p>
       <div className={styles.recommendedList}>
         {destinations.map((destination) => {
           const IconComponent =

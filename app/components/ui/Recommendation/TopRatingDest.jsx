@@ -54,6 +54,10 @@ const TopRatingDest = () => {
   return (
     <div className={styles.recommendedSection}>
       <h2 className={styles.recommendedTitle}>Top Rated Destinations</h2>
+      <p className={styles.recommendedSubtitle}>
+        Discover the top 5 must-visit destinations, ranked by traveler ratings
+        and loved by the Tajawul community.
+      </p>
       <div className={styles.recommendedList}>
         {destinations.map((destination) => {
           const IconComponent =
