@@ -527,11 +527,23 @@
   }
 }
 
+.reviews {
+  background: var(--Beige-Very-Bright);
+}
+
+.reviewsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
 .reviewsList {
   margin-top: 24px;
   display: flex;
   flex-direction: column;
   gap: 16px;
+  width: 100%;
 }
 
 .noReviews {

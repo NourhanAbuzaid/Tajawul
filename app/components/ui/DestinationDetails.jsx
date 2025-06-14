@@ -261,9 +261,11 @@ export default async function DestinationDetails({ destinationId }) {
           <div id="images" className={`${styles.section} ${styles.images}`}>
             <ImageList images={destination?.images} />
           </div>
-          <div id="reviews" className={styles.section}>
-            <h2>Reviews</h2>
-            <WriteReview destinationId={destinationId} />
+          <div id="reviews" className={`${styles.section} ${styles.reviews}`}>
+            <div className={styles.reviewsHeader}>
+              <h2>Reviews</h2>
+              <WriteReview destinationId={destinationId} />
+            </div>
 
             <div className={styles.reviewsList}>
               {destination?.reviews?.length > 0 ? (

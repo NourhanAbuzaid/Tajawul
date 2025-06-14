@@ -2,7 +2,7 @@
   padding: 16px;
   margin-bottom: 16px;
   border-radius: 8px;
-  background-color: var(--Neutrals-Light-Background);
+  background-color: var(--Neutrals-Background);
   border: 1px solid var(--Neutrals-Light-Outline);
   width: 100%;
 }
@@ -45,4 +45,5 @@
 .reviewComment {
   color: var(--Neutrals-Dark-Text);
   line-height: 1.5;
+  text-align: left;
 }
