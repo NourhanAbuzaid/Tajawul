@@ -11,6 +11,8 @@ import CountriesSection from "@/components/ui/filter/CountriesSection";
 import AddDestinationCard from "@/components/ui/AddDestinationCard";
 import { GreenLoading } from "@/components/ui/Loading";
 import typeIconsMapping from "@/utils/typeIconsMapping";
+import Divider from "@mui/material/Divider";
+import RecommendedDest from "@/components/ui/Recommendation/RecommendedDest";
 
 // This component will receive the initial data from the server component
 export default function ExplorePageClient({ initialDestinations }) {
@@ -170,6 +172,14 @@ export default function ExplorePageClient({ initialDestinations }) {
           </div>
         ) : (
           <>
+            <RecommendedDest />
+            <Divider
+              sx={{
+                height: "1px",
+                width: "100%",
+                bgcolor: "var(--Neutrals-Light-Outline)",
+              }}
+            />
             <AddDestinationCard />
             {error && <p style={{ color: "red" }}>{error}</p>}
             {destinations.length === 0 && <p>No destinations found.</p>}
