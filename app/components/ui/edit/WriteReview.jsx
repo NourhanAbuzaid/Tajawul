@@ -4,6 +4,7 @@ import { useState } from "react";
 import styles from "./EditPopup.module.css";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import SuccessMessage from "@/components/ui/SuccessMessage";
+import EditIcon from "@mui/icons-material/Edit";
 import API from "@/utils/api";
 import useAuthStore from "@/store/authStore";
 import { Rating } from "@mui/material";
@@ -71,7 +72,7 @@ export default function WriteReview({ destinationId }) {
   return (
     <>
       <button className={styles.editButton} onClick={handleOpenPopup}>
-        Write a Review
+        <EditIcon sx={{ fontSize: 22 }} /> Write a Review
       </button>
 
       {showPopup && (
