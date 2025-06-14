@@ -388,11 +388,6 @@ export default async function DestinationDetails({ destinationId }) {
               </p>
             </div>
           </div>
-
-          <div id="events" className={styles.section}>
-            <h2>Upcoming Events</h2>
-            <p>Events will be here</p>
-          </div>
         </div>
       </div>
     </div>
