@@ -526,3 +526,19 @@
     gap: 8px;
   }
 }
+
+.reviewsList {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.noReviews {
+  color: var(--Neutrals-Medium-Text);
+  text-align: center;
+  padding: 24px;
+  background-color: var(--Neutrals-Light-Background);
+  border-radius: 8px;
+  border: 1px dashed var(--Neutrals-Light-Outline);
+}

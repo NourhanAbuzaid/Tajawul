@@ -25,6 +25,7 @@ import XIcon from "@mui/icons-material/X";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import LanguageIcon from "@mui/icons-material/Language";
+import Review from "@/components/ui/Review";
 
 export default async function DestinationDetails({ destinationId }) {
   await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -52,7 +53,14 @@ export default async function DestinationDetails({ destinationId }) {
     contributersData = contributersResponse || { users: [] };
     console.log("Raw attributes response:", attributesData);
 
-    destination = destinationData.destinations[0];
+    const { data: reviewsData } = await axios.get(
+      `${baseUrl}/Review?DestinationId=${destinationId}`
+    );
+
+    destination = {
+      ...destinationData.destinations[0],
+      reviews: reviewsData.reviews,
+    };
 
     // Extract just the names from each attribute
     groupSizes =
@@ -256,6 +264,18 @@ export default async function DestinationDetails({ destinationId }) {
           <div id="reviews" className={styles.section}>
             <h2>Reviews</h2>
             <WriteReview destinationId={destinationId} />
+
+            <div className={styles.reviewsList}>
+              {destination?.reviews?.length > 0 ? (
+                destination.reviews.map((review) => (
+                  <Review key={review.reviewId} review={review} />
+                ))
+              ) : (
+                <p className={styles.noReviews}>
+                  No reviews yet. Be the first to review!
+                </p>
+              )}
+            </div>
           </div>
         </div>
 
