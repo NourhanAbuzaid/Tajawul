@@ -100,7 +100,7 @@
   font-weight: 500;
   text-align: left;
   display: flex;
-  gap: 4px;
+  gap: 6px;
   align-items: center;
 }
 
@@ -112,6 +112,9 @@
 
 .typeIcon {
   color: var(--Neutrals-Medium-Outline, #837468);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .rating {
