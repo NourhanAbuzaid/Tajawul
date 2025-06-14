@@ -57,7 +57,8 @@ const DestinationCard = ({
         <div className={styles.top}>
           <span className={styles.name}>{name}</span>
           <div className={styles.description}>
-            <span className={styles.typeIcon}>{typeIcon}</span>
+            {typeIcon &&
+              React.createElement(typeIcon, { style: { fontSize: "18px" } })}
             {type}
           </div>
           <div className={styles.rating}>

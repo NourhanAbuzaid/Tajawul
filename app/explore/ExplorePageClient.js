@@ -10,6 +10,9 @@ import DestinationTypeDropdown from "@/components/ui/filter/DestinationTypeDropd
 import CountriesSection from "@/components/ui/filter/CountriesSection";
 import AddDestinationCard from "@/components/ui/AddDestinationCard";
 import { GreenLoading } from "@/components/ui/Loading";
+import typeIconsMapping from "@/utils/typeIconsMapping";
+import Divider from "@mui/material/Divider";
+import RecommendedDest from "@/components/ui/Recommendation/RecommendedDest";
 
 // This component will receive the initial data from the server component
 export default function ExplorePageClient({ initialDestinations }) {
@@ -169,27 +172,40 @@ export default function ExplorePageClient({ initialDestinations }) {
           </div>
         ) : (
           <>
+            <RecommendedDest />
+            <Divider
+              sx={{
+                height: "1px",
+                width: "100%",
+                bgcolor: "var(--Neutrals-Light-Outline)",
+              }}
+            />
             <AddDestinationCard />
             {error && <p style={{ color: "red" }}>{error}</p>}
             {destinations.length === 0 && <p>No destinations found.</p>}
 
-            {destinations.map((destination) => (
-              <Link
-                key={destination.destinationId}
-                href={`/explore/${destination.destinationId}`}
-              >
-                <DestinationCard
-                  image={destination.coverImage || "/fallback.jpg"}
-                  name={destination.name}
-                  type={destination.type}
-                  location={`${destination.city}, ${destination.country}`}
-                  typeIcon={null}
-                  rating={destination.averageRating}
-                  ratingCount={destination.reviewsCount}
-                  priceRange={destination.priceRange}
-                />
-              </Link>
-            ))}
+            {destinations.map((destination) => {
+              const IconComponent =
+                typeIconsMapping[destination.type] || typeIconsMapping.Explore;
+
+              return (
+                <Link
+                  key={destination.destinationId}
+                  href={`/explore/${destination.destinationId}`}
+                >
+                  <DestinationCard
+                    image={destination.coverImage || "/fallback.jpg"}
+                    name={destination.name}
+                    type={destination.type}
+                    location={`${destination.city}, ${destination.country}`}
+                    typeIcon={IconComponent} // Just pass the component, not the rendered element
+                    rating={destination.averageRating}
+                    ratingCount={destination.reviewsCount}
+                    priceRange={destination.priceRange}
+                  />
+                </Link>
+              );
+            })}
           </>
         )}
       </div>

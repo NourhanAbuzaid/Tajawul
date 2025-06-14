@@ -11,33 +11,33 @@ import PlaceIcon from "@mui/icons-material/Place";
 import typeIconsMapping from "@/utils/typeIconsMapping";
 import { GreenLoading } from "@/components/ui/Loading";
 
-const RecommendedDest = () => {
+const TopRatingDest = () => {
   const [destinations, setDestinations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchRecommendedDestinations = async () => {
+    const fetchTopRatedDestinations = async () => {
       try {
-        const response = await API.get("/Recommendation/destinations");
-        setDestinations(response.data.items || []);
+        const response = await API.get(
+          "/Destination?sortBy=AverageRating&Ascending=false&PageNumber=1&PageSize=5"
+        );
+        setDestinations(response.data.destinations || []);
       } catch (err) {
-        console.error("Failed to fetch recommended destinations:", err);
-        setError("Unable to load recommendations at this time.");
+        console.error("Failed to fetch top rated destinations:", err);
+        setError("Unable to load top rated destinations at this time.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchRecommendedDestinations();
+    fetchTopRatedDestinations();
   }, []);
 
   if (loading) {
     return (
       <div className={styles.recommendedSection}>
-        <h2 className={styles.recommendedTitle}>
-          Recommended Destinations For You
-        </h2>
+        <h2 className={styles.recommendedTitle}>Top Rated Destinations</h2>
         <div style={{ margin: "40px 0" }}>
           <GreenLoading />
         </div>
@@ -48,9 +48,7 @@ const RecommendedDest = () => {
   if (error) {
     return (
       <div className={styles.recommendedSection}>
-        <h2 className={styles.recommendedTitle}>
-          Recommended Destinations For You
-        </h2>
+        <h2 className={styles.recommendedTitle}>Top Rated Destinations</h2>
         <p className={styles.recommendedError}>{error}</p>
       </div>
     );
@@ -58,12 +56,10 @@ const RecommendedDest = () => {
 
   return (
     <div className={styles.recommendedSection}>
-      <h2 className={styles.recommendedTitle}>
-        Recommended Destinations For You
-      </h2>
+      <h2 className={styles.recommendedTitle}>Top Rated Destinations</h2>
       <p className={styles.recommendedSubtitle}>
-        Handpicked just for you — these destinations match your travel style and
-        interests, making every journey feel more personal and unforgettable.
+        Discover the top 5 must-visit destinations, ranked by traveler ratings
+        and loved by the Tajawul community.
       </p>
       <div className={styles.recommendedList}>
         {destinations.map((destination) => {
@@ -105,6 +101,7 @@ const RecommendedDest = () => {
                     </div>
                     <div className={styles.rating}>
                       <Rating average={destination.averageRating} />
+                      <span>{destination.reviewsCount} Reviews</span>
                     </div>
                   </div>
                 </div>
@@ -117,4 +114,4 @@ const RecommendedDest = () => {
   );
 };
 
-export default RecommendedDest;
+export default TopRatingDest;
