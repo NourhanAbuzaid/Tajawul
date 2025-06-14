@@ -9,6 +9,7 @@ import Rating from "@/components/ui/Rating";
 import PriceRange from "@/components/ui/tags/PriceRange";
 import PlaceIcon from "@mui/icons-material/Place";
 import typeIconsMapping from "@/utils/typeIconsMapping";
+import { GreenLoading } from "@/components/ui/Loading";
 
 const RecommendedDest = () => {
   const [destinations, setDestinations] = useState([]);
@@ -37,7 +38,9 @@ const RecommendedDest = () => {
         <h2 className={styles.recommendedTitle}>
           Recommended Destinations For You
         </h2>
-        <p>Loading recommendations...</p>
+        <div style={{ margin: "40px 0" }}>
+          <GreenLoading />
+        </div>
       </div>
     );
   }

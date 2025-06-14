@@ -9,6 +9,7 @@ import Rating from "@/components/ui/Rating";
 import PriceRange from "@/components/ui/tags/PriceRange";
 import PlaceIcon from "@mui/icons-material/Place";
 import typeIconsMapping from "@/utils/typeIconsMapping";
+import { GreenLoading } from "@/components/ui/Loading";
 
 const TopRatingDest = () => {
   const [destinations, setDestinations] = useState([]);
@@ -37,7 +38,9 @@ const TopRatingDest = () => {
     return (
       <div className={styles.recommendedSection}>
         <h2 className={styles.recommendedTitle}>Top Rated Destinations</h2>
-        <p>Loading top rated destinations...</p>
+        <div style={{ margin: "40px 0" }}>
+          <GreenLoading />
+        </div>
       </div>
     );
   }

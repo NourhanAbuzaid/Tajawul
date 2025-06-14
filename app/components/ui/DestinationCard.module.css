@@ -227,7 +227,7 @@
 .recommendedList {
   display: flex;
   justify-content: space-between;
-  gap: 16px;
+  gap: 8px;
   overflow-x: auto;
   scrollbar-width: none; /* For Firefox */
   width: 100%;
