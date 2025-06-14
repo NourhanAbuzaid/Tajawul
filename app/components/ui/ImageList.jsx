@@ -34,7 +34,6 @@ const ImageList = ({ images = [] }) => {
     const files = event.target.files;
     if (!files || files.length === 0) return;
 
-    // Add validation here to ensure destinationId exists
     if (!destinationId) {
       setError("Destination ID is missing");
       return;
@@ -46,7 +45,7 @@ const ImageList = ({ images = [] }) => {
     try {
       const formData = new FormData();
       Array.from(files).forEach((file) => {
-        formData.append("images", file); // Note lowercase 'images' to match API expectation
+        formData.append("images", file);
       });
 
       const response = await API.put(
@@ -83,7 +82,6 @@ const ImageList = ({ images = [] }) => {
           destination to life!
         </p>
 
-        {/* Hidden file input triggered by the button */}
         <input
           type="file"
           id="imageUploadInput"
@@ -120,9 +118,41 @@ const ImageList = ({ images = [] }) => {
   return (
     <div className={styles.container}>
       <div className={styles.mainImageWrapper}>
-        <button onClick={handlePrev} className={styles.arrowLeft}>
-          <ArrowBackIcon />
-        </button>
+        {images.length > 1 && (
+          <>
+            <button onClick={handlePrev} className={styles.arrowLeft}>
+              <ArrowBackIcon />
+            </button>
+            <button onClick={handleNext} className={styles.arrowRight}>
+              <ArrowForwardIcon />
+            </button>
+          </>
+        )}
+        {images.length <= 5 && (
+          <div className={styles.uploadButtonContainer}>
+            <input
+              type="file"
+              id="imageUploadInput"
+              className={styles.hiddenInput}
+              onChange={handleFileChange}
+              accept="image/jpeg, image/jpg, image/png, image/webp"
+              multiple
+            />
+            <label
+              htmlFor="imageUploadInput"
+              className={styles.smolUploadButton}
+            >
+              {loading ? (
+                "Uploading..."
+              ) : (
+                <>
+                  <CloudUploadIcon className={styles.smolUploadIcon} />
+                  Upload Images
+                </>
+              )}
+            </label>
+          </div>
+        )}
         <div className={styles.mainImage}>
           <Image
             src={images[selectedIndex]}
@@ -131,24 +161,23 @@ const ImageList = ({ images = [] }) => {
             objectFit="cover"
           />
         </div>
-        <button onClick={handleNext} className={styles.arrowRight}>
-          <ArrowForwardIcon />
-        </button>
       </div>
-      <div className={styles.thumbnailWrapper}>
-        {images.map((image, index) => (
-          <div key={index} className={styles.thumbnail}>
-            <Image
-              src={image}
-              alt={`Thumbnail ${index}`}
-              layout="fill"
-              objectFit="cover"
-              className={index === selectedIndex ? styles.active : ""}
-              onClick={() => setSelectedIndex(index)}
-            />
-          </div>
-        ))}
-      </div>
+      {images.length > 1 && (
+        <div className={styles.thumbnailWrapper}>
+          {images.map((image, index) => (
+            <div key={index} className={styles.thumbnail}>
+              <Image
+                src={image}
+                alt={`Thumbnail ${index}`}
+                layout="fill"
+                objectFit="cover"
+                className={index === selectedIndex ? styles.active : ""}
+                onClick={() => setSelectedIndex(index)}
+              />
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

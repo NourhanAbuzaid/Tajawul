@@ -13,6 +13,7 @@ import ImageList from "@/components/ui/ImageList";
 import styles from "@/destination.module.css";
 import PriceRange from "./tags/PriceRange";
 import EditTags from "@/components/ui/edit/EditTags";
+import WriteReview from "@/components/ui/edit/WriteReview";
 import GroupSize from "./tags/GroupSize";
 import Tag from "./tags/Tag";
 import DestinationIdHandler from "@/components/DestinationIdHandler";
@@ -24,6 +25,7 @@ import XIcon from "@mui/icons-material/X";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import LanguageIcon from "@mui/icons-material/Language";
+import Review from "@/components/ui/Review";
 
 export default async function DestinationDetails({ destinationId }) {
   await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -51,7 +53,14 @@ export default async function DestinationDetails({ destinationId }) {
     contributersData = contributersResponse || { users: [] };
     console.log("Raw attributes response:", attributesData);
 
-    destination = destinationData.destinations[0];
+    const { data: reviewsData } = await axios.get(
+      `${baseUrl}/Review?DestinationId=${destinationId}`
+    );
+
+    destination = {
+      ...destinationData.destinations[0],
+      reviews: reviewsData.reviews,
+    };
 
     // Extract just the names from each attribute
     groupSizes =
@@ -137,17 +146,14 @@ export default async function DestinationDetails({ destinationId }) {
       {/* Secondary Nav Bar */}
       <div className={styles.secondaryNavBar}>
         <div className={styles.navContainer}>
-          <a href="#posts" className={styles.navItem}>
-            Posts
-          </a>
           <a href="#reviews" className={styles.navItem}>
             Reviews
           </a>
           <a href="#location" className={styles.navItem}>
             Location
           </a>
-          <a href="#events" className={styles.navItem}>
-            Events
+          <a href="#contributers" className={styles.navItem}>
+            Contributers
           </a>
         </div>
         <div className={styles.contactContainer}>
@@ -252,9 +258,23 @@ export default async function DestinationDetails({ destinationId }) {
           <div id="images" className={`${styles.section} ${styles.images}`}>
             <ImageList images={destination?.images} />
           </div>
-          <div id="posts" className={styles.section}>
-            <h2>Posts</h2>
-            <p>Posts will be here</p>
+          <div id="reviews" className={`${styles.section} ${styles.reviews}`}>
+            <div className={styles.reviewsHeader}>
+              <h2>Reviews</h2>
+              <WriteReview destinationId={destinationId} />
+            </div>
+
+            <div className={styles.reviewsList}>
+              {destination?.reviews?.length > 0 ? (
+                destination.reviews.map((review) => (
+                  <Review key={review.reviewId} review={review} />
+                ))
+              ) : (
+                <p className={styles.noReviews}>
+                  No reviews yet. Be the first to review!
+                </p>
+              )}
+            </div>
           </div>
         </div>
 
@@ -350,7 +370,7 @@ export default async function DestinationDetails({ destinationId }) {
                 contributersData?.users?.map((user) => ({
                   id: user.id,
                   name: user.name,
-                  url: user.profileImage,
+                  url: user.image, // Changed from profileImage to image
                 })) || []
               }
             />
@@ -364,15 +384,6 @@ export default async function DestinationDetails({ destinationId }) {
                   "Location not available"}
               </p>
             </div>
-          </div>
-
-          <div id="events" className={styles.section}>
-            <h2>Upcoming Events</h2>
-            <p>Events will be here</p>
-          </div>
-          <div id="reviews" className={styles.section}>
-            <h2>Reviews</h2>
-            <p>Reviews will be here</p>
           </div>
         </div>
       </div>
