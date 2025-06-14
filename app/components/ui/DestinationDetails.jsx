@@ -146,17 +146,14 @@ export default async function DestinationDetails({ destinationId }) {
       {/* Secondary Nav Bar */}
       <div className={styles.secondaryNavBar}>
         <div className={styles.navContainer}>
-          <a href="#posts" className={styles.navItem}>
-            Posts
-          </a>
           <a href="#reviews" className={styles.navItem}>
             Reviews
           </a>
           <a href="#location" className={styles.navItem}>
             Location
           </a>
-          <a href="#events" className={styles.navItem}>
-            Events
+          <a href="#contributers" className={styles.navItem}>
+            Contributers
           </a>
         </div>
         <div className={styles.contactContainer}>
@@ -373,7 +370,7 @@ export default async function DestinationDetails({ destinationId }) {
                 contributersData?.users?.map((user) => ({
                   id: user.id,
                   name: user.name,
-                  url: user.profileImage,
+                  url: user.image, // Changed from profileImage to image
                 })) || []
               }
             />
