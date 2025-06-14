@@ -17,11 +17,13 @@ import { useRouter } from "next/navigation"; // Import useRouter for redirection
 
 import dynamic from "next/dynamic";
 
-const LocationPicker = dynamic(() => import("@/components/map/LocationPicker"), {
-  ssr: false,
-  loading: () => <p>Loading map...</p>
-});
-
+const LocationPicker = dynamic(
+  () => import("@/components/map/LocationPicker"),
+  {
+    ssr: false,
+    loading: () => <p>Loading map...</p>,
+  }
+);
 
 // Debounce utility function to limit the number of calls to saveToLocalStorage
 const debounce = (func, delay) => {
@@ -441,33 +443,17 @@ export default function CreateDestinationForm() {
             type="text"
             required
             value={formData.locations[0]?.address || ""}
-            onChange={(e) => setFormData(prev => ({
-              ...prev,
-              locations: [{ ...prev.locations[0], address: e.target.value }]
-            }))}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                locations: [{ ...prev.locations[0], address: e.target.value }],
+              }))
+            }
             errorMsg={errors.address}
           />
         </div>
         <div className={styles.coordinatesContainer}>
           <div className={styles.longitudeField}>
-            <Input
-              label="Longitude"
-              id="longitude"
-              type="number"
-              step="any"
-              required
-              value={formData.locations[0]?.longitude || 0}
-              onChange={(e) => {
-                setFormData(prev => ({
-                  ...prev,
-                  locations: [{ ...prev.locations[0], longitude: e.target.value }]
-                }));
-              }}
-              errorMsg={errors.longitude}
-            />
-          </div>
-          
-          <div className={styles.latitudeField}>
             <Input
               label="Latitude"
               id="latitude"
@@ -476,29 +462,54 @@ export default function CreateDestinationForm() {
               required
               value={formData.locations[0]?.latitude || 0}
               onChange={(e) => {
-                setFormData(prev => ({
+                setFormData((prev) => ({
                   ...prev,
-                  locations: [{ ...prev.locations[0], latitude: e.target.value }]
+                  locations: [
+                    { ...prev.locations[0], latitude: e.target.value },
+                  ],
                 }));
               }}
               errorMsg={errors.latitude}
             />
+          </div>
+
+          <div className={styles.latitudeField}>
+            <Input
+              label="Longitude"
+              id="longitude"
+              type="number"
+              step="any"
+              required
+              value={formData.locations[0]?.longitude || 0}
+              onChange={(e) => {
+                setFormData((prev) => ({
+                  ...prev,
+                  locations: [
+                    { ...prev.locations[0], longitude: e.target.value },
+                  ],
+                }));
+              }}
+              errorMsg={errors.longitude}
+            />
             <LocationPicker
               onLocationSelect={(location) => {
-                setFormData(prev => ({
+                setFormData((prev) => ({
                   ...prev,
-                  locations: [{
-                    ...prev.locations[0],
-                    longitude: location.lng,
-                    latitude: location.lat,
-                    address: location.address || prev.locations[0]?.address || ""
-                  }]
+                  locations: [
+                    {
+                      ...prev.locations[0],
+                      longitude: location.lng,
+                      latitude: location.lat,
+                      address:
+                        location.address || prev.locations[0]?.address || "",
+                    },
+                  ],
                 }));
               }}
               initialLocation={{
                 lng: formData.locations[0]?.longitude || 0,
                 lat: formData.locations[0]?.latitude || 0,
-                address: formData.locations[0]?.address || ""
+                address: formData.locations[0]?.address || "",
               }}
             />
           </div>
