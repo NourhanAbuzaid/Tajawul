@@ -6,8 +6,7 @@ import ErrorMessage from "@/components/ui/ErrorMessage";
 import SuccessMessage from "@/components/ui/SuccessMessage";
 import API from "@/utils/api";
 import useAuthStore from "@/store/authStore";
-import StarIcon from "@mui/icons-material/Star";
-import StarBorderIcon from "@mui/icons-material/StarBorder";
+import { Rating } from "@mui/material";
 
 export default function WriteReview({ destinationId }) {
   const { roles } = useAuthStore();
@@ -18,7 +17,6 @@ export default function WriteReview({ destinationId }) {
   const [success, setSuccess] = useState("");
   const [comment, setComment] = useState("");
   const [rate, setRate] = useState(0);
-  const [hoverRating, setHoverRating] = useState(0);
 
   const handleOpenPopup = () => {
     if (!roles.includes("User")) {
@@ -70,24 +68,6 @@ export default function WriteReview({ destinationId }) {
     }
   };
 
-  const renderStars = () => {
-    return [1, 2, 3, 4, 5].map((star) => (
-      <span
-        key={star}
-        onMouseEnter={() => setHoverRating(star)}
-        onMouseLeave={() => setHoverRating(0)}
-        onClick={() => setRate(star)}
-        style={{ cursor: "pointer", margin: "0 2px" }}
-      >
-        {(hoverRating || rate) >= star ? (
-          <StarIcon sx={{ color: "var(--Green-Hover)", fontSize: 32 }} />
-        ) : (
-          <StarBorderIcon sx={{ color: "var(--Green-Hover)", fontSize: 32 }} />
-        )}
-      </span>
-    ));
-  };
-
   return (
     <>
       <button className={styles.editButton} onClick={handleOpenPopup}>
@@ -113,7 +93,23 @@ export default function WriteReview({ destinationId }) {
 
             <div className={styles.formContainer}>
               <div style={{ margin: "16px 0", textAlign: "center" }}>
-                <div>{renderStars()}</div>
+                <Rating
+                  name="half-rating"
+                  value={rate}
+                  precision={0.5}
+                  onChange={(event, newValue) => {
+                    setRate(newValue);
+                  }}
+                  size="large"
+                  sx={{
+                    "& .MuiRating-iconFilled": {
+                      color: "var(--Green-Hover)",
+                    },
+                    "& .MuiRating-iconHover": {
+                      color: "var(--Green-Hover)",
+                    },
+                  }}
+                />
               </div>
 
               <textarea
