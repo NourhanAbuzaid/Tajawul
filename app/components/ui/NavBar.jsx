@@ -128,7 +128,7 @@ export default function NavBar() {
           <Link href="/triphub" className={styles.dropdownItem}>
             TripHub
           </Link>
-          <Link href="/create-trip" className={styles.dropdownItem}>
+          <Link href="/add-trip" className={styles.dropdownItem}>
             Create New Trip
           </Link>
         </div>
