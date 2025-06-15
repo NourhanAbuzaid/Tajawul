@@ -437,21 +437,32 @@ export default function CreateDestinationForm() {
             marginBottom: "20px",
           }}
         />
-        <Dropdown
-          label="City"
-          id="city"
-          required
-          value={formData.city}
-          onChange={handleChange}
-          options={cities}
-          errorMsg={
-            cityClicked && !formData.country
-              ? "Please Select a Country"
-              : errors.city
-          }
-          disabled={!formData.country || cities.length === 0}
-          onDropdownClick={() => setCityClicked(true)}
-        />
+        <div className={styles.formRow}>
+          <Dropdown
+            label="Country"
+            id="country"
+            required
+            value={formData.country}
+            onChange={handleChange}
+            options={arabCountriesOptions}
+            errorMsg={errors.country}
+          />
+          <Dropdown
+            label="City"
+            id="city"
+            required
+            value={formData.city}
+            onChange={handleChange}
+            options={cities}
+            errorMsg={
+              cityClicked && !formData.country
+                ? "Please Select a Country"
+                : errors.city
+            }
+            disabled={!formData.country || cities.length === 0}
+            onDropdownClick={() => setCityClicked(true)}
+          />
+        </div>
         <div className={styles.formRow}>
           <Input
             label="Address"
