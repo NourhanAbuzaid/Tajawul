@@ -120,6 +120,16 @@
   justify-content: center;
   color: var(--Neutrals-Background);
   padding: 14px;
+  cursor: pointer; /* Add this line */
+  transition: all 0.2s ease; /* Optional: Add smooth transition */
+}
+
+.searchIcon:hover {
+  background: var(
+    --Gradient-Hover,
+    linear-gradient(268deg, #1a2f2b 23.52%, #4a8c82 136.03%)
+  );
+  transform: translateY(-50%) scale(1.05);
 }
 
 .searchResults {

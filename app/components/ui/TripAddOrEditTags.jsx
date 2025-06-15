@@ -6,11 +6,13 @@ import EditableTagQuestion from "@/components/ui/EditableTagQuestion";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import SuccessMessage from "@/components/ui/SuccessMessage";
 import API from "@/utils/api";
-import axios from "axios";
 import EditIcon from "@mui/icons-material/Edit";
 import useAuthStore from "@/store/authStore";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
-export default function EditTags({ destinationId }) {
+export default function EditTags({ tripId, onUpdate }) {
+  const router = useRouter();
   const { roles } = useAuthStore();
   const [showPopup, setShowPopup] = useState(false);
   const [showProtectedPopup, setShowProtectedPopup] = useState(false);
@@ -23,49 +25,16 @@ export default function EditTags({ destinationId }) {
   const [deletedTags, setDeletedTags] = useState([]);
   const [tagsOptions, setTagsOptions] = useState([]);
 
-  const handleOpenPopup = async () => {
-    if (!roles.includes("User")) {
-      setShowProtectedPopup(true);
-      return;
-    }
-
-    setFetchingData(true);
-    setError("");
-    try {
-      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-      const response = await axios.get(
-        `${baseUrl}/Destination/${destinationId}/attributes`
-      );
-      const data = response.data;
-
-      setTags(data.tags?.data?.map((item) => item.name) || []);
-      setDeletedTags([]);
-      setShowPopup(true);
-    } catch (err) {
-      console.error("Failed to fetch tags:", err);
-      setError("Failed to fetch existing tags. Please try again.");
-    } finally {
-      setFetchingData(false);
-    }
-  };
-
   useEffect(() => {
     const fetchOptions = async () => {
       setFetchingOptions(true);
       try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-        const tagsResponse = await axios.get(`${baseUrl}/tags`);
-
-        const processOptions = (items) => {
-          return (
-            items?.map((item) => ({
-              label: item.name,
-              value: item.name,
-            })) || []
-          );
-        };
-
-        setTagsOptions(processOptions(tagsResponse.data));
+        const response = await API.get(`/tags`);
+        const processedOptions = response.data?.map(item => ({
+          label: item.name,
+          value: item.name
+        })) || [];
+        setTagsOptions(processedOptions);
       } catch (err) {
         console.error("Failed to fetch tag options:", err);
         setError("Failed to load tag options. Please try again later.");
@@ -76,6 +45,28 @@ export default function EditTags({ destinationId }) {
 
     fetchOptions();
   }, []);
+
+  const handleOpenPopup = async () => {
+    if (!roles.includes("User")) {
+      setShowProtectedPopup(true);
+      return;
+    }
+
+    setFetchingData(true);
+    setError("");
+    try {
+      const response = await API.get(`/Trip/${tripId}/tags`);
+      const tagsData = response.data?.data || [];
+      setTags(Array.isArray(tagsData) ? tagsData : []);
+      setDeletedTags([]);
+      setShowPopup(true);
+    } catch (err) {
+      console.error("Failed to fetch tags:", err);
+      setError("Failed to fetch existing tags. Please try again.");
+    } finally {
+      setFetchingData(false);
+    }
+  };
 
   const handleTagsChange = (e) => {
     // Filter out any values that aren't in our options (new tags are handled by onAddNew)
@@ -105,14 +96,12 @@ export default function EditTags({ destinationId }) {
 
     try {
       if (deletedTags.length > 0) {
-        await API.delete(`/Destination/${destinationId}/attributes`, {
-          data: {
-            tags: deletedTags,
-          },
+        await API.delete(`/Trip/${tripId}/tags`, {
+          data: { tags: deletedTags },
         });
       }
 
-      await API.post(`/Destination/${destinationId}/attributes`, {
+      await API.post(`/Trip/${tripId}/tags`, {
         tags: tags,
       });
 
@@ -120,6 +109,7 @@ export default function EditTags({ destinationId }) {
       setTimeout(() => {
         setShowPopup(false);
         setSuccess("");
+        if (onUpdate) onUpdate();
       }, 2000);
     } catch (err) {
       console.error("Failed to update tags:", err);
@@ -157,8 +147,8 @@ export default function EditTags({ destinationId }) {
               ✕
             </button>
 
-            <h2>Edit Destination Tags</h2>
-            <p>Choose tags that best describe this destination</p>
+            <h2>Edit Trip Tags</h2>
+            <p>Choose tags that best describe this trip</p>
 
             <div className={styles.formContainer}>
               <EditableTagQuestion
@@ -170,6 +160,7 @@ export default function EditTags({ destinationId }) {
                 size="small"
                 addNewText="+ Add Tag"
                 onAddNew={handleAddNewTag}
+                allowAddNew={true}
               />
 
               {error && <ErrorMessage message={error} />}
@@ -179,7 +170,7 @@ export default function EditTags({ destinationId }) {
                 type="button"
                 className={styles.submitButton}
                 onClick={handleSubmit}
-                disabled={loading || fetchingOptions}
+                disabled={loading}
               >
                 {loading ? "Saving..." : "Save Tags"}
               </button>

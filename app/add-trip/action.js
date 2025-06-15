@@ -19,9 +19,9 @@ export const addTripSchema = z.object({
     }),
   }),
 
-  visibility: z.enum(["Public", "Private", "TripHub"], {
+  visibility: z.enum(["Public", "Private", "Triphub"], {
     errorMap: () => ({
-      message: "Visibility must be Public, Private, or TripHub",
+      message: "Visibility must be Public, Private, or Triphub",
     }),
   }),
 

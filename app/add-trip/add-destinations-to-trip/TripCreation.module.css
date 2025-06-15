@@ -108,14 +108,18 @@
 
 
 .destinationImageContainer {
-  width: 60px;
-  height: 60px;
-  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .destinationImage {
-  border-radius: 6px;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+  object-position: center;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 }
 
 .destinationNameContainer {
@@ -224,3 +228,14 @@
   }
 }
 
+.destinationImageWrapper {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
+}

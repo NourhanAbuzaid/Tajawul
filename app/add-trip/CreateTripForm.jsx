@@ -246,7 +246,7 @@ export default function CreateTripForm() {
             options={[
               { value: "Public", label: "Public" },
               { value: "Private", label: "Private" },
-              { value: "TripHub", label: "TripHub" },
+              { value: "Triphub", label: "Triphub" },
             ]}
             errorMsg={errors.visibility}
           />

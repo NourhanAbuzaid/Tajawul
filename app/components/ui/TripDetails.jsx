@@ -1,98 +1,237 @@
-import axios from "axios";
-import Image from "next/image";
-import Divider from "@mui/material/Divider";
-import Avatar from "@mui/material/Avatar";
-import Stats from "@/components/ui/Stats";
-import styles from "@/trip.module.css";
-import TripInteractions from "./TripInteractions";
-import TripIdHandler from "@/components/TripIdHandler";
-import SameCountry from "@/components/ui/SameCountry";
-import ImageList from "@/components/ui/ImageList";
+"use client";
+
+import { useState, useEffect } from 'react';
+import React from 'react';
+import Image from 'next/image';
+import Divider from '@mui/material/Divider';
+import Avatar from '@mui/material/Avatar';
+import MapIcon from '@mui/icons-material/Map';
+import EditIcon from '@mui/icons-material/Edit';
+import Stats from '@/components/ui/TripStats';
+import styles from '@/trip.module.css';
+import TripInteractions from './TripInteractions';
+import TripIdHandler from '@/components/TripIdHandler';
+import SameCountry from '@/components/ui/SameCountry';
+import PriceRange from './tags/PriceRange';
+import TripDuration from './tags/TripDuration';
+import Status from './tags/Status';
+import EditTags from '@/components/ui/TripAddOrEditTags';
+import Tag from './tags/Tag';
+import API from '@/utils/api';
+import useAuthStore from '@/store/authStore';
+import typeIconsMapping from '@/utils/typeIconsMapping';
+import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
+import StarHalfIcon from '@mui/icons-material/StarHalf';
+import Link from 'next/link';
+import LocationViewer from '@/components/map/LocationViewer';
+import useTripInteractionsStore from "@/store/TripInteractionsStore";
+import TripStatsHydrator from '@/components/TripStatsHydrator';
+import { useRouter } from 'next/navigation';
 
 
-import PriceRange from "./tags/PriceRange";
-import EditTags from "@/components/ui/TripAddOrEditTags";
-import Tag from "./tags/Tag";
-
-export default async function TripDetails({ tripId }) {
-  await new Promise((resolve) => setTimeout(resolve, 2000));
-
-const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-
-let trip = null;
-let destinations = [];
-let tags = [];
-let contributersData = { users: [] };
-
-try {
-  // 1. Fetch trip data
-  const { data: tripData } = await axios.get(
-    `${baseUrl}/Trip/${tripId}`
-  );
-
-  // 2. Fetch destinations for this trip
-  const { data: destinationsData } = await axios.get(
-    `${baseUrl}/Trip/${tripId}/destinations`
-  );
-
-  // 3. Fetch tags for this trip
-  const { data: tagsData } = await axios.get(
-    `${baseUrl}/Trip/${tripId}/tags`
-  );
-
-  // 4. Fetch contributors
-  const { data: contributersResponse } = await axios.get(
-    `${baseUrl}/Trip/${tripId}/users?Relation=contribute`
-  );
-  
-  contributersData = contributersResponse || { users: [] };
-  console.log("Raw tags response:", tagsData);
-
-  trip = tripData; // Assuming the response is the trip object directly
-
-  // Process destinations and tags
-  destinations = destinationsData || [];
-  tags = tagsData || []; // Assuming tagsData is already an array of tag names
-
-  if (!trip) throw new Error("Trip not found");
-
-  console.log("Processed Trip Details:", {
-    trip,
-    destinations,
-    tags,
-    contributers: contributersData.users
-  });
-} catch (error) {
-  console.error("Failed to fetch trip details:", error);
-  if (error.response) {
-    console.error("Response data:", error.response.data);
-    console.error("Status code:", error.response.status);
+const RatingStars = ({ rating }) => {
+  if (rating === undefined || rating === null) {
+    return null;
   }
-  contributersData = { users: [] };
-}
+
+  const normalizedRating = Math.max(0, Math.min(5, rating));
+  const fullStars = Math.floor(normalizedRating);
+  const hasHalfStar = normalizedRating % 1 >= 0.5;
+  const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
+  return (
+    <div className={styles.ratingContainer}>
+      <div className={styles.ratingStars}>
+        {[...Array(fullStars)].map((_, i) => (
+          <StarIcon key={`full-${i}`} className={styles.starFilled} />
+        ))}
+        {hasHalfStar && <StarHalfIcon key="half" className={styles.starHalf} />}
+        {[...Array(emptyStars)].map((_, i) => (
+          <StarBorderIcon key={`empty-${i}`} className={styles.starEmpty} />
+        ))}
+      </div>
+      {rating > 0 ? (
+        <span className={styles.ratingValue}>{normalizedRating.toFixed(1)}</span>
+      ) : (
+        <span className={styles.noRatingText}>No ratings</span>
+      )}
+    </div>
+  );
+};
+
+const getTypeIcon = (type) => {
+  const IconComponent = typeIconsMapping[type] || typeIconsMapping.Hotel;
+  return <IconComponent className={styles.destinationTypeIcon} />;
+};
+
+export default function TripDetails({ tripId }) {
+
+  const [coverImage, setCoverImage] = useState(null);
+  const [trip, setTrip] = useState(null);
+  const [destinations, setDestinations] = useState([]);
+  const [tags, setTags] = useState([]);
+  const [contributersData, setContributersData] = useState({ users: [] });
+  const [loading, setLoading] = useState(true);
+  const { accessToken } = useAuthStore();
+  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [slides, setSlides] = useState([]);
+  const router = useRouter();
+
+
+  // Get stats from store
+  const { favoritesCount, wishesCount, clonesCount } = useTripInteractionsStore();
+
+  const isValidUrl = (url) => {
+    if (!url) return false;
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return url.startsWith('/') || url.startsWith('blob:');
+    }
+  };
+
+  const fetchTripTags = async () => {
+    try {
+      const tagsRes = await API.get(`/Trip/${tripId}/tags`);
+      setTags(tagsRes.data?.data || []);
+    } catch (error) {
+      console.error("Failed to fetch tags:", error);
+    }
+  };
+
+  const groupDestinationsByDay = () => {
+    const grouped = {};
+    destinations.forEach(destination => {
+      const day = destination.day || 1;
+      if (!grouped[day]) {
+        grouped[day] = [];
+      }
+      grouped[day].push(destination);
+    });
+    return grouped;
+  };
+
+  useEffect(() => {
+    if (destinations.length > 0) {
+      const destinationImages = destinations
+        .filter(dest => dest.images && dest.images.length > 0)
+        .map(dest => {
+          const randomIndex = Math.floor(Math.random() * dest.images.length);
+          return {
+            src: dest.images[randomIndex],
+            alt: dest.name,
+            destinationId: dest.destinationId
+          };
+        });
+
+      setSlides(destinationImages);
+
+      if (destinationImages.length > 1) {
+        const interval = setInterval(() => {
+          setCurrentSlide(prev => (prev + 1) % destinationImages.length);
+        }, 5000);
+        
+        return () => clearInterval(interval);
+      }
+    }
+  }, [destinations]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        
+        const [tripRes, destinationsRes, contributersRes] = await Promise.all([
+          API.get(`/Trip?TripId=${tripId}`).catch(() => ({ data: { trips: [] }})),
+          API.get(`/Trip/${tripId}/destinations`).catch(() => ({ data: [] })),
+          API.get(`/Trip/${tripId}/users?Relation=contribute`).catch(() => ({ data: { users: [] }}))
+        ]);
+
+        const foundTrip = tripRes.data.trips?.find(t => t.tripId === tripId);
+        if (!foundTrip) throw new Error("Trip not found");
+        
+        setTrip(foundTrip);
+        
+        if (foundTrip.coverImage && isValidUrl(foundTrip.coverImage)) {
+          setCoverImage(foundTrip.coverImage);
+        } else {
+          setCoverImage(null);
+        }
+
+        setDestinations(destinationsRes.data || []);
+        setContributersData(contributersRes.data || { users: [] });
+        await fetchTripTags();
+
+      } catch (error) {
+        console.error("Failed to fetch trip details:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (tripId) {
+      fetchData();
+    }
+  }, [tripId, accessToken]);
+
+  const handleTagsUpdate = async () => {
+    await fetchTripTags();
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!trip) {
+    return <div>Trip not found</div>;
+  }
+
+  const destinationsByDay = groupDestinationsByDay();
+  const sortedDays = Object.keys(destinationsByDay).sort((a, b) => a - b);
 
   return (
     <div>
       <TripIdHandler tripId={tripId} />
+      
+      {/* Hydrate the store with server-side data */}
+      <TripStatsHydrator 
+        favoritesCount={trip?.favoritesCount || 0} 
+        wishesCount={trip?.wishesCount || 0}
+        clonesCount={trip?.clonesCount || 0}
+      />
+      
       <div className={styles.coverWrapper}>
         <div className={styles.tripCover}>
-          {trip?.coverImage && (
+          {coverImage && isValidUrl(coverImage) ? (
             <Image
-              src={trip.coverImage}
+              src={coverImage}
               alt={`Trip: ${trip.title}`}
-              fill={true}
-              style={{ objectFit: "cover" }}
+              fill
               priority
+              unoptimized
+              className={styles.tripCoverImage}
             />
+          ) : (
+            <div className={styles.coverPlaceholder} />
           )}
         </div>
         <div className={styles.coverContent}>
           <div className={styles.buttomContainer}>
             <div className={styles.buttomLeftContainer}>
-              <h1 className={styles.tripTitle}>{trip?.title}</h1>
+              <h1 className={styles.tripTitle}>{trip.title}</h1>
             </div>
             <div className={styles.buttomRightContainer}>
-              <TripInteractions tripId={tripId} />
+              <TripInteractions 
+                tripId={tripId} 
+                onCoverUpdate={(newCover) => {
+                  if (newCover && isValidUrl(newCover)) {
+                    setCoverImage(`${newCover}?${Date.now()}`);
+                  }
+                }} 
+              />
             </div>
           </div>
         </div>
@@ -103,65 +242,191 @@ try {
           <div id="tags" className={`${styles.section} ${styles.tagsContainer}`}>
             <div className={styles.headerRow}>
               <div className={styles.tagsWrapper}>
-                {trip?.priceRange && (
-                  <Tag options={[trip.priceRange]} type="price" />
-                )}
-                {trip?.tripDuration && (
-                  <Tag options={[trip.tripDuration]} type="duration" />
-                )}
-                {trip?.status && (
-                  <Tag options={[trip.status]} type="status" />
-                )}
+                {trip?.priceRange && <PriceRange priceRange={trip.priceRange} />}
+                {trip?.tripDuration && <TripDuration durations={[trip.tripDuration]} />}
+                {trip?.status && <Status status={trip.status} />}
               </div>
-              <Divider
-                sx={{
-                  height: "1px",
-                  width: "100%",
-                  bgcolor: "var(--Neutrals-Light-Outline)",
-                  my: "16px",
-                }}
-              />
+              <div className={styles.divider}></div>
               {tags.length > 0 ? (
                 <div className={styles.tagsWrapper}>
                   <Tag options={tags} />
                 </div>
               ) : (
-                <div className={styles.noTagsMessage}>
-                  No tags added yet
-                </div>
+                <div className={styles.noTagsMessage}>No tags added yet</div>
               )}
               <div className={styles.editButtonContainer}>
-                <EditTags tripId={tripId} />
+                <EditTags tripId={tripId} onUpdate={handleTagsUpdate} />
               </div>
             </div>
           </div>
-          <div id="destinations" className={styles.section}>
-          <h2>Destinations ({trip?.destinationCount || 0})</h2>
-          {destinations.length > 0 ? (
-            <>
-              <div className={styles.destinationsSlider}>
-                <ImageList
-                  images={destinations.map(dest => ({
-                    id: dest.id,
-                    url: dest.images?.[0] || dest.coverImage,
-                    alt: dest.name
-                  }))}
-                  showThumbnails={true}
-                  showFullScreen={true}
-                />
-              </div>
-              <div className={styles.destinationsGrid}>
-                {destinations.map((destination) => (
-                  <div key={destination.id} className={styles.destinationCard}>
-                    {/* Destination card content */}
+
+          {slides.length > 0 && (
+            <div className={`${styles.section} ${styles.sliderSection}`}>
+              <h2>Trip Highlights</h2>
+              <div className={styles.sliderContainer}>
+                <div 
+                  className={styles.sliderTrack}
+                  style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+                >
+                  {slides.map((slide, index) => (
+                    <div key={`${slide.destinationId}-${index}`} className={styles.slide}>
+                      <div className={styles.imageWrapper}>
+                        <Image
+                          src={slide.src}
+                          alt={slide.alt}
+                          fill
+                          className={styles.slideImage}
+                          unoptimized
+                          style={{
+                            objectFit: 'cover',
+                            objectPosition: 'center'
+                          }}
+                          onError={(e) => {
+                            e.currentTarget.src = '/fallback.jpg';
+                            e.currentTarget.onerror = null;
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                
+                {slides.length > 1 && (
+                  <div className={styles.sliderDots}>
+                    {slides.map((_, index) => (
+                      <button
+                        key={index}
+                        className={`${styles.dot} ${index === currentSlide ? styles.activeDot : ''}`}
+                        onClick={() => setCurrentSlide(index)}
+                      />
+                    ))}
                   </div>
+                )}
+              </div>
+            </div>
+          )}
+          
+          <div id="destinations" className={styles.section}>
+            <h2>Destinations</h2>
+            <br />
+            {destinations.length > 0 ? (
+              <div className={styles.destinationsContainer}>
+                <div className={styles.timelineLine}></div>
+                
+                {sortedDays.map((day, dayIndex) => (
+                  <React.Fragment key={`day-${day}`}>
+                    <div className={styles.dayNumber}>Day {day}</div>
+                    {destinationsByDay[day].map((destination, destIndex) => (
+                      <div key={`${day}-${destIndex}`} className={styles.destinationWrapper}>
+                        <div className={styles.destinationTimelineIcon}>
+                          {getTypeIcon(destination.type)}
+                        </div>
+                        <div className={styles.destinationCard}>
+                          {destination.locations?.length > 0 ? (
+                            <button 
+                              className={styles.cardMapIconButton}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedLocation({
+                                  lng: destination.locations[0].longitude,
+                                  lat: destination.locations[0].latitude,
+                                  address: `${destination.name}, ${destination.city}`
+                                });
+                              }}
+                              aria-label="View on map"
+                            >
+                              <MapIcon sx={{ 
+                                fontSize: '16px', 
+                                color: 'var(--Green-Perfect)',
+                                transition: 'transform 0.2s ease'
+                              }} />
+                            </button>
+                          ) : (
+                            <button 
+                              className={styles.cardMapIconButton} 
+                              disabled
+                              title="No location data"
+                            >
+                              <MapIcon sx={{ 
+                                fontSize: '16px', 
+                                color: 'var(--Neutrals-Medium-Text)',
+                                opacity: 0.5
+                              }} />
+                            </button>
+                          )}
+
+                          <div className={styles.destinationContent}>
+                            <Link 
+                              href={`/explore/${destination.destinationId}`}
+                              passHref
+                              style={{ textDecoration: 'none', color: 'inherit' }}
+                            >
+                              <div className={styles.destinationImage}>
+                                <Image
+                                  src={destination.coverImage || '/fallback.jpg'}
+                                  alt={destination.name}
+                                  fill
+                                  style={{ objectFit: 'cover' }}
+                                  unoptimized
+                                  onError={(e) => {
+                                    e.currentTarget.src = '/fallback.jpg';
+                                    e.currentTarget.onerror = null;
+                                  }}
+                                />
+                              </div>
+                            </Link>
+                            
+                            <div className={styles.destinationInfo}>
+                              <h3 className={styles.destinationName}>{destination.name}</h3>
+                              
+                              <div className={styles.ratingRow}>
+                                <div className={styles.ratingStars}>
+                                  {[1, 2, 3, 4, 5].map((star) => {
+                                    const rating = destination.averageRating || 0;
+                                    if (rating >= star) {
+                                      return <StarIcon key={star} className={styles.starFilled} />;
+                                    } else {
+                                      return <StarBorderIcon key={star} className={styles.starEmpty} />;
+                                    }
+                                  })}
+                                </div>
+                                <span className={styles.reviewsCount}>
+                                  {destination.reviewsCount || 0}
+                                </span>
+                              </div>
+
+                              <div className={styles.metaRow}>
+                                <div className={styles.destinationType}>
+                                  {getTypeIcon(destination.type)}
+                                  <span>{destination.type}</span>
+                                </div>
+                                {destination.priceRange && (
+                                  <div className={styles.priceRangeTag}>
+                                    <PriceRange priceRange={destination.priceRange} />
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </React.Fragment>
                 ))}
               </div>
-            </>
-          ) : (
-            <p>No destinations added yet</p>
-          )}
-        </div>
+            ) : (
+              <p>No destinations added yet</p>
+            )}
+          <div className={styles.editButtonContainer} style={{ marginTop: '16px' }}>
+            <button 
+              className={styles.editDestinationsButton}
+              onClick={() => router.push(`/add-destinations-to-trip/${tripId}`)}
+            >
+              <EditIcon fontSize="small" />
+              Edit Destinations
+            </button>
+          </div>
+            </div>
         </div>
 
         <div className={styles.rightColumn}>
@@ -169,23 +434,28 @@ try {
             <div className={styles.timeContainer}>
               <SameCountry sameCountry={trip?.sameCountry} />
             </div>
-            
             <Divider sx={{ 
               height: "1px", 
               width: "100%", 
-              bgcolor: "var(--Neutrals-Light-Outline)",
+              bgcolor: "var(--Neutrals-Light-Outline)", 
               my: "16px" 
             }} />
             
             <div className={styles.statsContainer}>
-              <Stats type="Favorites" count={trip?.favoritesCount} />
-              <Stats type="Wishes" count={trip?.wishesCount} />
+              <TripStatsHydrator 
+                favoritesCount={trip?.favoritesCount || 0}
+                wishesCount={trip?.wishesCount || 0}
+                clonesCount={trip?.clonesCount || 0}
+              />
+              <Stats type="Favorites" />
+              <Stats type="Wishes" />
+              <Stats type="Clones" />
             </div>
             
             <Divider sx={{ 
               height: "1px", 
               width: "100%", 
-              bgcolor: "var(--Neutrals-Light-Outline)",
+              bgcolor: "var(--Neutrals-Light-Outline)", 
               my: "16px" 
             }} />
             
@@ -195,55 +465,57 @@ try {
 
           <div id="contributers" className={styles.section}>
             <h2>Contributers</h2>
-            <div className={styles.contributersList}>
-              <div className={styles.contributerItem}>
-                <Avatar
-                  alt={trip?.creator?.name}
-                  src={trip?.creator?.profileImage}
-                  sx={{ width: 40, height: 40 }}
-                />
-                <div className={styles.contributerInfo}>
-                  <span className={styles.contributerLabel}>Created by:</span>
-                  <span className={styles.contributerName}>{trip?.creator?.name}</span>
-                </div>
+            <div className={styles.contributerItem}>
+              <Avatar
+                alt={trip?.creator?.[1] || 'Creator'}
+                src={trip?.creator?.[2]}
+                sx={{ width: 56, height: 56 }}
+              />
+              <div className={styles.contributerInfo}>
+                <span className={styles.contributerLabel}>Created by:</span>
+                <span className={styles.contributerName}>
+                  {trip?.creator?.[1] || 'Unknown'}
+                </span>
               </div>
-              
-              {trip?.clonedFrom && (
+            </div>
+
+            {trip?.clonedFrom && (
+              <>
+                <Divider sx={{ 
+                  height: "1px", 
+                  width: "100%", 
+                  bgcolor: "var(--Neutrals-Light-Outline)", 
+                  my: "16px" 
+                }} />
+                <h3>Inspired By</h3>
                 <div className={styles.contributerItem}>
                   <Avatar
-                    alt={trip?.clonedFrom?.creator?.name}
-                    src={trip?.clonedFrom?.creator?.profileImage}
-                    sx={{ width: 40, height: 40 }}
+                    alt={trip.clonedFrom.creator.name}
+                    src={trip.clonedFrom.creator.profileImage}
+                    sx={{ width: 56, height: 56 }}
                   />
                   <div className={styles.contributerInfo}>
-                    <span className={styles.contributerLabel}>Cloned from:</span>
-                    <span className={styles.contributerName}>{trip?.clonedFrom?.creator?.name}</span>
+                    <span className={styles.contributerName}>
+                      {trip.clonedFrom.creator.name}
+                    </span>
+                    <span className={styles.contributerLabel}>
+                      Original Creator
+                    </span>
                   </div>
                 </div>
-              )}
-              
-              {trip?.clonedBy && trip.clonedBy.length > 0 && (
-                <div className={styles.contributerItem}>
-                  <div className={styles.clonedByContainer}>
-                    <span className={styles.contributerLabel}>Cloned by:</span>
-                    <div className={styles.clonedByAvatars}>
-                      {trip.clonedBy.slice(0, 3).map((user, index) => (
-                        <Avatar
-                          key={index}
-                          alt={user.name}
-                          src={user.profileImage}
-                          sx={{ width: 32, height: 32 }}
-                        />
-                      ))}
-                      {trip.clonedBy.length > 3 && (
-                        <span className={styles.moreClones}>+{trip.clonedBy.length - 3}</span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
+              </>
+            )}
           </div>
+
+          {selectedLocation && (
+            <div className={styles.stickyMapContainer}>
+              <LocationViewer 
+                lng={selectedLocation.lng} 
+                lat={selectedLocation.lat} 
+                address={selectedLocation.address} 
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -44,18 +44,20 @@ function TripDestinationList({ destinations, onRemove, loading, destinationRefs,
                       highlightedDestination === item.id ? styles.highlighted : ''
                     }`}
                   >
-                    <div className={styles.destinationImageContainer}>
-                      <Image
-                        src={item.destination.coverImage}
-                        alt={item.destination.name}
-                        width={60}
-                        height={60}
-                        className={styles.destinationImage}
-                        onError={(e) => {
-                          e.target.src = '/default-destination.jpg';
-                        }}
-                      />
-                    </div>
+                  <div className={styles.destinationImageWrapper}>
+                    <Image
+                      src={item.destination.coverImage || '/default-destination.jpg'}
+                      alt={item.destination.name}
+                      fill
+                      quality={90}
+                      priority={false}
+                      className={styles.destinationImage}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = '/default-destination.jpg';
+                      }}
+                    />
+                  </div>
                     <div className={styles.destinationNameContainer}>
                       <span className={styles.destinationName}>{item.destination.name}</span>
                     </div>
@@ -211,65 +213,19 @@ function AddDestinationsPage() {
     setError("");
     setSuccess("");
 
-    // Validate days
-    const days = destinations.map(d => d.day);
-    if (new Set(days).size !== days.length) {
-      throw new Error("Duplicate days detected. Each day must be unique.");
-    }
-
     // Validate we have destinations
     if (destinations.length === 0) {
       throw new Error("Please add at least one destination before saving.");
     }
 
-    // Prepare requests
-    const createRequests = destinations
-      .filter(d => !d.id.startsWith('new-'))
-      .map(dest => {
-        if (!dest.destination?.id) {
-          throw new Error(`Invalid destination ID for ${dest.destination?.name}`);
-        }
-        return API.post(`${BASE_URL}/Trip/${tripId}/destination/${dest.destination.id}`, { 
-          day: dest.day 
-        });
-      });
-
-    // Execute requests
-    await Promise.all(createRequests);
+ setSuccess("Trip saved successfully!");
     
-    setSuccess("Trip saved successfully!");
+    // Immediately redirect to the trip details page
     router.push(`/triphub/${tripId}`);
-  } catch (err) {
-    let errorDetails = "Unknown error occurred";
     
-    // Handle Axios errors
-    if (err.isAxiosError) {
-      errorDetails = err.response?.data?.message || 
-                    err.response?.statusText || 
-                    err.message || 
-                    "Network error occurred";
-      
-      console.error("Axios error details:", {
-        status: err.response?.status,
-        data: err.response?.data,
-        config: {
-          url: err.config?.url,
-          method: err.config?.method,
-          data: err.config?.data
-        }
-      });
-    } 
-    // Handle regular errors
-    else if (err instanceof Error) {
-      errorDetails = err.message;
-    }
-    // Handle string errors
-    else if (typeof err === 'string') {
-      errorDetails = err;
-    }
-
-    console.error("Full error object:", err);
-    setError(`Failed to save trip: ${errorDetails}`);
+  } catch (err) {
+    console.error("Save Error:", err);
+    setError(err.message || "Failed to save trip");
   } finally {
     setLoading(prev => ({ ...prev, submit: false }));
   }

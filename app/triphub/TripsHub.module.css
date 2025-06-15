@@ -1,4 +1,4 @@
-.tripsContainer {
+.container {
   width: 100vw;
   margin-top: 60px;
   padding: 0;
@@ -8,62 +8,78 @@
   align-items: center;
 }
 
-.searchSection {
-  display: flex;
+.title {
   width: 100%;
   text-align: left;
   padding: 0 5%;
   height: 120px;
+  display: flex;
   align-items: center;
   border-bottom: 1px solid var(--Neutrals-Light-Outline);
-}
-
-.searchSection h1 {
   font-size: 48px;
-  margin: 0;
+  margin-bottom: 18px;
 }
 
 .tripsGrid {
   width: 100%;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  display: flex;
+  flex-direction: row-reverse;
+  flex-wrap: wrap;
   justify-content: center;
-  gap: 24px;
-  padding: 5%;
+  align-items: center;
+  padding: 0 3%;
+  gap: 18px;
 }
 
+.noTrips {
+  width: 100%;
+  text-align: center;
+  padding: 40px 0;
+  color: var(--Neutrals-Dark-Outline);
+  font-size: 18px;
+}
+
+/* Loading state styling - matches Explore page */
 .loadingContainer {
-  grid-column: 1 / -1;
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
+  margin: 20% 0;
 }
 
+/* Error message styling */
 .errorMessage {
-  grid-column: 1 / -1;
-  color: var(--Error-Red);
+  color: red;
   text-align: center;
-  padding: 20px;
+  width: 100%;
+  padding: 20px 0;
+  font-size: 16px;
 }
 
+/* Responsive adjustments */
 @media (max-width: 768px) {
-  .searchSection h1 {
+  .title {
     font-size: 36px;
+    height: 100px;
+    margin-bottom: 12px;
   }
+  
   .tripsGrid {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    padding: 0 2%;
+    gap: 12px;
   }
 }
 
 @media (max-width: 480px) {
-  .searchSection {
-    height: 90px;
-  }
-  .searchSection h1 {
+  .title {
     font-size: 28px;
+    height: 80px;
+    padding: 0 3%;
   }
+  
   .tripsGrid {
-    grid-template-columns: 1fr;
+    padding: 0 1%;
+    gap: 8px;
   }
 }

@@ -6,12 +6,11 @@ import { useState, useEffect } from "react";
 import { GreenLoading } from "@/components/ui/Loading";
 
 export default function TripsHubClient({ initialTrips }) {
-  const [trips, setTrips] = useState(initialTrips?.trips || []);
+  const [trips, setTrips] = useState(initialTrips?.trips || initialTrips || []);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-  // Fetch trips client-side if initial data is empty
   useEffect(() => {
     const fetchTrips = async () => {
       try {
@@ -20,7 +19,8 @@ export default function TripsHubClient({ initialTrips }) {
         if (!response.ok) {
           throw new Error(`Failed to fetch trips (Status: ${response.status})`);
         }
-        const data = await response.json();
+              const data = await response.json();
+        console.log('Client-side trips data:', data); 
         setTrips(data.trips || []);
         setError(null);
       } catch (err) {
@@ -35,26 +35,26 @@ export default function TripsHubClient({ initialTrips }) {
     if (trips.length === 0) {
       fetchTrips();
     }
-  }, []);
+  }, [baseUrl, trips.length]);
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Available Trips</h1>
+      <h1 className={styles.title}>Explore Trips</h1>
       
       {loading ? (
-        <div style={{ display: "flex", justifyContent: "center", margin: "2rem" }}>
+        <div className={styles.loadingContainer}>
           <GreenLoading />
         </div>
       ) : (
         <>
-          {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
+          {error && <p className={styles.errorMessage}>{error}</p>}
           
           <div className={styles.tripsGrid}>
-            {trips && trips.length > 0 ? (
+            {trips.length > 0 ? (
               trips.map((trip) => (
                 <TripCard 
-                  key={trip.id} 
-                  trip={trip}
+                  key={trip.id || `trip-${Math.random().toString(36).substr(2, 9)}`} 
+                  trip={trip} 
                 />
               ))
             ) : (

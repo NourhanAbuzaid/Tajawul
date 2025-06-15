@@ -10,7 +10,9 @@ async function getTrips() {
     throw new Error(`Failed to fetch trips (Status: ${res.status})`);
   }
 
-  return res.json();
+  const data = await res.json();
+  console.log('Server-side trips data:', data); // Add this line
+  return data;
 }
 
 export default async function TripsHubPage() {
