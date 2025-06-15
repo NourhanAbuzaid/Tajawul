@@ -11,6 +11,8 @@ import SearchBar from "@/components/ui/SearchBar";
 import FloatingChatButton from "@/components/ui/FloatingChatButton"; // Import the floating chat button component
 import RecommendedDest from "@/components/ui/Recommendation/RecommendedDest";
 import TopRatingDest from "@/components/ui/Recommendation/TopRatingDest";
+import CurrencyConverter from "@/currency-converter/CurrencyConverter"; // Import the currency converter component
+import Weather from "@/currency-converter/Weather";
 
 function Home() {
   const [showPopup, setShowPopup] = useState(false);
@@ -39,7 +41,8 @@ function Home() {
   return (
     <div>
       <NavBar />
-
+      <CurrencyConverter />
+      <Weather />
       <div className={styles.container}>
         <FloatingChatButton />
         <main>
